@@ -7,26 +7,35 @@ using UnityEngine;
 using System.Collections;
 using System;
 
-public class CameraController : MonoBehaviour {
-
-  // Consts
+public class InputManager : MonoBehaviour
+{
+  // Defines
   private const string HORIZONTAL = "Horizontal";
-  private const string VERTICAL   = "Vertical";
-  private const string ZOOM       = "Zoom";
+  private const string VERTICAL = "Vertical";
+  private const string ZOOM = "Zoom";
+
+  // Bounds
+  private const float MINCAMERAHEIGHT = 10f;
+  private const float MAXCAMERAHEIGHT = 40f;
+  private float minCameraX;
+  private float maxCameraX;
+  private float minCameraZ;
+  private float maxCameraZ;
 
   // Speeds
-  private float scrollSpeed = 2.0f;            // Speed of camera movement
+  private const float SCROLLSPEED = 2.0f;      // Speed of camera movement
 
   // Misc
-  private int scrollBorderLimit = 15;           // How close to border for scroll
+  private const int SCROLLBORDERLIMIT = 15;    // How close to border for scroll
 
-	void Start ()
+
+  void Start()
   {
-	
-	} // Start()
-	
 
-	void Update ()
+  } // Start()
+
+
+  void Update()
   { // Check player input for camera movement
 
     // Get mouse position
@@ -34,13 +43,13 @@ public class CameraController : MonoBehaviour {
     float mouseY = Input.mousePosition.y;
 
     // Check mouse position for movement
-    if (mouseX < scrollBorderLimit)                 // Check mouse left
+    if (mouseX < SCROLLBORDERLIMIT)                 // Check mouse left
       Move(HORIZONTAL, -5);
-    if (mouseX > Screen.width - scrollBorderLimit)  // Check mouse right
+    if (mouseX > Screen.width - SCROLLBORDERLIMIT)  // Check mouse right
       Move(HORIZONTAL, 5);
-    if (mouseY > Screen.height - scrollBorderLimit) // Check mouse up
+    if (mouseY > Screen.height - SCROLLBORDERLIMIT) // Check mouse up
       Move(VERTICAL, 5);
-    if (mouseY < scrollBorderLimit)                 // Check mouse down
+    if (mouseY < SCROLLBORDERLIMIT)                 // Check mouse down
       Move(VERTICAL, -5);
 
     // Check keyboard for movement
@@ -76,21 +85,21 @@ public class CameraController : MonoBehaviour {
     {
       case (HORIZONTAL):
         //Vector3 horiTarget = new Vector3(speed, 0, 0);
-        newPos = new Vector3(speed, 0 ,0) * Time.deltaTime * scrollSpeed;
+        newPos = new Vector3(speed, 0, 0) * Time.deltaTime * SCROLLSPEED;
         break;
 
       case (VERTICAL):
         //Vector3 vertTarget = new Vector3(0, 0, speed);
-        newPos = new Vector3(0, 0, speed) * Time.deltaTime * scrollSpeed;
+        newPos = new Vector3(0, speed, 0) * Time.deltaTime * SCROLLSPEED;
         break;
 
       case (ZOOM):
-        Vector3 target = new Vector3(0, speed, 0);
-        newPos = target;
+        newPos = new Vector3(0, 0, -speed);
         break;
     }
 
-    transform.Translate(newPos, Space.World);
+    // Translate using local axes
+    transform.Translate(newPos, Space.Self);
 
   } // Move()
 
