@@ -24,6 +24,7 @@ public class InputManager : MonoBehaviour
 
   // Speeds
   private const float SCROLLSPEED = 2.0f;      // Speed of camera movement
+  private const float ROTATESPEED = 50f;       // Rotatation speed of camera
 
   // Misc
   private const int SCROLLBORDERLIMIT = 15;    // How close to border for scroll
@@ -63,13 +64,15 @@ public class InputManager : MonoBehaviour
       Move(VERTICAL, Input.GetAxis(VERTICAL));
 
     // Zoom Camera in or out
-    if (Input.GetAxis("Mouse ScrollWheel") < 0)
-    {
+    if (Input.GetAxis("Mouse ScrollWheel") < 0)       // Check zoom out
       Move(ZOOM, 0.2f);
-    }
-    if (Input.GetAxis("Mouse ScrollWheel") > 0)
-    {
+    if (Input.GetAxis("Mouse ScrollWheel") > 0)       // Check zoom in
       Move(ZOOM, -0.2f);
+
+    // Check for rotation
+    if (Input.GetMouseButton(1))
+    {
+      Rotate(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
     }
 
   } // Update()
@@ -84,12 +87,10 @@ public class InputManager : MonoBehaviour
     switch (direction)
     {
       case (HORIZONTAL):
-        //Vector3 horiTarget = new Vector3(speed, 0, 0);
         newPos = new Vector3(speed, 0, 0) * Time.deltaTime * SCROLLSPEED;
         break;
 
       case (VERTICAL):
-        //Vector3 vertTarget = new Vector3(0, 0, speed);
         newPos = new Vector3(0, speed, 0) * Time.deltaTime * SCROLLSPEED;
         break;
 
@@ -102,5 +103,20 @@ public class InputManager : MonoBehaviour
     transform.Translate(newPos, Space.Self);
 
   } // Move()
+
+
+  void Rotate(float xInput, float yInput)
+  { // Rotate the camera to the desired angle
+
+    Vector3 cameraAngle = Camera.main.transform.eulerAngles;
+
+    cameraAngle.x -= yInput * ROTATESPEED;
+    cameraAngle.y += xInput * ROTATESPEED;
+
+    Camera.main.transform.eulerAngles = Vector3.MoveTowards(Camera.main.transform.eulerAngles, 
+                                                            cameraAngle, 
+                                                            Time.deltaTime * ROTATESPEED);
+
+  } // Rotate()
 
 } // CameraController
