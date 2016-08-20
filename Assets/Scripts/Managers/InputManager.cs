@@ -43,31 +43,37 @@ public class InputManager : MonoBehaviour
     float mouseX = Input.mousePosition.x;
     float mouseY = Input.mousePosition.y;
 
+    Vector3 movement = Vector3.zero;
+
     // Check mouse position for movement
     if (mouseX < SCROLLBORDERLIMIT)                 // Check mouse left
-      Move(HORIZONTAL, -5);
+      movement.x = -0.1f;
     if (mouseX > Screen.width - SCROLLBORDERLIMIT)  // Check mouse right
-      Move(HORIZONTAL, 5);
+      movement.x = 0.1f;
     if (mouseY > Screen.height - SCROLLBORDERLIMIT) // Check mouse up
-      Move(VERTICAL, 5);
+      movement.z = 0.1f;
     if (mouseY < SCROLLBORDERLIMIT)                 // Check mouse down
-      Move(VERTICAL, -5);
+      movement.z = -0.1f;
 
     // Check keyboard for movement
     if (Input.GetAxis(HORIZONTAL) < 0)                // Check left movement
-      Move(HORIZONTAL, Input.GetAxis(HORIZONTAL));
+      movement.x = -0.1f;
     if (Input.GetAxis(HORIZONTAL) > 0)                // Check right movement
-      Move(HORIZONTAL, Input.GetAxis(HORIZONTAL));
+      movement.x = 0.1f;
     if (Input.GetAxis(VERTICAL) < 0)                  // Check down movement
-      Move(VERTICAL, Input.GetAxis(VERTICAL));
+      movement.z = -0.1f;
     if (Input.GetAxis(VERTICAL) > 0)                  // Check up movement
-      Move(VERTICAL, Input.GetAxis(VERTICAL));
+      movement.z = 0.1f;
 
     // Zoom Camera in or out
     if (Input.GetAxis("Mouse ScrollWheel") < 0)       // Check zoom out
-      Move(ZOOM, 0.2f);
+      movement.y = 0.2f;
     if (Input.GetAxis("Mouse ScrollWheel") > 0)       // Check zoom in
-      Move(ZOOM, -0.2f);
+      movement.y = -0.2f;
+
+    if (movement != Vector3.zero)
+      Move(movement);
+
 
     // Check for rotation
     if (Input.GetMouseButton(1))
@@ -78,29 +84,21 @@ public class InputManager : MonoBehaviour
   } // Update()
 
 
-  void Move(string direction, float speed)
+  void Move(Vector3 movement)
   { // Process movement of the camera, check if movement is in bounds, if so, 
     // translate camera
 
-    Vector3 newPos = new Vector3(0, 0, 0);
 
-    switch (direction)
-    {
-      case (HORIZONTAL):
-        newPos = new Vector3(speed, 0, 0) * Time.deltaTime * SCROLLSPEED;
-        break;
+    float yRot = Camera.main.transform.eulerAngles.y;
 
-      case (VERTICAL):
-        newPos = new Vector3(0, speed, 0) * Time.deltaTime * SCROLLSPEED;
-        break;
-
-      case (ZOOM):
-        newPos = new Vector3(0, 0, -speed);
-        break;
-    }
+    Vector3 newPos = new Vector3(
+      Mathf.Cos(yRot * Mathf.Deg2Rad) * movement.x + Mathf.Sin(yRot * Mathf.Deg2Rad) * movement.z,
+      movement.y,
+      Mathf.Cos(yRot * Mathf.Deg2Rad) * movement.z - Mathf.Sin(yRot * Mathf.Deg2Rad) * movement.x
+    );
 
     // Translate using local axes
-    transform.Translate(newPos, Space.Self);
+    transform.Translate(newPos, Space.World);
 
   } // Move()
 
