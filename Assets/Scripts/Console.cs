@@ -17,14 +17,14 @@ using System.Text.RegularExpressions;
 
 public class Console : MonoBehaviour
 {
-    private string inputString = "";
+    private string _inputString = "";
 
-    private GameObject player;
+    private GameObject _player;
 
-    private bool consoleEnabled;
+    private bool _consoleEnabled;
 
     //List of spawnable items
-    private List<string> SPAWN_ITEMS;
+    private List<string> _spawnItems;
 
     //Print stuff to Unity debugging console
     [SerializeField]
@@ -33,12 +33,12 @@ public class Console : MonoBehaviour
     void Start()
     {
         //Find gameobjects etc.
-        player = GameObject.FindWithTag("Player");
+        _player = GameObject.FindWithTag("Player");
 
         //Filling SPAWN_ITEMS
         DirectoryInfo directoryInfo = new DirectoryInfo("Assets/Resources");
         DirectoryInfo[] subDirectories = directoryInfo.GetDirectories();
-        SPAWN_ITEMS = new List<string>();
+        _spawnItems = new List<string>();
         foreach (DirectoryInfo dir in subDirectories)
         {
             if (PRINT_LOADING_PREFABS) Debug.Log("Searching directory: " + dir.Name);
@@ -49,28 +49,27 @@ public class Console : MonoBehaviour
                 {
                     newString = dir.Name + "/" + file.Name.Substring(0, file.Name.IndexOf('.'));
 
-                    SPAWN_ITEMS.Add(newString);
+                    _spawnItems.Add(newString);
                     if (PRINT_LOADING_PREFABS) Debug.Log("Loaded " + newString);
                 }
             }
         }
         if (PRINT_LOADING_PREFABS) Debug.Log("End loading prefabs");
 
-        consoleEnabled = false;
+        _consoleEnabled = false;
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.BackQuote))
         {
-            consoleEnabled = !consoleEnabled;
+            _consoleEnabled = !_consoleEnabled;
         }
     }
 
     int Submit(string submitString)
     {
         //spawn foo/foo/bar x y z rot
-        Regex regex = new Regex("");
         Match match = Regex.Match(submitString, "spawn");
         if (match.Success)
         {
@@ -78,7 +77,7 @@ public class Console : MonoBehaviour
 
             string[] split = Regex.Split(submitString, " ");
 
-            SPAWN_ITEMS.ForEach(item =>
+            _spawnItems.ForEach(item =>
             {
                 if (Regex.Match(submitString, item).Success)
                 {                    
@@ -105,27 +104,18 @@ public class Console : MonoBehaviour
         }
         return 1;
     }
-
-    Vector3 Parse()
-    {
-        return Vector3.zero;
-    }
-
-    void ClearField()
-    {
-    }
     
     void OnGUI()
     {
-        if (consoleEnabled)
+        if (_consoleEnabled)
         {
-            float xSize = inputString.Length * 7.5f;
+            float xSize = _inputString.Length * 7.5f;
             xSize = Mathf.Clamp(xSize, 200, 400);
-            inputString = GUI.TextField(new Rect(10, 10, xSize, 20), inputString, 50);
-            if (Event.current.keyCode == KeyCode.Return && inputString != "")
+            _inputString = GUI.TextField(new Rect(10, 10, xSize, 20), _inputString, 50);
+            if (Event.current.keyCode == KeyCode.Return && _inputString != "")
             {
-                Submit(inputString);
-                inputString = "";
+                Submit(_inputString);
+                _inputString = "";
             }
         }
     }
