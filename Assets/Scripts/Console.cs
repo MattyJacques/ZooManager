@@ -13,6 +13,7 @@ using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 public class Console : MonoBehaviour
 {
@@ -21,9 +22,6 @@ public class Console : MonoBehaviour
     private GameObject player;
 
     private bool consoleEnabled;
-
-    //Console Keywords
-    const string KEYWORD_SPAWN = "spawn";
 
     //List of spawnable items
     private List<string> SPAWN_ITEMS;
@@ -40,12 +38,10 @@ public class Console : MonoBehaviour
         //Filling SPAWN_ITEMS
         DirectoryInfo directoryInfo = new DirectoryInfo("Assets/Resources");
         DirectoryInfo[] subDirectories = directoryInfo.GetDirectories();
-
         SPAWN_ITEMS = new List<string>();
-        if (PRINT_LOADING_PREFABS) Debug.Log("Begin loading prefabs");
         foreach (DirectoryInfo dir in subDirectories)
         {
-            if (PRINT_LOADING_PREFABS) Debug.Log("Searching directory: "+dir.Name);
+            if (PRINT_LOADING_PREFABS) Debug.Log("Searching directory: " + dir.Name);
             foreach (FileInfo file in dir.GetFiles())
             {
                 string newString;
@@ -71,43 +67,48 @@ public class Console : MonoBehaviour
         }
     }
 
-    void Submit()
+    int Submit(string submitString)
     {
-        string submitText = inputString;
-        submitText = submitText.ToLower();
-
-        if (submitText.StartsWith(KEYWORD_SPAWN))
+        //spawn foo/foo/bar x y z rot
+        Regex regex = new Regex("");
+        Match match = Regex.Match(submitString, "spawn");
+        if (match.Success)
         {
-            foreach (string ITEM_TO_SPAWN in SPAWN_ITEMS)
+            GameObject newObject;
+
+            string[] split = Regex.Split(submitString, " ");
+
+            SPAWN_ITEMS.ForEach(item =>
             {
-                if (submitText.Contains(ITEM_TO_SPAWN))
-                {
-                    GameObject spawningThis = (GameObject)Instantiate(Resources.Load(ITEM_TO_SPAWN));
-                    spawningThis.name = ITEM_TO_SPAWN;
-
-                    Vector3 spawnPos = player.transform.position;
-                    if (submitText.Length > submitText.IndexOf(ITEM_TO_SPAWN) + ITEM_TO_SPAWN.Length)
+                if (Regex.Match(submitString, item).Success)
+                {                    
+                    newObject = new GameObject();
+                    if (item.Contains("/"))
                     {
-                        string xyzString = "";
-                        string[] xyzStrings = new string[3];
-                        xyzString = submitText.Substring(submitText.IndexOf(ITEM_TO_SPAWN) + ITEM_TO_SPAWN.Length + 1);
-                        if (xyzString != "")
-                        {
-                            xyzStrings = xyzString.Split(' ');
-
-                            spawnPos = player.transform.position;
-                            spawnPos.x = float.Parse(xyzStrings[0]);
-                            spawnPos.y = float.Parse(xyzStrings[1]);
-                            spawnPos.z = float.Parse(xyzStrings[2]);
-                        }
+                        newObject.AddComponent(Type.GetType(item.Substring(item.LastIndexOf("/"))));
                     }
-                    spawningThis.transform.position = spawnPos;
-
-                    if (PRINT_SPAWNING_PREFABS) Debug.Log("Spawning " + spawningThis.name + " at X=" + spawnPos.x + " Y=" + spawnPos.y + " Z=" + spawnPos.z);
+                    else
+                    {
+                        newObject.AddComponent(Type.GetType(item));
+                    }
                 }
+            });
+
+            if (split.Length > 2)
+            {
+                string[] sPos = Regex.Split(split[2], ",");
+                Vector3 v3Pos = sPos.ParseVec3();
             }
         }
-        inputString = "";
+        else
+        {
+        }
+        return 1;
+    }
+
+    Vector3 Parse()
+    {
+        return Vector3.zero;
     }
 
     void ClearField()
@@ -121,9 +122,9 @@ public class Console : MonoBehaviour
             float xSize = inputString.Length * 7.5f;
             xSize = Mathf.Clamp(xSize, 200, 400);
             inputString = GUI.TextField(new Rect(10, 10, xSize, 20), inputString, 50);
-            if (Event.current.keyCode == KeyCode.Return)
+            if (Event.current.keyCode == KeyCode.Return && inputString != "")
             {
-                Submit();
+                Submit(inputString);
                 inputString = "";
             }
         }
