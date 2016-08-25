@@ -67,7 +67,7 @@ public class Console : MonoBehaviour
         }
     }
 
-    int Submit(string submitString)
+    public void Submit(string submitString)
     {
         //spawn foo/foo/bar x y z rot
         Match match = Regex.Match(submitString, "spawn");
@@ -99,10 +99,6 @@ public class Console : MonoBehaviour
                 Vector3 v3Pos = sPos.ParseVec3();
             }
         }
-        else
-        {
-        }
-        return 1;
     }
     
     void OnGUI()
