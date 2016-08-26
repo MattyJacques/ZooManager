@@ -8,16 +8,28 @@ using System.Collections;
 
 public class AnimalBase : MonoBehaviour
 {
-    //Protected member variables
-    protected float health;
-    protected float healthRate;
-    protected float hunger;
-    protected float hungerRate;
-    protected float thirst;
-    protected float thirstRate;
-    protected float age;
-    protected float ageMax;
-    protected float boredom;
+  //Protected member variables
+  protected int id;
+  protected string animalname;
+  protected int price;
+  protected string habitat;
+  protected string[] food;
+  protected string[] fun;
+  protected string[] tags;
+  protected float health;
+  protected float healthRate;
+  protected float hunger;
+  protected float hungerRate;
+  protected float thirst;
+  protected float thirstRate;
+  protected float age;
+  protected float lifespan;
+  protected float boredom;
+
+  public AnimalBase()
+  {
+
+  }
 
     //Public accessors
     public float Health
@@ -89,7 +101,7 @@ public class AnimalBase : MonoBehaviour
 
             //Handles age
             age += deltaTime;
-            if (age < ageMax) { Cull(); }
+            if (age < lifespan) { Cull(); }
         }
         else if (health < 0) { health = 0; }
         else if (health == 0)

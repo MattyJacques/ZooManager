@@ -1,7 +1,7 @@
 "animals":[
   {
     "id":1,
-    "name":"Lemur001",
+    "animalname":"Lemur001",
     "price":1,
     "habitat":"Rainforest",
     "food":["Leaves","Fruit"],
