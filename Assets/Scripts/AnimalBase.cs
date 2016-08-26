@@ -6,106 +6,85 @@
 using UnityEngine;
 using System.Collections;
 
-public class AnimalBase : MonoBehaviour
+namespace Assets.Scripts
 {
-    //Protected member variables
-    protected float health;
-    protected float healthRate;
-    protected float hunger;
-    protected float hungerRate;
-    protected float thirst;
-    protected float thirstRate;
-    protected float age;
-    protected float ageMax;
-    protected float boredom;
+    public class AnimalBase : MonoBehaviour
+    {
+        //Protected member variables
+        protected float Health { get; set; }
+        protected float HealthRate { get; set; }
+        protected float Hunger { get; set; }
+        protected float HungerRate { get; set; }
+        protected float Thirst { get; set; }
+        protected float ThirstRate { get; set; }
+        protected float Age { get; set; }
+        protected float AgeMax { get; set; }
+        protected float Boredom { get; set; }
 
-    //Public accessors
-    public float Health
-    {
-        get { return health; }
-        set { health = value; }
-    }
-    public float HealthRate
-    {
-        get { return healthRate; }
-        set { healthRate = value; }
-    }
-    public float Hunger
-    {
-        get { return hunger; }
-        set { hunger = value; }
-    }
-    public float HungerRate
-    {
-        get { return hungerRate; }
-        set { hungerRate = value; }
-    }
-    public float Thirst
-    {
-        get { return thirst; }
-        set { thirst = value; }
-    }
-    public float ThirstRate
-    {
-        get { return thirstRate; }
-        set { thirstRate = value; }
-    }
-    public float Age
-    {
-        get { return age; }
-    }
-    public float Boredom
-    {
-        get { return boredom; }
-        set { boredom = value; }
-    }
+        [SerializeField] private GameClock _gameClock;
 
-    [SerializeField]
-    GameClock gameClock;
-
-    // Use this for initialization
-    protected virtual void Start()
-    {
-	    
-	}
-
-    // Update is called once per frame
-    protected virtual void Update()
-    {
-        float deltaTime = Time.deltaTime;
-        if (health > 0)
+        // Use this for initialization
+        protected virtual void Start()
         {
-            //Handles thirst
-            if (thirst > 0) { thirst -= thirstRate * deltaTime; }
-            thirst = Mathf.Clamp(thirst, 0, 100);
 
-            //Handles hunger
-            if (hunger > 0) { hunger -= hungerRate * deltaTime; }
-            hunger = Mathf.Clamp(hunger, 0, 100);
-
-            //Handles health
-            if (hunger > 50 && health > 50) { health += healthRate * deltaTime; }
-            if (hunger == 0 || thirst == 0) { health -= healthRate * deltaTime; }
-
-            //Handles age
-            age += deltaTime;
-            if (age < ageMax) { Cull(); }
         }
-        else if (health < 0) { health = 0; }
-        else if (health == 0)
+
+        // Update is called once per frame
+        protected virtual void Update()
         {
-            //Do dying stuff
+            float deltaTime = Time.deltaTime;
+            if (Health > 0)
+            {
+                //Handles thirst
+                if (Thirst > 0)
+                {
+                    Thirst -= ThirstRate*deltaTime;
+                }
+                Thirst = Mathf.Clamp(Thirst, 0, 100);
+
+                //Handles hunger
+                if (Hunger > 0)
+                {
+                    Hunger -= HungerRate*deltaTime;
+                }
+                Hunger = Mathf.Clamp(Hunger, 0, 100);
+
+                //Handles health
+                if (Hunger > 50 && Health > 50)
+                {
+                    Health += HealthRate*deltaTime;
+                }
+                if (Hunger == 0 || Thirst == 0)
+                {
+                    Health -= HealthRate*deltaTime;
+                }
+
+                //Handles age
+                Age += deltaTime;
+                if (Age < AgeMax)
+                {
+                    Cull();
+                }
+            }
+            else if (Health < 0)
+            {
+                Health = 0;
+            }
+            else if (Health == 0)
+            {
+                // TODO: Do dying stuff
+            }
         }
-	}
 
-    public virtual void Feed(float food, float water)
-    {
-        hunger += food;
-        thirst += water;
-    }
+        public virtual void Feed(float food, float water)
+        {
+            Hunger += food;
+            Thirst += water;
+        }
 
-    public virtual void Cull()
-    {
-        health = 0;
+        public virtual void Cull()
+        {
+            Health = 0;
+        }
     }
 }
