@@ -6,105 +6,53 @@
 using UnityEngine;
 using System.Collections;
 
-public class AnimalBase : MonoBehaviour
+public class AnimalBase
 {
-  //Protected member variables
-  protected int id;
-  protected string animalname;
-  protected int price;
-  protected string habitat;
-  protected string[] food;
-  protected string[] fun;
-  protected string[] tags;
-  protected float health;
-  protected float healthRate;
-  protected float hunger;
-  protected float hungerRate;
-  protected float thirst;
-  protected float thirstRate;
-  protected float age;
-  protected float lifespan;
-  protected float boredom;
+    // This reference can be used to move the animal around without needing to make AnimalBase a MonoBehaviour
+    public Transform UnityTransform { get; set; }
 
-  public AnimalBase()
-  {
+    // Template values never get set, they represent the animal's permanent properties (max age, speed, etc)
+    public AnimalTemplate Template { get; set; }
 
-  }
-
-    //Public accessors
-    public float Health
-    {
-        get { return health; }
-        set { health = value; }
-    }
-    public float HealthRate
-    {
-        get { return healthRate; }
-        set { healthRate = value; }
-    }
-    public float Hunger
-    {
-        get { return hunger; }
-        set { hunger = value; }
-    }
-    public float HungerRate
-    {
-        get { return hungerRate; }
-        set { hungerRate = value; }
-    }
-    public float Thirst
-    {
-        get { return thirst; }
-        set { thirst = value; }
-    }
-    public float ThirstRate
-    {
-        get { return thirstRate; }
-        set { thirstRate = value; }
-    }
-    public float Age
-    {
-        get { return age; }
-    }
-    public float Boredom
-    {
-        get { return boredom; }
-        set { boredom = value; }
-    }
+    // The animal's temporary properties change over the life of the animal
+    public float Health { get; set; }
+    public float Hunger { get; set; }
+    public float Thirst { get; set; }
+    public float Age { get; set; }
+    public float Boredom { get; set; }
 
     [SerializeField]
     GameClock gameClock;
 
-    // Use this for initialization
-    protected virtual void Start()
+    public AnimalBase(AnimalTemplate template)
     {
-	    
-	}
+        Template = template;
+    }
 
     // Update is called once per frame
-    protected virtual void Update()
+    protected void Update()
     {
         float deltaTime = Time.deltaTime;
-        if (health > 0)
+        if (Health > 0)
         {
             //Handles thirst
-            if (thirst > 0) { thirst -= thirstRate * deltaTime; }
-            thirst = Mathf.Clamp(thirst, 0, 100);
+            if (Thirst > 0) { Thirst -= Template.thirstRate * deltaTime; }
+            Thirst = Mathf.Clamp(Thirst, 0, 100);
 
             //Handles hunger
-            if (hunger > 0) { hunger -= hungerRate * deltaTime; }
-            hunger = Mathf.Clamp(hunger, 0, 100);
+            if (Hunger > 0) { Hunger -= Template.hungerRate * deltaTime; }
+            Hunger = Mathf.Clamp(Hunger, 0, 100);
 
             //Handles health
-            if (hunger > 50 && health > 50) { health += healthRate * deltaTime; }
-            if (hunger == 0 || thirst == 0) { health -= healthRate * deltaTime; }
+            if (Hunger > 50 && Health > 50) { Health += Template.healthRate * deltaTime; }
+            if (Hunger == 0 || Thirst == 0) { Health -= Template.healthRate * deltaTime; }
 
             //Handles age
-            age += deltaTime;
-            if (age < lifespan) { Cull(); }
+            Age += deltaTime;
+            if (Age < Template.lifespan) { Cull(); }
         }
-        else if (health < 0) { health = 0; }
-        else if (health == 0)
+        else if (Health < 0) { Health = 0; }
+        else if (Health == 0)
         {
             //Do dying stuff
         }
@@ -112,12 +60,12 @@ public class AnimalBase : MonoBehaviour
 
     public virtual void Feed(float food, float water)
     {
-        hunger += food;
-        thirst += water;
+        Hunger += food;
+        Thirst += water;
     }
 
     public virtual void Cull()
     {
-        health = 0;
+        Health = 0;
     }
 }

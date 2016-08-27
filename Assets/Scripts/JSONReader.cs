@@ -1,21 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
-
-public class AnimalCollection : MonoBehaviour
-{
-  public AnimalBase[] animalCol;
-}
-
+using System.Collections.Generic;
 
 public class JSONReader : MonoBehaviour {
 
   TextAsset animal;
-
-	void Start ()
+  void Start ()
   {
     animal = Resources.Load("Animals/Animals") as TextAsset;
     TextAsset animla2 = animal;
-    AnimalCollection animals = JsonUtility.FromJson<AnimalCollection>(animal.text);
-	}
-	
+    var collection = JsonUtility.FromJson<AnimalTemplateCollection>(animal.text);
+
+    // You can make any animal you want by passing in the proper template
+    var newAnimal = new AnimalBase(collection.animalTemplates[0]);
+  }
 }

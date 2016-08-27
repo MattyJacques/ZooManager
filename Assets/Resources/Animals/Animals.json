@@ -1,4 +1,4 @@
-"animals":[
+{"animalTemplates":[
   {
     "id":1,
     "animalname":"Lemur001",
@@ -7,6 +7,9 @@
     "food":["Leaves","Fruit"],
     "fun":["Climbing","Basking"],
     "tags":["Terrestrial"],
+	"healthRate":1,
+	"hungerRate":1,
+	"thirstRate":1,
     "lifespan":18
   },
   {
@@ -17,6 +20,9 @@
     "food":["Leaves","Insects"],
     "fun":[],
     "tags":["Terrestrial"],
+	"healthRate":1,
+	"hungerRate":1,
+	"thirstRate":1,
     "lifespan":20
-  }
-]
+  }]
+}
