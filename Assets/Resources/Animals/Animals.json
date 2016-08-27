@@ -7,9 +7,9 @@
     "food":["Leaves","Fruit"],
     "fun":["Climbing","Basking"],
     "tags":["Terrestrial"],
-	"healthRate":1,
-	"hungerRate":1,
-	"thirstRate":1,
+	  "healthRate":1,
+	  "hungerRate":1,
+	  "thirstRate":1,
     "lifespan":18
   },
   {
@@ -20,9 +20,9 @@
     "food":["Leaves","Insects"],
     "fun":[],
     "tags":["Terrestrial"],
-	"healthRate":1,
-	"hungerRate":1,
-	"thirstRate":1,
+	  "healthRate":1,
+	  "hungerRate":1,
+	  "thirstRate":1,
     "lifespan":20
   }]
 }

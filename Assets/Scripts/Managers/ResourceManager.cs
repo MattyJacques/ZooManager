@@ -7,16 +7,12 @@ namespace ZooManager
   public class ResourceManager : MonoBehaviour
   {
 
-    // Use this for initialization
+    public AnimalTemplateCollection templates;
+
     void Start()
     {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+      //JSONReader JSONHandler;
+      templates = JSONReader.ReadJSON();
     }
   }
 }
