@@ -11,7 +11,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-namespace ZooManager
+namespace Assets.Scripts
 {
 
   public class JSONReader

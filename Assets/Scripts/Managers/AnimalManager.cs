@@ -6,9 +6,10 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.Animals;
 
 
-namespace ZooManager
+namespace Assets.Scripts.Managers
 {
 
   public class AnimalManager : MonoBehaviour
@@ -20,7 +21,7 @@ namespace ZooManager
     // Holds all animal templates read from JSON array
     public AnimalTemplateCollection _templates;
 
-    List<AnimalBase> _animals;
+    List<AnimalBase> _animals = new List<AnimalBase> { };
 
 
     void Start()
