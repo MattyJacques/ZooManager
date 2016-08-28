@@ -1,0 +1,28 @@
+{"animalTemplates":[
+  {
+    "id":1,
+    "animalname":"Lemur001",
+    "price":1,
+    "habitat":"Rainforest",
+    "food":["Leaves","Fruit"],
+    "fun":["Climbing","Basking"],
+    "tags":["Terrestrial"],
+	  "healthRate":1,
+	  "hungerRate":1,
+	  "thirstRate":1,
+    "lifespan":18
+  },
+  {
+    "id":2,
+    "name":"Peafowl001",
+    "price":2,
+    "habitat":"Forest",
+    "food":["Leaves","Insects"],
+    "fun":[],
+    "tags":["Terrestrial"],
+	  "healthRate":1,
+	  "hungerRate":1,
+	  "thirstRate":1,
+    "lifespan":20
+  }]
+}
