@@ -4,68 +4,49 @@
 // Date         : 20/08/2016
 
 using UnityEngine;
-using System.Collections;
 
-public class GameClock : MonoBehaviour
+namespace Assets.Scripts
 {
-    float currentTimeSeconds;
-    int minute, hour;
-    float timeMultiplier_;
-    public float timeMultiplier
+    public class GameClock : MonoBehaviour
     {
-        get
+        public float TimeMultiplier { get; set; }
+        public int Minute { get; private set; }
+        public int Hour { get; private set; }
+
+        public float _convertedDeltaTime { get; private set; }
+        private float _currentTimeSeconds;
+        
+        
+        // Use this for initialization
+        void Start()
         {
-            return timeMultiplier_;
+            transform.position = Vector3.zero;
+            transform.rotation = new Quaternion(0, 0, 180, 1);
+            _currentTimeSeconds = PlayerPrefs.GetFloat("currentTimeSeconds");
+            TimeMultiplier = 1.0f;
+            transform.Rotate(new Vector3(-_currentTimeSeconds / 240, 0, 0));
         }
-        set
+
+        // Update is called once per frame
+        void Update()
         {
-            timeMultiplier_ = value;
+            _convertedDeltaTime = Time.deltaTime / 0.0416666667f * TimeMultiplier;
+            _currentTimeSeconds += _convertedDeltaTime;
+
+            Minute = (int)(_currentTimeSeconds / 60);
+            Hour = Minute / 24;
+
+            transform.Rotate(new Vector3(-_convertedDeltaTime / 240, 0, 0));
         }
-    }
-    float convertedDeltaTime_;
-    public float convertedDeltaTime
-    {
-        get
+
+        void OnDestroy()
         {
-            return convertedDeltaTime_;
+            PlayerPrefs.SetFloat("currentTimeSeconds", _currentTimeSeconds);
         }
-    }
 
-    // Use this for initialization
-    void Start ()
-    {
-        transform.position = Vector3.zero;
-        transform.rotation = new Quaternion(0, 0, 180, 1);
-        currentTimeSeconds = PlayerPrefs.GetFloat("currentTimeSeconds");
-        timeMultiplier_ = 1.0f;
-        transform.Rotate(new Vector3(-currentTimeSeconds / 240, 0, 0));
-    }
-	
-	// Update is called once per frame
-	void Update ()
-    {
-        convertedDeltaTime_ = Time.deltaTime / 0.0416666667f * timeMultiplier_;
-        currentTimeSeconds += convertedDeltaTime;
-
-        minute = (int)(currentTimeSeconds / 60);
-        hour = (int)(minute / 24);
-
-        transform.Rotate(new Vector3(-convertedDeltaTime / 240, 0, 0));
-    }
-
-    void GetTime(out int a_hour, out int a_minute)
-    {
-        a_hour = hour;
-        a_minute = minute;
-    }
-
-    void OnDestroy()
-    {
-        PlayerPrefs.SetFloat("currentTimeSeconds", currentTimeSeconds);
-    }
-
-    void OnApplicationQuit()
-    {
-        PlayerPrefs.SetFloat("currentTimeSeconds", currentTimeSeconds);
+        void OnApplicationQuit()
+        {
+            PlayerPrefs.SetFloat("currentTimeSeconds", _currentTimeSeconds);
+        }
     }
 }
