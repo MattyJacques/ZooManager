@@ -22,10 +22,10 @@ namespace Assets.Scripts.Managers
         // Bounds
         private const float MINCAMERAHEIGHT = 5f;
         private const float MAXCAMERAHEIGHT = 40f;
-        private float _minCameraX;
-        private float _maxCameraX;
-        private float _minCameraZ;
-        private float _maxCameraZ;
+        //private float _minCameraX;
+        //private float _maxCameraX;
+        //private float _minCameraZ;
+        //private float _maxCameraZ;
 
         // Speeds
         private const float SCROLLSPEED = 2.0f; // Speed of camera movement
