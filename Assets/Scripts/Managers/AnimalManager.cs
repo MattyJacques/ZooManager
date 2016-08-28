@@ -5,7 +5,7 @@
 
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic
+using System.Collections.Generic;
 
 
 namespace ZooManager
@@ -18,15 +18,15 @@ namespace ZooManager
     enum CreateMode { ID, NAME };
 
     // Holds all animal templates read from JSON array
-    public AnimalTemplateCollection templates;
+    public AnimalTemplateCollection _templates;
 
-    List<AnimalBase> animals;
+    List<AnimalBase> _animals;
 
 
     void Start()
     { // Call to get the templates from JSON
 
-      templates = JSONReader.ReadJSON();
+      _templates = JSONReader.ReadJSON();
 
     } // Start()
 
@@ -38,10 +38,10 @@ namespace ZooManager
       int index = GetTemplateIndex(id, "", CreateMode.ID);
 
       // Create new animal with found template
-      AnimalBase newAnimal = new AnimalBase(templates.animalTemplates[index]);
+      AnimalBase newAnimal = new AnimalBase(_templates.animalTemplates[index]);
 
       // Add animal to instances list
-      animals.Add(newAnimal);
+      _animals.Add(newAnimal);
 
     } // CreateAnimal(id)
 
@@ -53,10 +53,10 @@ namespace ZooManager
       int index = GetTemplateIndex(0, name, CreateMode.NAME);
 
       // Create new animal with found template
-      AnimalBase newAnimal = new AnimalBase(templates.animalTemplates[index]);
+      AnimalBase newAnimal = new AnimalBase(_templates.animalTemplates[index]);
 
       // Add animal to instances list
-      animals.Add(newAnimal);
+      _animals.Add(newAnimal);
 
     } // CreateAnimal(name)
 
@@ -67,13 +67,13 @@ namespace ZooManager
 
       int templateIndex = -1;              // Holds the template index found
 
-      for (int i = 0; i < templates.animalTemplates.Length; i++)
+      for (int i = 0; i < _templates.animalTemplates.Length; i++)
       { // Check if there is a match for every template in the array
 
         if (mode == CreateMode.ID)
         { // If mode is ID, check for matching ID
 
-          if (templates.animalTemplates[i].id == id)
+          if (_templates.animalTemplates[i].id == id)
           { // Check for matching ID, if found set index and break out of loop
             templateIndex = i;
             break;
@@ -82,7 +82,7 @@ namespace ZooManager
         else if (mode == CreateMode.NAME)
         { // If mode is name, check for matching name
 
-          if (templates.animalTemplates[i].animalname == name)
+          if (_templates.animalTemplates[i].animalname == name)
           { // Check for matching name, if found set index and break out of loop
             templateIndex = i;
             break;
