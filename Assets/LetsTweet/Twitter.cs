@@ -227,17 +227,40 @@ namespace Twitter
 
 				Dictionary<string, string> parameters = new Dictionary<string, string>();
 				parameters.Add("count", "4");
-
+			parameters.Add("screen_name", "SuperIsHere");
 
 				// HTTP header
 				Dictionary<string, string> headers = new Dictionary<string, string>();
-				headers["Authorization"] = GetHeaderWithAccessToken("POST", GetTimelineURL, consumerKey, consumerSecret, response, parameters);
-			WWWForm form = new WWWForm();
-			form.AddField("status", text);
-			WWW web = new WWW(PostTweetURL, form.data, headers);
+				headers["Authorization"] = GetHeaderWithAccessToken("GET", GetTimelineURL, consumerKey, consumerSecret, response, parameters);
+			WWW web = new WWW("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=SuperIsHere&count=4", null, headers);
 			yield return web;
-			Debug.Log (web.text);
+			string encodedString = web.text;
+			JSONObject j = new JSONObject(encodedString);
+			accessData(j);
 		}
+
+		public static void accessData(JSONObject obj){
+			switch(obj.type){
+			case JSONObject.Type.OBJECT:
+				for(int i = 0; i < obj.list.Count; i++){
+					string key = (string)obj.keys[i];
+					JSONObject j = (JSONObject)obj.list[i];
+					Debug.Log(key);
+					accessData(j);
+				}
+				break;
+			case JSONObject.Type.ARRAY:
+				foreach(JSONObject j in obj.list){
+					accessData(j);
+				}
+				break;
+			case JSONObject.Type.STRING:
+					Debug.Log (obj.str);
+					break;
+				}
+			}
+
+
 
         #endregion
 
