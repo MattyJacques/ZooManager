@@ -37,7 +37,7 @@
 	  "hungerRate":1,
 	  "thirstRate":1,
     "lifespan":18
-   },
+  },
   {
     "id":4,
     "animalname":"SumatranTiger",
@@ -50,7 +50,7 @@
 	  "hungerRate":1,
 	  "thirstRate":1,
     "lifespan":18
-   },
+  },
   {
     "id":5,
     "animalname":"GrizzlyBear",
@@ -63,7 +63,7 @@
 	  "hungerRate":1,
 	  "thirstRate":1,
     "lifespan":18
-   },
+  },
   {
     "id":6,
     "animalname":"PlainsZebra",
@@ -76,7 +76,7 @@
 	  "hungerRate":1,
 	  "thirstRate":1,
     "lifespan":18
-   },
+  },
   {
     "id":7,
     "animalname":"CommonChimpanzee",
@@ -89,5 +89,5 @@
 	  "hungerRate":1,
 	  "thirstRate":1,
     "lifespan":18
-   }]
+  }]
 }
