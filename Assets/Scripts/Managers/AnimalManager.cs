@@ -7,6 +7,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.Animals;
+using Assets.Scripts.Helpers;
 
 
 namespace Assets.Scripts.Managers
@@ -26,8 +27,8 @@ namespace Assets.Scripts.Managers
 
     void Start()
     { // Call to get the templates from JSON
-
-      _templates = JSONReader.ReadJSON();
+    
+      _templates = JSONReader.ReadJSON<AnimalTemplateCollection>("Animals/Animals");
 
     } // Start()
 

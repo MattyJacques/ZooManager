@@ -9,22 +9,20 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.Animals;
 
 
-namespace Assets.Scripts
+namespace Assets.Scripts.Helpers
 {
 
   public class JSONReader
   {
-
-    public static AnimalTemplateCollection ReadJSON()
+    public static T ReadJSON<T>(string location)
     { // Read in the JSON file and return the AnimalTemplateCollection
 
-      TextAsset animal = Resources.Load("Animals/Animals") as TextAsset;
-      return JsonUtility.FromJson<AnimalTemplateCollection>(animal.text);
+      TextAsset animal = Resources.Load(location) as TextAsset;
+      return JsonUtility.FromJson<T>(animal.text);
 
     } // ReadJSON()
-
-
   } // JSONReader
 } // namespace
