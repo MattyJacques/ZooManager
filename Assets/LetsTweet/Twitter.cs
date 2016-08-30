@@ -234,9 +234,10 @@ namespace Twitter
 				headers["Authorization"] = GetHeaderWithAccessToken("GET", GetTimelineURL, consumerKey, consumerSecret, response, parameters);
 			WWW web = new WWW("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=SuperIsHere&count=4", null, headers);
 			yield return web;
-			string encodedString = web.text;
+			Debug.Log (web.text);
+			/*string encodedString = web.text;
 			JSONObject j = new JSONObject(encodedString);
-			accessData(j);
+			accessData(j); */
 		}
 
 		public static void accessData(JSONObject obj){
