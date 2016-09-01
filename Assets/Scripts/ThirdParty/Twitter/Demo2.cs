@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.ThirdParty.Twitter
 {
@@ -15,6 +16,11 @@ namespace Assets.Scripts.ThirdParty.Twitter
     private const string TwitterScreenName = "SuperIsHere";
     private const string TwitterUserToken = "3056989378-cMFqalsKk8ZKEbiQopsrNNf9pPwmXxwYW4gbDeg";
     private const string TwitterSecret = "2NjQhXXeLoNybd8HiQN5lsZReJ2sCyIluMlNvbDuW7vTo";
+		public Text tweet1;
+		public Text tweet2;
+		public Text tweet3;
+		public Text tweet4;
+
     
     // Use this for initialization
     private void Start()
@@ -26,7 +32,7 @@ namespace Assets.Scripts.ThirdParty.Twitter
       tokenResponse.TokenSecret = TwitterSecret;
 
       StartCoroutine(API.GetTimeline("rand", "OSHVMJHuDmW5xeWX7VYVBWubW",
-        "3rDvhRhSO76WJrniGmvYKv6OVtRuQmpSmjns9w40JxLCxFx6lF", tokenResponse));
+				"3rDvhRhSO76WJrniGmvYKv6OVtRuQmpSmjns9w40JxLCxFx6lF", tokenResponse, tweet1, tweet2, tweet3, tweet4));
     }
 
     // Update is called once per frame

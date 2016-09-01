@@ -11,6 +11,7 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.ThirdParty.Twitter
 {
@@ -34,6 +35,7 @@ namespace Assets.Scripts.ThirdParty.Twitter
 
     public class API
     {
+
         #region OAuth Token Methods
         // 1. Get Request-Token From Twitter
         // 2. Get PIN from User
@@ -221,14 +223,15 @@ namespace Assets.Scripts.ThirdParty.Twitter
 			
 		private const string GetTimelineURL = "https://api.twitter.com/1.1/statuses/user_timeline.json";
     // API documentation: https://dev.twitter.com/rest/reference/get/statuses/user_timeline
-    public static IEnumerator GetTimeline(string text, string consumerKey, string consumerSecret, AccessTokenResponse response)
+		public static IEnumerator GetTimeline(string text, string consumerKey, string consumerSecret, AccessTokenResponse response, Text tweet1, Text tweet2, Text tweet3, Text tweet4)
 		{
-      string username = "SuperIsHere"; // twitter username
+      string username = "WhiteLemurGames"; // twitter username
       int count = 4; // number of tweets to fetch
 		  bool trimUser = true; // should full user info be stripped out?
 		  bool excludeReplies = true; // should replies be stripped out?
 		  bool includeRts = true; // should retweets be included?
-
+		  int tweetnum = 0;
+		
       Dictionary<string, string> parameters = new Dictionary<string, string>();
 			parameters.Add("count", count.ToString());
       parameters.Add("screen_name", username);
@@ -258,7 +261,20 @@ namespace Assets.Scripts.ThirdParty.Twitter
       foreach (var tweet in timeline.Tweets)
       {
         Debug.Log(tweet.text);
-      }
+				if (tweetnum == 0) {
+				tweet1.text = tweet.text;
+				}
+				if (tweetnum == 1) {
+					tweet2.text = tweet.text;
+				}
+				if (tweetnum == 2) {
+					tweet3.text = tweet.text;
+				}
+				if (tweetnum == 3) {
+					tweet4.text = tweet.text;
+				}
+				tweetnum++;
+			}
 		}
 
     public static IEnumerator WaitForRequest(WWW www)

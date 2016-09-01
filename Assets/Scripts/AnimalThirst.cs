@@ -9,18 +9,22 @@ public class AnimalThirst : MonoBehaviour {
 	public Button myButtond;
 
 	// Use this for initialization
-	void Start () {
+	void Start () 
+	{
 		thirst = 100;
 		StartCoroutine (IncreaseThirst ());
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update () 
+	{
 		perc.text = thirst.ToString ();
-		if (thirst <= 50) {
+		if (thirst <= 50)
+		{
 			needsWater = Thirst.True;
 		}
-		else {
+		else 
+		{
 			needsWater = Thirst.False;
 		}
 		Debug.Log (needsWater);
@@ -38,9 +42,11 @@ public class AnimalThirst : MonoBehaviour {
 		thirst = 100;
 	}
 
-	public IEnumerator IncreaseThirst() {
+	public IEnumerator IncreaseThirst() 
+	{
 		yield return new WaitForSeconds(0.1f);
-		if (thirst > 0) {
+		if (thirst > 0) 
+		{
 			thirst--;
 		}
 		Debug.Log (thirst);
@@ -48,7 +54,8 @@ public class AnimalThirst : MonoBehaviour {
 	}
 }
 
-public enum Thirst {
+public enum Thirst 
+{
 	False,
 	True
 }
