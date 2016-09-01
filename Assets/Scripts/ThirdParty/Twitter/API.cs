@@ -10,10 +10,9 @@ using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
-
 using UnityEngine;
 
-namespace Twitter
+namespace Assets.Scripts.ThirdParty.Twitter
 {
     public class RequestTokenResponse
     {
@@ -221,26 +220,63 @@ namespace Twitter
         }
 			
 		private const string GetTimelineURL = "https://api.twitter.com/1.1/statuses/user_timeline.json";
-
-		public static IEnumerator GetTimeline(string text, string consumerKey, string consumerSecret, AccessTokenResponse response)
+    // API documentation: https://dev.twitter.com/rest/reference/get/statuses/user_timeline
+    public static IEnumerator GetTimeline(string text, string consumerKey, string consumerSecret, AccessTokenResponse response)
 		{
+      string username = "SuperIsHere"; // twitter username
+      int count = 4; // number of tweets to fetch
+		  bool trimUser = true; // should full user info be stripped out?
+		  bool excludeReplies = true; // should replies be stripped out?
+		  bool includeRts = true; // should retweets be included?
 
-				Dictionary<string, string> parameters = new Dictionary<string, string>();
-				parameters.Add("count", "4");
-			parameters.Add("screen_name", "SuperIsHere");
+      Dictionary<string, string> parameters = new Dictionary<string, string>();
+			parameters.Add("count", count.ToString());
+      parameters.Add("screen_name", username);
+      parameters.Add("trim_user", trimUser.ToString());
+      parameters.Add("exclude_replies", excludeReplies.ToString());
+      parameters.Add("include_rts", includeRts.ToString());
 
-				// HTTP header
-				Dictionary<string, string> headers = new Dictionary<string, string>();
-				headers["Authorization"] = GetHeaderWithAccessToken("GET", GetTimelineURL, consumerKey, consumerSecret, response, parameters);
-			WWW web = new WWW("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=SuperIsHere&count=4", null, headers);
-			yield return web;
-			Debug.Log (web.text);
-			/*string encodedString = web.text;
-			JSONObject j = new JSONObject(encodedString);
-			accessData(j); */
+      // Build the request URL by adding querystring values to the base URL
+      string url = string.Format(
+        "{0}?screen_name={1}&count={2}&trim_user={3}&exclude_replies={4}&include_rts={5}",
+        GetTimelineURL,
+        username,
+        count,
+        trimUser,
+        excludeReplies,
+        includeRts
+      );
+
+      // HTTP header
+      Dictionary<string, string> headers = new Dictionary<string, string>();
+			headers["Authorization"] = GetHeaderWithAccessToken("GET", GetTimelineURL, consumerKey, consumerSecret, response, parameters);
+      var web = new WWW(url, null, headers);
+      yield return web;
+
+      var responseJson = "{\"Tweets\":" + web.text + "}";
+      var timeline =  JsonUtility.FromJson<UserTimeline>(responseJson);
+      foreach (var tweet in timeline.Tweets)
+      {
+        Debug.Log(tweet.text);
+      }
 		}
 
-		/*public static void accessData(JSONObject obj){
+    public static IEnumerator WaitForRequest(WWW www)
+    {
+      yield return www;
+
+      // check for errors
+      if (www.error == null)
+      {
+        Debug.Log("WWW Ok!: " + www.data);
+      }
+      else
+      {
+        Debug.Log("WWW Error: " + www.error);
+      }
+    }
+
+    /*public static void accessData(JSONObject obj){
 			switch(obj.type){
 			case JSONObject.Type.OBJECT:
 				for(int i = 0; i < obj.list.Count; i++){
@@ -263,47 +299,47 @@ namespace Twitter
 
 
 
-        #endregion
+    #endregion
 
-        #region OAuth Help Methods
-        // The below help methods are modified from "WebRequestBuilder.cs" in Twitterizer(http://www.twitterizer.net/).
-        // Here is its license.
+    #region OAuth Help Methods
+    // The below help methods are modified from "WebRequestBuilder.cs" in Twitterizer(http://www.twitterizer.net/).
+    // Here is its license.
 
-        //-----------------------------------------------------------------------
-        // <copyright file="WebRequestBuilder.cs" company="Patrick 'Ricky' Smith">
-        //  This file is part of the Twitterizer library (http://www.twitterizer.net/)
-        // 
-        //  Copyright (c) 2010, Patrick "Ricky" Smith (ricky@digitally-born.com)
-        //  All rights reserved.
-        //  
-        //  Redistribution and use in source and binary forms, with or without modification, are 
-        //  permitted provided that the following conditions are met:
-        // 
-        //  - Redistributions of source code must retain the above copyright notice, this list 
-        //    of conditions and the following disclaimer.
-        //  - Redistributions in binary form must reproduce the above copyright notice, this list 
-        //    of conditions and the following disclaimer in the documentation and/or other 
-        //    materials provided with the distribution.
-        //  - Neither the name of the Twitterizer nor the names of its contributors may be 
-        //    used to endorse or promote products derived from this software without specific 
-        //    prior written permission.
-        // 
-        //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
-        //  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-        //  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-        //  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-        //  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-        //  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-        //  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-        //  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-        //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
-        //  POSSIBILITY OF SUCH DAMAGE.
-        // </copyright>
-        // <author>Ricky Smith</author>
-        // <summary>Provides the means of preparing and executing Anonymous and OAuth signed web requests.</summary>
-        //-----------------------------------------------------------------------
+    //-----------------------------------------------------------------------
+    // <copyright file="WebRequestBuilder.cs" company="Patrick 'Ricky' Smith">
+    //  This file is part of the Twitterizer library (http://www.twitterizer.net/)
+    // 
+    //  Copyright (c) 2010, Patrick "Ricky" Smith (ricky@digitally-born.com)
+    //  All rights reserved.
+    //  
+    //  Redistribution and use in source and binary forms, with or without modification, are 
+    //  permitted provided that the following conditions are met:
+    // 
+    //  - Redistributions of source code must retain the above copyright notice, this list 
+    //    of conditions and the following disclaimer.
+    //  - Redistributions in binary form must reproduce the above copyright notice, this list 
+    //    of conditions and the following disclaimer in the documentation and/or other 
+    //    materials provided with the distribution.
+    //  - Neither the name of the Twitterizer nor the names of its contributors may be 
+    //    used to endorse or promote products derived from this software without specific 
+    //    prior written permission.
+    // 
+    //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
+    //  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+    //  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+    //  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+    //  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+    //  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+    //  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+    //  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+    //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    //  POSSIBILITY OF SUCH DAMAGE.
+    // </copyright>
+    // <author>Ricky Smith</author>
+    // <summary>Provides the means of preparing and executing Anonymous and OAuth signed web requests.</summary>
+    //-----------------------------------------------------------------------
 
-        private static readonly string[] OAuthParametersToIncludeInHeader = new[]
+    private static readonly string[] OAuthParametersToIncludeInHeader = new[]
                                                           {
                                                               "oauth_version",
                                                               "oauth_nonce",

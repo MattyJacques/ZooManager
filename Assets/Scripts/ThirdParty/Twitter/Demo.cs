@@ -2,7 +2,7 @@
 using UnityEngine;
 using System.Collections;
 
-namespace Twitter
+namespace Assets.Scripts.ThirdParty.Twitter
 {
     public class Demo : MonoBehaviour
     {
@@ -102,8 +102,8 @@ namespace Twitter
                     m_AccessTokenResponse.ScreenName = "SuperIsHere";
                     m_AccessTokenResponse.Token = "3056989378-cMFqalsKk8ZKEbiQopsrNNf9pPwmXxwYW4gbDeg";
                     m_AccessTokenResponse.TokenSecret = "2NjQhXXeLoNybd8HiQN5lsZReJ2sCyIluMlNvbDuW7vTo";
-                    StartCoroutine(Twitter.API.GetTimeline("rand", "OSHVMJHuDmW5xeWX7VYVBWubW",
-                        "3rDvhRhSO76WJrniGmvYKv6OVtRuQmpSmjns9w40JxLCxFx6lF", m_AccessTokenResponse));
+                    //StartCoroutine(Twitter.API.GetTimeline("rand", "OSHVMJHuDmW5xeWX7VYVBWubW",
+                    //    "3rDvhRhSO76WJrniGmvYKv6OVtRuQmpSmjns9w40JxLCxFx6lF", m_AccessTokenResponse));
 
                 }
             }
