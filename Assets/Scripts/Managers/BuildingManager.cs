@@ -15,6 +15,8 @@ namespace Assets.Scripts.Managers
 
 
     void Create()
+		{
 
   } // BuildingManager
+}
 }
