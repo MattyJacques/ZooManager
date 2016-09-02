@@ -29,9 +29,17 @@ namespace Assets.Scripts.Managers
     { // Call to get the templates from JSON
     
       _templates = JSONReader.ReadJSON<AnimalTemplateCollection>("Animals/Animals");
+			CreateAnimal (1);
+
 
     } // Start()
-
+			
+	void Update()
+	{
+			foreach (AnimalBase animal in _animals) {
+				animal.CheckedNeeds ();
+			}
+	}
 
     public void CreateAnimal(int id)
     { // Create an animal instance using the ID field of the templates
@@ -41,9 +49,9 @@ namespace Assets.Scripts.Managers
 
       // Create new animal with found template
       AnimalBase newAnimal = new AnimalBase(_templates.animalTemplates[index]);
-
       // Add animal to instances list
       _animals.Add(newAnimal);
+			Debug.Log (_templates.animalTemplates [index].animalname);
 
     } // CreateAnimal(id)
 
