@@ -47,8 +47,6 @@ namespace Assets.Scripts.Managers
     } // Update()
 
 
-    
-
     private void PlaceBuilding()
     { // Place the building in the world, add to buildings list
       // stop mouse position updating building position
@@ -72,17 +70,34 @@ namespace Assets.Scripts.Managers
     { // Update the position of the building object that is following the
       // mouse position to the new mouse position
 
-      // Get the current mouse position, using camera y
-      Vector3 mousePos = Input.mousePosition;
-      mousePos = new Vector3(mousePos.x, mousePos.y, Camera.main.transform.position.y);
+      Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+      RaycastHit hit;
 
-      // Get the world point that the mouse is currently at
-      Vector3 buildPos = Camera.main.ScreenToWorldPoint(mousePos);
+      if (Physics.Raycast(ray, out hit))
+      {
+        Vector3 newPos = new Vector3(hit.point.x, 0, hit.point.z);
+        _currentBuild.position = newPos;
 
-      // Update transform to new mouse position
-      _currentBuild.position = new Vector3(buildPos.x, 0, buildPos.z);
+      }
 
     } // UpdateMouseBuilding()
+
+
+    //private void UpdateMouseBuild()
+    //{ // Update the position of the building object that is following the
+    //  // mouse position to the new mouse position
+
+    //  // Get the current mouse position, using camera y
+    //  Vector3 mousePos = Input.mousePosition;
+    //  mousePos = new Vector3(mousePos.x, mousePos.y, Camera.main.transform.position.y);
+
+    //  // Get the world point that the mouse is currently at
+    //  Vector3 buildPos = Camera.main.ScreenToWorldPoint(mousePos);
+
+    //  // Update transform to new mouse position
+    //  _currentBuild.position = new Vector3(buildPos.x, 0, buildPos.z);
+
+    //} // UpdateMouseBuilding()
 
 
     public void Create(string buildName)
