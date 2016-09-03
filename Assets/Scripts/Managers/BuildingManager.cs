@@ -62,6 +62,7 @@ namespace Assets.Scripts.Managers
       // stop mouse position updating building position
 
       _buildings.Add(_currentBuild.gameObject);
+      _currentBuild.GetComponent<Renderer>().material.color = Color.white;
       _currentBuild = null;
      
     } // PlaceBuilding()
@@ -102,6 +103,7 @@ namespace Assets.Scripts.Managers
       //_currentBuild = ((GameObject)Instantiate(_buildingsTemplates[index])).transform;
 
       _currentBuild = ((GameObject)Instantiate(prefab)).transform;
+      _currentBuild.GetComponent<Renderer>().material.color = Color.grey;
     } // Create()
 
 
