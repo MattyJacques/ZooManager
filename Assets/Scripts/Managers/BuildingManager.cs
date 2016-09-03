@@ -39,9 +39,15 @@ namespace Assets.Scripts.Managers
         {
           PlaceBuilding();
         }
+        else if (Input.GetMouseButtonDown(1))
+        {
+          DeleteCurrBuild();
+        }
       }
     } // Update()
 
+
+    
 
     private void PlaceBuilding()
     { // Place the building in the world, add to buildings list
@@ -51,6 +57,15 @@ namespace Assets.Scripts.Managers
       _currentBuild = null;
      
     } // PlaceBuilding()
+
+
+    private void DeleteCurrBuild()
+    { // Delete that current building that has been instantiated
+
+      Destroy(_currentBuild.gameObject);
+      _currentBuild = null;
+
+    } // DeleteCurrBuild()
 
 
     private void UpdateMouseBuild()
