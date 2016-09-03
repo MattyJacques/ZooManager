@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Assets.Scripts.Buildings;
+using System;
 
 namespace Assets.Scripts.Managers
 {
@@ -33,8 +34,23 @@ namespace Assets.Scripts.Managers
       if (_currentBuild)
       {
         UpdateMouseBuild();
+
+        if (Input.GetMouseButtonDown(0))
+        {
+          PlaceBuilding();
+        }
       }
     } // Update()
+
+
+    private void PlaceBuilding()
+    { // Place the building in the world, add to buildings list
+      // stop mouse position updating building position
+
+      _buildings.Add(_currentBuild.gameObject);
+      _currentBuild = null;
+     
+    } // PlaceBuilding()
 
 
     private void UpdateMouseBuild()
@@ -77,16 +93,16 @@ namespace Assets.Scripts.Managers
         if (mode == CreateMode.ID)
         { // If mode is ID, check for matching ID
 
-          //if (_buildings.id == id)
-          //{ // Check for matching ID, if found set index and break out of loop
-          //  templateIndex = i;
-          //  break;
-          //}
+          if (_buildingTemplates.buildingTemplates[i].id == id)
+          { // Check for matching ID, if found set index and break out of loop
+            templateIndex = i;
+            break;
+          }
         }
         else if (mode == CreateMode.NAME)
         { // If mode is name, check for matching name
 
-          if (_buildings[i].name == name)
+          if (_buildingTemplates.buildingTemplates[i].name == name)
           { // Check for matching name, if found set index and break out of loop
             templateIndex = i;
             break;
