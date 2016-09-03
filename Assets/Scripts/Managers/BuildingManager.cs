@@ -15,35 +15,45 @@ namespace Assets.Scripts.Managers
   public class BuildingManager : MonoBehaviour
   {
 
-    // Which mode to find the animal template with
+    // Which mode to find the building template with
     enum CreateMode { ID, NAME };
 
+    // Lists
+    // Collection of building templates
     private BuildingTemplateCollection _buildingTemplates;
-    private List<GameObject> _buildings;
-    private Transform _currentBuild;
+    private List<GameObject> _buildings;    // List of current active buildings
+
+    // Objects
+    private Transform _currentBuild;        // Current building to be placed
     public GameObject prefab;
 
     void Start()
-    {
+    { // Load the buildings from Resources
+
       LoadBuildings();
+
     } // Start()
 
     
     void Update()
-    {
+    { // Check if building is currently following mouse position
+
       if (_currentBuild)
-      {
+      { // If there is currently a building being placed, update position
+        // and check for mouse input
+
         UpdateMouseBuild();
 
         if (Input.GetMouseButtonDown(0))
-        {
+        { // If left click, place the building
           PlaceBuilding();
         }
         else if (Input.GetMouseButtonDown(1))
-        {
+        { // If right click, cancel build
           DeleteCurrBuild();
         }
       }
+
     } // Update()
 
 
@@ -70,34 +80,18 @@ namespace Assets.Scripts.Managers
     { // Update the position of the building object that is following the
       // mouse position to the new mouse position
 
+      // Create raycast from screen point using mouse position
       Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
       RaycastHit hit;
 
       if (Physics.Raycast(ray, out hit))
-      {
+      { // If raycast hits collider, update position of _currentBuild
+
         Vector3 newPos = new Vector3(hit.point.x, 0, hit.point.z);
         _currentBuild.position = newPos;
-
       }
 
     } // UpdateMouseBuilding()
-
-
-    //private void UpdateMouseBuild()
-    //{ // Update the position of the building object that is following the
-    //  // mouse position to the new mouse position
-
-    //  // Get the current mouse position, using camera y
-    //  Vector3 mousePos = Input.mousePosition;
-    //  mousePos = new Vector3(mousePos.x, mousePos.y, Camera.main.transform.position.y);
-
-    //  // Get the world point that the mouse is currently at
-    //  Vector3 buildPos = Camera.main.ScreenToWorldPoint(mousePos);
-
-    //  // Update transform to new mouse position
-    //  _currentBuild.position = new Vector3(buildPos.x, 0, buildPos.z);
-
-    //} // UpdateMouseBuilding()
 
 
     public void Create(string buildName)
