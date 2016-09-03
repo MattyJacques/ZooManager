@@ -226,7 +226,7 @@ namespace Assets.Scripts.ThirdParty.Twitter
 		public static IEnumerator GetTimeline(string text, string consumerKey, string consumerSecret, AccessTokenResponse response, Text tweet1, Text tweet2, Text tweet3, Text tweet4)
 		{
       string username = "WhiteLemurGames"; // twitter username
-      int count = 4; // number of tweets to fetch
+      int count = 5; // number of tweets to fetch
 		  bool trimUser = true; // should full user info be stripped out?
 		  bool excludeReplies = true; // should replies be stripped out?
 		  bool includeRts = true; // should retweets be included?
@@ -261,19 +261,20 @@ namespace Assets.Scripts.ThirdParty.Twitter
       foreach (var tweet in timeline.Tweets)
       {
         Debug.Log(tweet.text);
-				if (tweetnum == 0) {
+				tweetnum++;
+				if (tweetnum == 1) {
 				tweet1.text = tweet.text;
 				}
-				if (tweetnum == 1) {
+				if (tweetnum == 2) {
 					tweet2.text = tweet.text;
 				}
-				if (tweetnum == 2) {
+				if (tweetnum == 3) {
 					tweet3.text = tweet.text;
 				}
-				if (tweetnum == 3) {
+				if (tweetnum == 4) {
 					tweet4.text = tweet.text;
 				}
-				tweetnum++;
+				Debug.Log (tweetnum);
 			}
 		}
 
