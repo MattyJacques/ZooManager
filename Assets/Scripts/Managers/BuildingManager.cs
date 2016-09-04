@@ -27,6 +27,8 @@ namespace Assets.Scripts.Managers
     private Transform _currentBuild;        // Current building to be placed
     public GameObject prefab;
 
+    private float _currBuildY;              // Current building Y placement
+
     void Start()
     { // Load the buildings from Resources
 
@@ -62,7 +64,6 @@ namespace Assets.Scripts.Managers
       // stop mouse position updating building position
 
       _buildings.Add(_currentBuild.gameObject);
-      _currentBuild.GetComponent<Renderer>().material.color = Color.white;
       _currentBuild = null;
      
     } // PlaceBuilding()
@@ -88,22 +89,29 @@ namespace Assets.Scripts.Managers
       if (Physics.Raycast(ray, out hit))
       { // If raycast hits collider, update position of _currentBuild
 
-        Vector3 newPos = new Vector3(hit.point.x, 0, hit.point.z);
+        Vector3 newPos = new Vector3(hit.point.x, _currBuildY, hit.point.z);
         _currentBuild.position = newPos;
       }
 
     } // UpdateMouseBuilding()
 
 
+    private void CalcCurrentY()
+    { // Calculate the the Y coordinate for the current building selection
+      // to be placed 
+
+      _currBuildY = _currentBuild.GetComponent<Collider>().bounds.size.y / 2;
+
+    } // CalcCurrentY()
+
+
     public void Create(string buildName)
     { // Get the index of the building with the name provided, then set the
       // current building to the building found
 
-      //int index = GetBuildingIndex(0, buildName, CreateMode.NAME);
-      //_currentBuild = ((GameObject)Instantiate(_buildingsTemplates[index])).transform;
-
-      _currentBuild = ((GameObject)Instantiate(prefab)).transform;
-      _currentBuild.GetComponent<Renderer>().material.color = Color.grey;
+      buildName = "Buildings/Prefabs/" + buildName;
+      _currentBuild = ((GameObject)Instantiate(Resources.Load(buildName))).transform;
+      CalcCurrentY();
     } // Create()
 
 
