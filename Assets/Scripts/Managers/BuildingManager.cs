@@ -112,6 +112,7 @@ namespace Assets.Scripts.Managers
       buildName = "Buildings/Prefabs/" + buildName;
       _currentBuild = ((GameObject)Instantiate(Resources.Load(buildName))).transform;
       CalcCurrentY();
+
     } // Create()
 
 
