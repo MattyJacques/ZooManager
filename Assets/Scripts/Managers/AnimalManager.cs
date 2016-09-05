@@ -36,7 +36,8 @@ namespace Assets.Scripts.Managers
 			
 	void Update()
 	{
-			foreach (AnimalBase animal in _animals) {
+			foreach (AnimalBase animal in _animals) 
+			{
 				animal.CheckedNeeds ();
 			}
 	}

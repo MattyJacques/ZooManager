@@ -74,22 +74,22 @@ namespace Assets.Scripts.Animals
     }
 	public virtual void CheckedNeeds() 
 	{
-			if (Health < 50) 
-			{
-				Debug.Log ("feeling sick!");
-			}
-			if (Hunger < 50) 
-			{
-				Debug.Log ("feeling hungry!");
-			}
-			if (Thirst < 50) 
-			{
-				Debug.Log ("feeling thirsty!");
-			}
-			if (Boredom < 50) 
-			{
-				Debug.Log ("feeling bored!");
-			}
+		if (Health < 50) 
+		{
+			Debug.Log ("feeling sick!");
+		}
+		if (Hunger < 50) 
+		{
+			Debug.Log ("feeling hungry!");
+		}
+		if (Thirst < 50) 
+		{
+			Debug.Log ("feeling thirsty!");
+		}
+		if (Boredom < 50) 
+		{
+			Debug.Log ("feeling bored!");
+		}
 	}
   }
 }
