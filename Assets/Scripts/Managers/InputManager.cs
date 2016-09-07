@@ -13,6 +13,10 @@ namespace Assets.Scripts.Managers
   {
 		// Objects
 		public Terrain terrain;
+		Vector2 mouse;
+		int w = 32;
+		int h = 32;
+		public Texture2D cursor;
 
     // Defines
     private const string HORIZONTAL = "Horizontal";
@@ -33,8 +37,10 @@ namespace Assets.Scripts.Managers
     private const int SCROLLBORDERLIMIT = 15; // How close to border for scroll
         
     private void Start()
-    { // Set the terrain object for camera bounds
+    { 
+			Cursor.visible = false;
 
+			// Set the terrain object for camera bounds
 		  if (terrain == null)
       {
 			  terrain = GameObject.FindObjectOfType<Terrain> ();
@@ -51,6 +57,7 @@ namespace Assets.Scripts.Managers
       // Get mouse position
       float mouseX = Input.mousePosition.x;
       float mouseY = Input.mousePosition.y;
+
 
       Vector3 movement = Vector3.zero;
 
@@ -88,10 +95,18 @@ namespace Assets.Scripts.Managers
 			  Cursor.lockState = CursorLockMode.Locked;
 			  Rotate (Input.GetAxis ("Mouse X"), Input.GetAxis ("Mouse Y"));
 		  } else {
-			  Cursor.lockState = CursorLockMode.Confined;
+			  Cursor.lockState = CursorLockMode.None;
+				mouse = new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y);
+				Cursor.visible = false;
+				//Input.mousePosition = new Vector2 (mouseX, mouseY);
 		  }
 
     } // Update()
+
+	void  OnGUI ()
+	{
+		GUI.DrawTexture(new Rect(mouse.x - (w / 2), mouse.y - (h / 2), w, h), cursor);
+	}
 
 
     private void Move(Vector3 movement)
