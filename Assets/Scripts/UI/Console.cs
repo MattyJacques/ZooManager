@@ -1,8 +1,8 @@
 ﻿// Title        : GameClock.cs
 // Purpose      : Open console with ` or '. 
 //                Submit with "enter" or "return".
-//				  Use the console to spawn items in the "Resources" directory.
-//				  spawn <Id/Name/Tag> <Amount> <Position> <Other>
+//				        Use the console to spawn items in the "Resources" directory.
+//				        spawn <Id/Name/Tag> <Amount> <Position> <Other>
 // Author       : Dan Budworth-Mead
 // Date         : 21/08/2016
 
@@ -23,6 +23,7 @@ namespace Assets.Scripts.UI
     private string _inputString = "";
 
     private GameObject _player;
+    private Component _buildMgr;
 
     private bool _consoleEnabled;
 
@@ -43,6 +44,7 @@ namespace Assets.Scripts.UI
     {
       //Find gameobjects etc.
       _player = GameObject.FindWithTag("Player");
+      _buildMgr = GetComponent("BuildingManager");
 
       //Filling SPAWN_ITEMS
       DirectoryInfo directoryInfo = new DirectoryInfo("Assets/Resources");
@@ -110,6 +112,15 @@ namespace Assets.Scripts.UI
         #region Create
 
         case create:
+          //FORMAT: create buildingname
+          if (inputParamsLength == 2)
+          {
+            Debug.Log("Create Command");
+            string type = inputParams[1];
+            _buildMgr.GetComponent<Assets.Scripts.Managers.BuildingManager>().Create(type);
+            
+            
+          }
           break;
 
         #endregion
@@ -118,7 +129,6 @@ namespace Assets.Scripts.UI
         #region Spawn
 
         case spawn:
-          Debug.Log("Spawn Command");
           
           //FORMAT: spawn <type> <amount> <location> <additional params>
           if (inputParamsLength > 1)
