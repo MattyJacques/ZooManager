@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class AnimalThirst : MonoBehaviour {
+public class AnimalThirst {
 	public float thirst;
 	public Text perc;
 	public Thirst needsWater;
@@ -12,12 +12,17 @@ public class AnimalThirst : MonoBehaviour {
 	void Start () 
 	{
 		thirst = 100;
-		StartCoroutine (IncreaseThirst ());
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
+		if (thirst > 0) 
+		{
+			thirst--;
+		}
+		Debug.Log (thirst);
+
 		perc.text = thirst.ToString ();
 		if (thirst <= 50)
 		{
@@ -42,7 +47,7 @@ public class AnimalThirst : MonoBehaviour {
 		thirst = 100;
 	}
 
-	public IEnumerator IncreaseThirst() 
+	/*public IEnumerator IncreaseThirst() 
 	{
 		yield return new WaitForSeconds(0.1f);
 		if (thirst > 0) 
@@ -51,7 +56,7 @@ public class AnimalThirst : MonoBehaviour {
 		}
 		Debug.Log (thirst);
 		StartCoroutine (IncreaseThirst ());
-	}
+	} */
 }
 
 public enum Thirst 
