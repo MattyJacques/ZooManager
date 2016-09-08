@@ -14,9 +14,10 @@ namespace Assets.Scripts.Managers
 		// Objects
 		public Terrain terrain;
 		Vector2 mouse;
-		int w = 32;
-		int h = 32;
+		int w = 16;
+		int h = 16;
 		public Texture2D cursor;
+		public Texture2D cursor2;
 
     // Defines
     private const string HORIZONTAL = "Horizontal";
@@ -94,11 +95,13 @@ namespace Assets.Scripts.Managers
       { // Lock cursor whilst rotating camera
 			  Cursor.lockState = CursorLockMode.Locked;
 			  Rotate (Input.GetAxis ("Mouse X"), Input.GetAxis ("Mouse Y"));
+				cursor = null;
 		  } else {
 			  Cursor.lockState = CursorLockMode.None;
 				mouse = new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y);
 				Cursor.visible = false;
 				//Input.mousePosition = new Vector2 (mouseX, mouseY);
+				cursor = cursor2;
 		  }
 
     } // Update()
