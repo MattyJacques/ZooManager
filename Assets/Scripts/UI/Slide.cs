@@ -64,7 +64,7 @@ namespace Assets.Scripts.UI
 
           //print(twitter.GetComponent<RectTransform>().anchoredPosition.y);
 
-          twitter.GetComponent<RectTransform>().anchoredPosition += new Vector2(0, -4.5f);
+          twitter.GetComponent<RectTransform>().anchoredPosition += new Vector2(0, -5f);
         }
         if (twitter.GetComponent<RectTransform>().sizeDelta.y != 830)
         {
