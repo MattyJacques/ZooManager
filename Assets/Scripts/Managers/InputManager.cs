@@ -16,8 +16,8 @@ namespace Assets.Scripts.Managers
 		Vector2 mouse;
 		int w = 16;
 		int h = 16;
-		public Texture2D cursor;
-		public Texture2D cursor2;
+		Texture2D cursor;
+		Texture2D cursor2;
 
     // Defines
     private const string HORIZONTAL = "Horizontal";
@@ -40,7 +40,8 @@ namespace Assets.Scripts.Managers
     private void Start()
     { 
 			Cursor.visible = false;
-
+			cursor =  (Texture2D) Resources.Load("Cursors/Cursors/normal-cursor");
+			cursor2 = (Texture2D) Resources.Load("Cursors/Cursors/normal-cursor");
 			// Set the terrain object for camera bounds
 		  if (terrain == null)
       {
