@@ -40,8 +40,8 @@ namespace Assets.Scripts.Managers
     private void Start()
     { 
 			Cursor.visible = false;
-			cursor =  (Texture2D) Resources.Load("Cursors/Cursors/normal-cursor");
-			cursor2 = (Texture2D) Resources.Load("Cursors/Cursors/normal-cursor");
+			cursor =  (Texture2D) Resources.Load("Cursors/Cursors/Normal-Cursor");
+			cursor2 = (Texture2D) Resources.Load("Cursors/Cursors/Normal-Cursor");
 			// Set the terrain object for camera bounds
 		  if (terrain == null)
       {
@@ -90,9 +90,13 @@ namespace Assets.Scripts.Managers
       {
         Move(movement);
       }
-
+			//change cursor sprite if pressed
+			if (Input.GetMouseButton (0)) {
+				cursor =  (Texture2D) Resources.Load("Cursors/Cursors/Active-Normal-Cursor");
+				cursor2 = (Texture2D) Resources.Load("Cursors/Cursors/Active-Normal-Cursor");
+			}
       // Check for rotation
-		  if (Input.GetMouseButton (1))
+        if (Input.GetMouseButton (1))
       { // Lock cursor whilst rotating camera
 			  Cursor.lockState = CursorLockMode.Locked;
 			  Rotate (Input.GetAxis ("Mouse X"), Input.GetAxis ("Mouse Y"));
@@ -102,8 +106,12 @@ namespace Assets.Scripts.Managers
 				mouse = new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y);
 				Cursor.visible = false;
 				//Input.mousePosition = new Vector2 (mouseX, mouseY);
-				cursor = cursor2;
 		  }
+			//if no mouse buttons pressed reset cursor sprite to normal
+			if (!Input.GetMouseButton (0) && !Input.GetMouseButton (1)) {
+				cursor = (Texture2D)Resources.Load ("Cursors/Cursors/Normal-Cursor");
+				cursor2 = (Texture2D)Resources.Load ("Cursors/Cursors/Normal-Cursor");
+			}
 
     } // Update()
 
