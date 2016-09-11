@@ -4,6 +4,7 @@
 // Date         : 03/09/2016
 
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -24,14 +25,21 @@ namespace Assets.Scripts.Managers
     private List<GameObject> _buildings;    // List of current active buildings
 
     // Objects
-    private Transform _currentBuild;        // Current building to be placed
+    public Transform _currentBuild;        // Current building to be placed
     public GameObject prefab;
 
     private float _currBuildY;              // Current building Y placement
+    
+    private Rect _rotateLeftRect;           //Rect for the rotate left button. Used to prevent over clicking.
+    private Rect _rotateRightRect;          //Rect for the rotate right button. Used to prevent over clicking.
 
     void Start()
     { // Load the buildings from Resources
-
+      //_rotateLeftRect = new Rect(20,615,100,20);
+      //627H // 880W
+      _rotateLeftRect = new Rect((Screen.width/44),Screen.height - (Screen.height/11),(Screen.width / 8.8f),(Screen.height / 31.35f));
+      _rotateRightRect = new Rect((Screen.width/4.4f),Screen.height - (Screen.height/11),(Screen.width / 8.8f),(Screen.height / 31.35f));
+      //_rotateRightRect = new Rect(200,580,100,20);
       LoadBuildings();
 
     } // Start()
@@ -48,13 +56,28 @@ namespace Assets.Scripts.Managers
 
         if (Input.GetMouseButtonDown(0))
         { // If left click, place the building
-          PlaceBuilding();
+          if (!_rotateLeftRect.Contains(new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y)) &&
+          !_rotateRightRect.Contains(new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y)))
+          {
+            PlaceBuilding();
+          }
         }
         else if (Input.GetMouseButtonDown(1))
         { // If right click, cancel build
           DeleteCurrBuild();
         }
+        else if (Input.GetKeyDown(KeyCode.L))
+        {
+          Vector3 newRotation = new Vector3(0,-45,0);
+          _currentBuild.Rotate(newRotation);
+        }
+        else if (Input.GetKeyDown(KeyCode.R))
+        {
+          Vector3 newRotation = new Vector3(0,45,0);
+          _currentBuild.Rotate(newRotation);
+        }
       }
+      
 
     } // Update()
 
@@ -174,6 +197,24 @@ namespace Assets.Scripts.Managers
       }
 
     } // LoadBuildings()
+    
+    private void OnGUI()
+    { // Display buttons for rotation 
+      if (_currentBuild != null)
+      {
+        if(GUI.Button(_rotateLeftRect, "[L]Rotate Leaft"))
+        {
+          Vector3 newRotation = new Vector3(0,-45,0);
+          _currentBuild.Rotate(newRotation);
+        }
+        
+        if(GUI.Button(_rotateRightRect, "[R]Rotate Reight"))
+        {
+          Vector3 newRotation = new Vector3(0,45,0);
+          _currentBuild.Rotate(newRotation);
+        }
+      }
+    } // OnGUI()
 
   } // BuildingManager
 }

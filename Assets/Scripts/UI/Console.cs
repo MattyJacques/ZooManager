@@ -25,7 +25,8 @@ namespace Assets.Scripts.UI
     private GameObject _player;
     private Component _buildMgr;
 
-    private bool _consoleEnabled;
+    private bool _consoleEnabled = true;
+    private bool _swapConsoleFunction;
 
     //List of spawnable items
     private List<string> _spawnItems = new List<string>();
@@ -66,8 +67,6 @@ namespace Assets.Scripts.UI
         }
       }
       if (PRINT_LOADING_PREFABS) Debug.Log("End loading prefabs");
-
-      _consoleEnabled = false;
     }
 
     private void OnPointerDownDelegate(PointerEventData data)
@@ -79,16 +78,23 @@ namespace Assets.Scripts.UI
     {
       if (Input.GetKeyDown(KeyCode.BackQuote))
       {
-        _consoleEnabled = !_consoleEnabled;
+        _swapConsoleFunction = !_swapConsoleFunction;
       }
 
-      if (_consoleEnabled && Input.GetMouseButtonDown(0) &&
+      if (!_consoleEnabled)
+      {
+        if (_buildMgr.GetComponent<Assets.Scripts.Managers.BuildingManager>()._currentBuild == null)
+        {
+          _consoleEnabled = true;
+        }
+      }
+      else if (_swapConsoleFunction && _consoleEnabled && Input.GetMouseButtonDown(0) &&
           !_consoleRect.Contains(new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y)))
       {
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Physics.Raycast(ray, out hit);
-        _inputString += hit.collider.GetInstanceID();
+        _inputString += "ID: " + hit.collider.GetInstanceID();
       }
     }
 
@@ -118,7 +124,6 @@ namespace Assets.Scripts.UI
             Debug.Log("Create Command");
             string type = inputParams[1];
             _buildMgr.GetComponent<Assets.Scripts.Managers.BuildingManager>().Create(type);
-            
             
           }
           break;
@@ -263,16 +268,20 @@ namespace Assets.Scripts.UI
       Vector2 consoleSize = _consoleRect.size;
       consoleSize.x = xSize;
       _consoleRect.size = consoleSize;
-      _inputString = GUI.TextField(new Rect(10, 10, consoleSize.x, 20), _inputString);
-      if (Event.current.keyCode == KeyCode.Return && _inputString != "")
+      if (_consoleEnabled)
       {
-        Submit(_inputString);
-        ClearConsole();
-      }
+        _inputString = GUI.TextField(new Rect(10, 10, consoleSize.x, 20), _inputString);
+        if (Event.current.keyCode == KeyCode.Return && _inputString != "")
+        {
+          Submit(_inputString);
+          ClearConsole();
+          _consoleEnabled = false;
+        }
 
-      for (int i = 0; i < _commands.Count; i++)
-      {
-        GUI.Label(new Rect(10, i*14 + 32, Screen.width, 20), _commands[_commands.Count - i - 1]);
+        for (int i = 0; i < _commands.Count; i++)
+        {
+          GUI.Label(new Rect(10, i*14 + 32, Screen.width, 20), _commands[_commands.Count - i - 1]);
+        }
       }
     } // OnGUI()
 
