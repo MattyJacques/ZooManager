@@ -1,12 +1,7 @@
-﻿// Title        : BuildingManager.cs
-// Purpose      : Initiates templates, manages instances of animals
-// Author       : Matthew Jacques
-// Date         : 03/09/2016
-
-//Last Edit
-//Update Purpose: Updated the building placement procedure.
-//Author        : Jacob Miller
-//Date          : 09/11/2016
+﻿// Title        : PaveManager.cs
+// Purpose      : Initiates templates, manages instances of pavement
+// Author       : Jacob Miller
+// Date         : 09/11/2016
 
 using UnityEngine;
 using System.Collections;
@@ -17,19 +12,20 @@ using System;
 
 namespace Assets.Scripts.Managers
 {
-  public class BuildingManager : MonoBehaviour
+  public class PaveManager : MonoBehaviour
   {
     enum CreateMode { ID, NAME };           // Which mode to find the building template with
 
     // Lists
     // Collection of building templates
-    private BuildingTemplateCollection _buildingTemplates;
-    private List<GameObject> _buildings;    // List of current active buildings
+    private PavementTemplateCollection _pavementTemplates;
+    private List<GameObject> _pavements;    // List of current active paveings
 
     // Objects
-    public Transform _currentBuild;         // Current building to be placed
+    public GameObject _pole;
+    public Transform _currentPavement;         // Current paveing to be placed
 
-    private float _currBuildY;              // Current building Y placement
+    private float _currentPaveY;              // Current paveing Y placement
     
     private Rect _rotateLeftRect;           //Rect for the rotate left button. Used to prevent over clicking.
     private Rect _rotateRightRect;          //Rect for the rotate right button. Used to prevent over clicking.
@@ -39,13 +35,16 @@ namespace Assets.Scripts.Managers
     
     public Terrain terrain;                 //Allows the script to find the highest y point to place the building
 
+    public float _fakeMoney = 100.0f;
+    private string _paveType;
+      
     void Start()
     { // Load the buildings from Resources
       //627H & 880W //Test values to make sure that unity properlly streches the buttons to the right size.
       _rotateLeftRect = new Rect((Screen.width/44),Screen.height - (Screen.height/11),(Screen.width / 8.8f),(Screen.height / 31.35f));
       _rotateRightRect = new Rect((Screen.width/4.4f),Screen.height - (Screen.height/11),(Screen.width / 8.8f),(Screen.height / 31.35f));
       
-      LoadBuildings();
+      LoadPave();
 
     } // Start()
 
@@ -53,7 +52,7 @@ namespace Assets.Scripts.Managers
     void Update()
     { // Check if building is currently following mouse position
 
-      if (_currentBuild)
+      if (_currentPavement)
       { // If there is currently a building being placed, update position
         // and check for mouse input
 
@@ -74,12 +73,12 @@ namespace Assets.Scripts.Managers
         else if (Input.GetKeyDown(KeyCode.L))
         {
           Vector3 newRotation = new Vector3(0,-45,0);
-          _currentBuild.Rotate(newRotation);
+          _currentPavement.Rotate(newRotation);
         }
         else if (Input.GetKeyDown(KeyCode.R))
         {
           Vector3 newRotation = new Vector3(0,45,0);
-          _currentBuild.Rotate(newRotation);
+          _currentPavement.Rotate(newRotation);
         }
       }
       
@@ -91,8 +90,14 @@ namespace Assets.Scripts.Managers
     { // Place the building in the world, add to buildings list
       // stop mouse position updating building position
 
-      _buildings.Add(_currentBuild.gameObject);
-      _currentBuild = null;
+      _pavements.Add(_currentPavement.gameObject);
+      _currentPavement = null;
+      if (_fakeMoney >= 5.0f)
+      {
+        Pave(_paveType);
+        _fakeMoney -= 5;
+      }
+        
      
     } // PlaceBuilding()
 
@@ -100,8 +105,8 @@ namespace Assets.Scripts.Managers
     private void DeleteCurrBuild()
     { // Delete that current building that has been instantiated
 
-      Destroy(_currentBuild.gameObject);
-      _currentBuild = null;
+      Destroy(_currentPavement.gameObject);
+      _currentPavement = null;
 
     } // DeleteCurrBuild()
 
@@ -115,26 +120,27 @@ namespace Assets.Scripts.Managers
       RaycastHit hit;
 
       if (Physics.Raycast(ray, out hit))
-      { // If raycast hits collider, update position of _currentBuild
+      { // If raycast hits collider, update position of _currentPavement
 
-        Vector3 newPos = new Vector3(hit.point.x, _currBuildY, hit.point.z);
+        Vector3 newPos = new Vector3(hit.point.x, _currentPaveY, hit.point.z);
         
-        //Resets _currBuildY = a usable variable
-        _currBuildY = 1;
+        //Resets _currentPaveY = a usable variable
+        _currentPaveY = 1;
         //Gets the highest usable y point on the terrain.
         newPos.y = terrain.SampleHeight(newPos);
         
-        _currentBuild.position = newPos;
+        _currentPavement.position = newPos;
       }
 
     } // UpdateMouseBuilding()
 
-    public void Create(string buildName)
+    public void Pave(string buildName)
     { // Get the index of the building with the name provided, then set the
       // current building to the building found
 
-      buildName = "Buildings/Prefabs/" + buildName;
-      _currentBuild = ((GameObject)Instantiate(Resources.Load(buildName))).transform;
+      _paveType = buildName;
+      buildName = "Pavings/Prefabs/" + buildName;
+      _currentPavement = ((GameObject)Instantiate(Resources.Load(buildName))).transform;
 
     } // Create()
 
@@ -144,13 +150,13 @@ namespace Assets.Scripts.Managers
 
       int templateIndex = -1;              // Holds the template index found
 
-      for (int i = 0; i < _buildings.Count; i++)
+      for (int i = 0; i < _pavements.Count; i++)
       { // Check if there is a match for every template in the array
 
         if (mode == CreateMode.ID)
         { // If mode is ID, check for matching ID
 
-          if (_buildingTemplates.buildingTemplates[i].id == id)
+          if (_pavementTemplates.pavementTemplates[i].id == id)
           { // Check for matching ID, if found set index and break out of loop
             templateIndex = i;
             break;
@@ -159,7 +165,7 @@ namespace Assets.Scripts.Managers
         else if (mode == CreateMode.NAME)
         { // If mode is name, check for matching name
 
-          if (_buildingTemplates.buildingTemplates[i].name == name)
+          if (_pavementTemplates.pavementTemplates[i].name == name)
           { // Check for matching name, if found set index and break out of loop
             templateIndex = i;
             break;
@@ -172,13 +178,13 @@ namespace Assets.Scripts.Managers
     } // GetTemplateIndex()
 
 
-    private void LoadBuildings()
+    private void LoadPave()
     { // Load buildings from Assets/Resources
 
-      DirectoryInfo directoryInfo = new DirectoryInfo("Assets/Resources/Buildings");
+      DirectoryInfo directoryInfo = new DirectoryInfo("Assets/Resources/Pavings");
       DirectoryInfo[] subDirectories = directoryInfo.GetDirectories();
 
-      _buildings = new List<GameObject>();
+      _pavements = new List<GameObject>();
       
       foreach (DirectoryInfo dir in subDirectories)
       {
@@ -188,7 +194,7 @@ namespace Assets.Scripts.Managers
         {
           if (file.Name.EndsWith("prefab"))
           {
-            _buildings.Add((GameObject)Resources.Load(dir.Name + "/" + file.Name));
+            _pavements.Add((GameObject)Resources.Load(dir.Name + "/" + file.Name));
             Debug.Log("Loaded " + dir.Name + "/" + file.Name);
           }
         }
@@ -199,14 +205,14 @@ namespace Assets.Scripts.Managers
     
     private void OnGUI()
     { // Display buttons for rotation 
-      if (_currentBuild != null)
+      if (_currentPavement != null)
       {
         //Remove this next line to remove all trace of text
         GUI.Label(new Rect(_rotateLeftRect.x + (Screen.width/58),_rotateLeftRect.y - (Screen.height/31.35f),_rotateLeftRect.width,_rotateLeftRect.height), "Rotate Left");
         if(GUI.Button(_rotateLeftRect, _leftArrow))
         {
           Vector3 newRotation = new Vector3(0,-45,0);
-          _currentBuild.Rotate(newRotation);
+          _currentPavement.Rotate(newRotation);
         }
         
         //Remove this next line to remove all trace of text
@@ -214,7 +220,7 @@ namespace Assets.Scripts.Managers
         if(GUI.Button(_rotateRightRect, _rightArrow))
         {
           Vector3 newRotation = new Vector3(0,45,0);
-          _currentBuild.Rotate(newRotation);
+          _currentPavement.Rotate(newRotation);
         }
       }
     } // OnGUI()

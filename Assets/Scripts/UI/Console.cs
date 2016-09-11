@@ -29,6 +29,7 @@ namespace Assets.Scripts.UI
 
     private GameObject _player;
     private Component _buildMgr;
+    private Component _paveMgr;
 
     private bool _consoleEnabled = true;    // Whether the console is shown and active
     private bool _swapConsoleFunction;      // Switch between entering data and finding IDs
@@ -52,6 +53,7 @@ namespace Assets.Scripts.UI
       //Find gameobjects etc.
       _player = GameObject.FindWithTag("Player");
       _buildMgr = GetComponent("BuildingManager");
+      _paveMgr = GetComponent("PaveManager");
 
       //Filling SPAWN_ITEMS
       DirectoryInfo directoryInfo = new DirectoryInfo("Assets/Resources");
@@ -114,6 +116,7 @@ namespace Assets.Scripts.UI
       const string clear = "clear";
       const string destroy = "destroy";
       const string create = "create";
+      const string pave = "pave";
 
       string[] inputParams = submitString.Split(' ');
       int inputParamsLength = inputParams.Length;
@@ -121,6 +124,20 @@ namespace Assets.Scripts.UI
 
       switch (keyword)
       {
+        #region Pave
+        
+        case pave:
+          //FORMAT: pave type
+          if (inputParamsLength == 2)
+          {
+            Debug.Log("Pave Command");
+            string type = inputParams[1];
+            _paveMgr.GetComponent<Assets.Scripts.Managers.PaveManager>().Pave(type);
+          }
+          break;
+        
+        #endregion
+        
         #region Create
 
         case create:
