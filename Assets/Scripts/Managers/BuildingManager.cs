@@ -3,8 +3,12 @@
 // Author       : Matthew Jacques
 // Date         : 03/09/2016
 
+//Last Edit
+//Update        : Added in rotation and buttons.
+//Author        : Jacob Miller
+//Date          : 09/10/2016
+
 using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -35,11 +39,10 @@ namespace Assets.Scripts.Managers
 
     void Start()
     { // Load the buildings from Resources
-      //_rotateLeftRect = new Rect(20,615,100,20);
-      //627H // 880W
+      //627H & 880W //Test values to make sure that unity properlly streches the buttons to the right size.
       _rotateLeftRect = new Rect((Screen.width/44),Screen.height - (Screen.height/11),(Screen.width / 8.8f),(Screen.height / 31.35f));
       _rotateRightRect = new Rect((Screen.width/4.4f),Screen.height - (Screen.height/11),(Screen.width / 8.8f),(Screen.height / 31.35f));
-      //_rotateRightRect = new Rect(200,580,100,20);
+      
       LoadBuildings();
 
     } // Start()
@@ -202,13 +205,13 @@ namespace Assets.Scripts.Managers
     { // Display buttons for rotation 
       if (_currentBuild != null)
       {
-        if(GUI.Button(_rotateLeftRect, "[L]Rotate Leaft"))
+        if(GUI.Button(_rotateLeftRect, "Rotate [L]eft"))
         {
           Vector3 newRotation = new Vector3(0,-45,0);
           _currentBuild.Rotate(newRotation);
         }
         
-        if(GUI.Button(_rotateRightRect, "[R]Rotate Reight"))
+        if(GUI.Button(_rotateRightRect, "Rotate [R]ight"))
         {
           Vector3 newRotation = new Vector3(0,45,0);
           _currentBuild.Rotate(newRotation);
