@@ -109,9 +109,15 @@ namespace Assets.Scripts.Managers
     { // Get the index of the building with the name provided, then set the
       // current building to the building found
 
+      // Build path then load the object
       buildName = "Buildings/Prefabs/" + buildName;
-      _currentBuild = ((GameObject)Instantiate(Resources.Load(buildName))).transform;
-      CalcCurrentY();
+      UnityEngine.Object loadedObject = Resources.Load(buildName);
+
+      if (loadedObject)
+      { // If the object has been loaded, instantiate and store transform
+        _currentBuild = ((GameObject)Instantiate(loadedObject)).transform;
+        CalcCurrentY();
+      }
 
     } // Create()
 
