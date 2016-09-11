@@ -20,7 +20,8 @@ public class SaveSystem
 
 	public static void Load() 
 	{
-		if(File.Exists(Application.persistentDataPath + "/savedGames.gd")) {
+		if(File.Exists(Application.persistentDataPath + "/savedGames.gd"))
+        {
 			BinaryFormatter bf = new BinaryFormatter();
 			FileStream file = File.Open(Application.persistentDataPath + "/savedGames.gd", FileMode.Open);
 			SaveSystem.savedGames = (List<GameData>)bf.Deserialize(file);
