@@ -19,9 +19,7 @@ namespace Assets.Scripts.Managers
 {
   public class BuildingManager : MonoBehaviour
   {
-
-    // Which mode to find the building template with
-    enum CreateMode { ID, NAME };
+    enum CreateMode { ID, NAME };           // Which mode to find the building template with
 
     // Lists
     // Collection of building templates
@@ -30,15 +28,14 @@ namespace Assets.Scripts.Managers
 
     // Objects
     public Transform _currentBuild;         // Current building to be placed
-    public GameObject prefab;
 
     private float _currBuildY;              // Current building Y placement
     
     private Rect _rotateLeftRect;           //Rect for the rotate left button. Used to prevent over clicking.
     private Rect _rotateRightRect;          //Rect for the rotate right button. Used to prevent over clicking.
     
-    public Texture2D leftArrow;             //Images for buttons
-    public Texture2D rightArrow;            //Images for buttons
+    public Texture2D _leftArrow;             //Images for buttons
+    public Texture2D _rightArrow;            //Images for buttons
 
     void Start()
     { // Load the buildings from Resources
@@ -126,7 +123,7 @@ namespace Assets.Scripts.Managers
 
 
     private void CalcCurrentY()
-    { // Calculate the the Y coordinate for the current building selection
+    { // Calculate the Y coordinate for the current building selection
       // to be placed 
 
       _currBuildY = _currentBuild.GetComponent<Collider>().bounds.size.y / 2;
@@ -208,19 +205,17 @@ namespace Assets.Scripts.Managers
     { // Display buttons for rotation 
       if (_currentBuild != null)
       {
-        //if(GUI.Button(_rotateLeftRect, "Rotate [L]eft")) // Revert back to text instead of images
         //Remove this next line to remove all trace of text
         GUI.Label(new Rect(_rotateLeftRect.x + (Screen.width/58),_rotateLeftRect.y - (Screen.height/31.35f),_rotateLeftRect.width,_rotateLeftRect.height), "Rotate Left");
-        if(GUI.Button(_rotateLeftRect, leftArrow))
+        if(GUI.Button(_rotateLeftRect, _leftArrow))
         {
           Vector3 newRotation = new Vector3(0,-45,0);
           _currentBuild.Rotate(newRotation);
         }
         
-        //if(GUI.Button(_rotateRightRect, "Rotate [R]ight")) // Revert back to text instead of images
         //Remove this next line to remove all trace of text
         GUI.Label(new Rect(_rotateRightRect.x + (Screen.width/58),_rotateRightRect.y - (Screen.height/31.35f),_rotateRightRect.width,_rotateRightRect.height), "Rotate Right");
-        if(GUI.Button(_rotateRightRect, rightArrow))
+        if(GUI.Button(_rotateRightRect, _rightArrow))
         {
           Vector3 newRotation = new Vector3(0,45,0);
           _currentBuild.Rotate(newRotation);
