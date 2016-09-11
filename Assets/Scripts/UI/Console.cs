@@ -6,6 +6,11 @@
 // Author       : Dan Budworth-Mead
 // Date         : 21/08/2016
 
+//Last Edit
+//Update Purpose: Update the controls and fix the console selection bug
+//Author        : Jacob Miller
+//Date          : 09/10/2016
+
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -25,15 +30,16 @@ namespace Assets.Scripts.UI
     private GameObject _player;
     private Component _buildMgr;
 
-    private bool _consoleEnabled = true;
-    private bool _swapConsoleFunction;
+    private bool _consoleEnabled = true;    // Whether the console is shown and active
+    private bool _swapConsoleFunction;      // Switch between entering data and finding IDs
 
     //List of spawnable items
     private List<string> _spawnItems = new List<string>();
     private List<string> _commands = new List<string>();
 
     private Transform _transform;
-
+    
+    // Rect for the console text box
     private Rect _consoleRect = new Rect(10, 10, 1000000, 20);
 
 #pragma warning disable
@@ -67,12 +73,12 @@ namespace Assets.Scripts.UI
         }
       }
       if (PRINT_LOADING_PREFABS) Debug.Log("End loading prefabs");
-    }
+    }// Start()
 
     private void OnPointerDownDelegate(PointerEventData data)
     {
         print("test");
-    }
+    }//OnPointerDownDelegate()
 
     private void Update()
     {
@@ -96,7 +102,7 @@ namespace Assets.Scripts.UI
         Physics.Raycast(ray, out hit);
         _inputString += "ID: " + hit.collider.GetInstanceID();
       }
-    }
+    }// Update()
 
     public void Submit(string submitString)
     {
@@ -288,7 +294,7 @@ namespace Assets.Scripts.UI
     private void ClearConsole()
     {
         _inputString = "";
-    }
+    }// ClearConsole()
 
     //Private methods
     private bool AddClassToGameObject(GameObject obj, string s)

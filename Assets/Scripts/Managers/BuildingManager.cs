@@ -4,7 +4,7 @@
 // Date         : 03/09/2016
 
 //Last Edit
-//Update        : Added in rotation and buttons.
+//Update Purpose: Added in rotation and buttons.
 //Author        : Jacob Miller
 //Date          : 09/10/2016
 
@@ -29,13 +29,16 @@ namespace Assets.Scripts.Managers
     private List<GameObject> _buildings;    // List of current active buildings
 
     // Objects
-    public Transform _currentBuild;        // Current building to be placed
+    public Transform _currentBuild;         // Current building to be placed
     public GameObject prefab;
 
     private float _currBuildY;              // Current building Y placement
     
     private Rect _rotateLeftRect;           //Rect for the rotate left button. Used to prevent over clicking.
     private Rect _rotateRightRect;          //Rect for the rotate right button. Used to prevent over clicking.
+    
+    public Texture2D leftArrow;             //Images for buttons
+    public Texture2D rightArrow;            //Images for buttons
 
     void Start()
     { // Load the buildings from Resources
@@ -205,13 +208,15 @@ namespace Assets.Scripts.Managers
     { // Display buttons for rotation 
       if (_currentBuild != null)
       {
-        if(GUI.Button(_rotateLeftRect, "Rotate [L]eft"))
+        //if(GUI.Button(_rotateLeftRect, "Rotate [L]eft")) // Revert back to text instead of images
+        if(GUI.Button(_rotateLeftRect, leftArrow))
         {
           Vector3 newRotation = new Vector3(0,-45,0);
           _currentBuild.Rotate(newRotation);
         }
         
-        if(GUI.Button(_rotateRightRect, "Rotate [R]ight"))
+        //if(GUI.Button(_rotateRightRect, "Rotate [R]ight")) // Revert back to text instead of images
+        if(GUI.Button(_rotateRightRect, rightArrow))
         {
           Vector3 newRotation = new Vector3(0,45,0);
           _currentBuild.Rotate(newRotation);
