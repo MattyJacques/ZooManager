@@ -97,6 +97,10 @@ namespace Assets.Scripts.Managers
         Pave(_paveType);
         _fakeMoney -= 5;
       }
+      else
+      {
+        Debug.Log("Out of Money");
+      }
         
      
     } // PlaceBuilding()
@@ -124,12 +128,27 @@ namespace Assets.Scripts.Managers
 
         Vector3 newPos = new Vector3(hit.point.x, _currentPaveY, hit.point.z);
         
+        if (Input.GetKey(KeyCode.LeftShift))
+        {//Snap
+          //48 / 10 = 4.8 -> (int) 4
+          //4 * 10 = 40
+          /*int roundX = (int)(newPos.x / 2);
+          newPos.x = roundX * 2;
+          int roundZ = (int)(newPos.z / 2);
+          newPos.z = roundZ * 2;*/
+          int roundX = (int)newPos.x;
+          int roundZ = (int)newPos.z;
+          newPos.x = roundX;
+          newPos.z = roundZ;
+        }
+        
         //Resets _currentPaveY = a usable variable
         _currentPaveY = 1;
         //Gets the highest usable y point on the terrain.
         newPos.y = terrain.SampleHeight(newPos);
         
         _currentPavement.position = newPos;
+        
       }
 
     } // UpdateMouseBuilding()
