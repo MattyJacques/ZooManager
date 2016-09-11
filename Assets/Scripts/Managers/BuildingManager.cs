@@ -209,6 +209,8 @@ namespace Assets.Scripts.Managers
       if (_currentBuild != null)
       {
         //if(GUI.Button(_rotateLeftRect, "Rotate [L]eft")) // Revert back to text instead of images
+        //Remove this next line to remove all trace of text
+        GUI.Label(new Rect(_rotateLeftRect.x + (Screen.width/58),_rotateLeftRect.y - (Screen.height/31.35f),_rotateLeftRect.width,_rotateLeftRect.height), "Rotate Left");
         if(GUI.Button(_rotateLeftRect, leftArrow))
         {
           Vector3 newRotation = new Vector3(0,-45,0);
@@ -216,6 +218,8 @@ namespace Assets.Scripts.Managers
         }
         
         //if(GUI.Button(_rotateRightRect, "Rotate [R]ight")) // Revert back to text instead of images
+        //Remove this next line to remove all trace of text
+        GUI.Label(new Rect(_rotateRightRect.x + (Screen.width/58),_rotateRightRect.y - (Screen.height/31.35f),_rotateRightRect.width,_rotateRightRect.height), "Rotate Right");
         if(GUI.Button(_rotateRightRect, rightArrow))
         {
           Vector3 newRotation = new Vector3(0,45,0);
