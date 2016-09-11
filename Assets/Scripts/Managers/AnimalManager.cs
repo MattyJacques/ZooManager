@@ -22,6 +22,7 @@ namespace Assets.Scripts.Managers
     // Holds all animal templates read from JSON array
     public AnimalTemplateCollection _templates;
 
+    // List of all active animals
     List<AnimalBase> _animals = new List<AnimalBase> { };
 
 
@@ -29,47 +30,43 @@ namespace Assets.Scripts.Managers
     { // Call to get the templates from JSON
     
       _templates = JSONReader.ReadJSON<AnimalTemplateCollection>("Animals/Animals");
-			CreateAnimal (1);
-
 
     } // Start()
 			
-	void Update()
-	{
+	  void Update()
+	  {
 			foreach (AnimalBase animal in _animals) 
 			{
-				animal.CheckedNeeds ();
+				animal.CheckedNeeds();
 			}
-	}
+	  }
 
-    public void CreateAnimal(int id)
+    public void Create(int id, int amount, Vector3 location)
     { // Create an animal instance using the ID field of the templates
 
       // Find index in array
       int index = GetTemplateIndex(id, "", CreateMode.ID);
 
-      // Create new animal with found template
-      AnimalBase newAnimal = new AnimalBase(_templates.animalTemplates[index]);
-      // Add animal to instances list
-      _animals.Add(newAnimal);
-			Debug.Log (_templates.animalTemplates [index].animalname);
+      if (index >= 0)
+      { // Make sure template was found before creating the animal
+        CreateAnimal(index, amount, location);
+      }
 
-    } // CreateAnimal(id)
+    } // Create(id)
 
 
-    public void CreateAnimal(string name)
+    public void Create(string name, int amount, Vector3 location)
     { // Create an animal instance using the name field of the templates
 
       // Find index in array
       int index = GetTemplateIndex(0, name, CreateMode.NAME);
 
-      // Create new animal with found template
-      AnimalBase newAnimal = new AnimalBase(_templates.animalTemplates[index]);
+      if (index >= 0)
+      { // Make sure template was found before creating the animal
+        CreateAnimal(index, amount, location);
+      }
 
-      // Add animal to instances list
-      _animals.Add(newAnimal);
-
-    } // CreateAnimal(name)
+    } // Create(name)
 
 
     private int GetTemplateIndex(int id, string name, CreateMode mode)
@@ -104,6 +101,26 @@ namespace Assets.Scripts.Managers
       return templateIndex;
 
     } // GetTemplateIndex()
+
+
+    private void CreateAnimal(int index, int amount, Vector3 location)
+    { // Create and store the animal using the template index, amount of animals
+      // and the current location of the animal
+
+      for (int i = 0; i < amount; i++)
+      { // Create as many animals as needed
+
+        // Create new animal with found template
+        AnimalBase newBase = new AnimalBase(_templates.animalTemplates[index]);
+
+        // Update location of object
+        newBase.UnityTransform.position = location;
+
+        // Add animal to instances list
+        _animals.Add(newBase);
+      }
+
+    } // Create()
 
 
   } // AnimalManager
