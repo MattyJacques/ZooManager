@@ -37,6 +37,7 @@ namespace Assets.Scripts.Managers
 
     public float _fakeMoney = 100.0f;
     private string _paveType;
+    private int numberOfPavs = 0;
       
     void Start()
     { // Load the buildings from Resources
@@ -89,9 +90,27 @@ namespace Assets.Scripts.Managers
     private void PlaceBuilding()
     { // Place the building in the world, add to buildings list
       // stop mouse position updating building position
-
+      bool place = true;
+      Collider[] colliders;
+       if((colliders = Physics.OverlapSphere(_currentPavement.position, 0.39f /* Radius */)).Length > 1) //Presuming the object you are testing also has a collider 0 otherwise
+       {
+        foreach(Collider collider in colliders)
+        {
+          GameObject go = collider.gameObject; //This is the game object you collided with
+          if(go.transform.name != _currentPavement.name &&  go.transform.name != "Terrain") 
+          {
+            Debug.Log(go.transform.name);
+            place = false;
+          }
+        }
+       }
+      if (!place)
+      {
+        return;
+      }
       _pavements.Add(_currentPavement.gameObject);
       _currentPavement = null;
+      numberOfPavs++;
       if (_fakeMoney >= 5.0f)
       {
         Pave(_paveType);
@@ -160,6 +179,7 @@ namespace Assets.Scripts.Managers
       _paveType = buildName;
       buildName = "Pavings/Prefabs/" + buildName;
       _currentPavement = ((GameObject)Instantiate(Resources.Load(buildName))).transform;
+      _currentPavement.name = _currentPavement.name + numberOfPavs;
 
     } // Create()
 
