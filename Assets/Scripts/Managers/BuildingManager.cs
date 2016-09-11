@@ -4,9 +4,9 @@
 // Date         : 03/09/2016
 
 //Last Edit
-//Update Purpose: Added in rotation and buttons.
+//Update Purpose: Updated the building placement procedure.
 //Author        : Jacob Miller
-//Date          : 09/10/2016
+//Date          : 09/11/2016
 
 using UnityEngine;
 using System.Collections;
@@ -34,10 +34,10 @@ namespace Assets.Scripts.Managers
     private Rect _rotateLeftRect;           //Rect for the rotate left button. Used to prevent over clicking.
     private Rect _rotateRightRect;          //Rect for the rotate right button. Used to prevent over clicking.
     
-    public Texture2D _leftArrow;             //Images for buttons
-    public Texture2D _rightArrow;            //Images for buttons
+    public Texture2D _leftArrow;            //Images for buttons
+    public Texture2D _rightArrow;           //Images for buttons
     
-    public Terrain terrain;
+    public Terrain terrain;                 //Allows the script to find the highest y point to place the building
 
     void Start()
     { // Load the buildings from Resources
@@ -119,7 +119,9 @@ namespace Assets.Scripts.Managers
 
         Vector3 newPos = new Vector3(hit.point.x, _currBuildY, hit.point.z);
         
+        //Resets _currBuildY = a usable variable
         _currBuildY = 1;
+        //Gets the highest usable y point on the terrain.
         newPos.y = terrain.SampleHeight(newPos);
         
         _currentBuild.position = newPos;
