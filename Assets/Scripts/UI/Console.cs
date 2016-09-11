@@ -167,46 +167,6 @@ namespace Assets.Scripts.UI
             _animalMGR.GetComponent<Assets.Scripts.Managers.AnimalManager>().
                        Create(type, amount, location);
 
-            //Spawn the require amount
-            /*for (int i = 0; i < amount; i++)
-            {
-              GameObject objectToSpawn = new GameObject();
-              objectToSpawn.name = objectToSpawn.GetInstanceID().ToString();
-              
-              #region Add Class
-
-              if (type.Contains("/"))
-              {
-                if (!AddClassToGameObject(objectToSpawn, type.Substring(type.LastIndexOf("/"))))
-                {
-                  break;
-                }
-              }
-              else
-              {
-                if (!AddClassToGameObject(objectToSpawn, type))
-                {
-                  break;
-                }
-              }
-
-              #endregion Add Class*/
-
-            /*#region Move it to correct location
-
-            if (location.Contains("(") && location.Contains(")"))
-            {
-              objectToSpawn.transform.position =
-              location.Substring(location.IndexOf('(') + 1, location.Length - 2)
-                                .Split(',')
-                                .ParseVec3();
-            }
-            else
-            {
-              objectToSpawn.transform.position = _transform.position;
-            }
-
-            #endregion Move it to correct location*/
 
             /*#region Begin dealing with additional parameters
 
