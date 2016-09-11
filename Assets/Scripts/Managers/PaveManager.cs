@@ -14,7 +14,7 @@ namespace Assets.Scripts.Managers
 {
   public class PaveManager : MonoBehaviour
   {
-    enum CreateMode { ID, NAME };           // Which mode to find the building template with
+    enum CreateMode { ID, NAME };           // Which mode to find the paving template with
 
     // Lists
     // Collection of building templates
@@ -23,9 +23,9 @@ namespace Assets.Scripts.Managers
 
     // Objects
     public GameObject _pole;
-    public Transform _currentPavement;         // Current paveing to be placed
+    public Transform _currentPavement;      // Current paveing to be placed
 
-    private float _currentPaveY;              // Current paveing Y placement
+    private float _currentPaveY;            // Current paveing Y placement
     
     private Rect _rotateLeftRect;           //Rect for the rotate left button. Used to prevent over clicking.
     private Rect _rotateRightRect;          //Rect for the rotate right button. Used to prevent over clicking.
@@ -35,9 +35,9 @@ namespace Assets.Scripts.Managers
     
     public Terrain terrain;                 //Allows the script to find the highest y point to place the building
 
-    public float _fakeMoney = 100.0f;
-    private string _paveType;
-    private int numberOfPavs = 0;
+    public float _fakeMoney = 100.0f;       //Used until money is implemented
+    private string _paveType;               //Used for repeating placement
+    private int numberOfPavs = 0;           //Keeps track of how many are made and helps with overlapping
       
     void Start()
     { // Load the buildings from Resources
@@ -93,7 +93,7 @@ namespace Assets.Scripts.Managers
       bool place = true;
       Collider[] colliders;
        if((colliders = Physics.OverlapSphere(_currentPavement.position, 0.39f /* Radius */)).Length > 1) //Presuming the object you are testing also has a collider 0 otherwise
-       {
+       {//Checks to see if anything is in the way
         foreach(Collider collider in colliders)
         {
           GameObject go = collider.gameObject; //This is the game object you collided with
@@ -105,16 +105,18 @@ namespace Assets.Scripts.Managers
         }
        }
       if (!place)
-      {
+      {//if something is in the way then dont place it
         return;
       }
+      //Placement stuffs
       _pavements.Add(_currentPavement.gameObject);
       _currentPavement = null;
       numberOfPavs++;
+      //Take money
+      _fakeMoney -= 5;
       if (_fakeMoney >= 5.0f)
-      {
+      {//If you have enough money then keep making roads
         Pave(_paveType);
-        _fakeMoney -= 5;
       }
       else
       {
@@ -175,13 +177,15 @@ namespace Assets.Scripts.Managers
     public void Pave(string buildName)
     { // Get the index of the building with the name provided, then set the
       // current building to the building found
+      if (_fakeMoney >= 5.0f)
+      {
+        _paveType = buildName;
+        buildName = "Pavings/Prefabs/" + buildName;
+        _currentPavement = ((GameObject)Instantiate(Resources.Load(buildName))).transform;
+        _currentPavement.name = _currentPavement.name + numberOfPavs;
+      }
 
-      _paveType = buildName;
-      buildName = "Pavings/Prefabs/" + buildName;
-      _currentPavement = ((GameObject)Instantiate(Resources.Load(buildName))).transform;
-      _currentPavement.name = _currentPavement.name + numberOfPavs;
-
-    } // Create()
+    } // Pave()
 
     private int GetBuildingIndex(int id, string name, CreateMode mode)
     { // Get the template index using the name or id, whichever mode is passed in
