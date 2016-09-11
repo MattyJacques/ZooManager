@@ -117,7 +117,8 @@ namespace Assets.Scripts.Managers
 
 	void  OnGUI ()
 	{
-		GUI.DrawTexture(new Rect(mouse.x - (w / 2), mouse.y - (h / 2), w, h), cursor);
+    Vector2 newMouse = new Vector2(mouse.x + 10,mouse.y + 10);
+		GUI.DrawTexture(new Rect(newMouse.x - (w / 2), newMouse.y - (h / 2), w, h), cursor);
 	}
 
 
