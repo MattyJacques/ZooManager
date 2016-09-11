@@ -3,6 +3,11 @@
 // Author       : Matthew Jacques
 // Date         : 03/09/2016
 
+//Last Edit
+//Update Purpose: Updated the building placement procedure.
+//Author        : Jacob Miller
+//Date          : 09/11/2016
+
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,9 +19,7 @@ namespace Assets.Scripts.Managers
 {
   public class BuildingManager : MonoBehaviour
   {
-
-    // Which mode to find the building template with
-    enum CreateMode { ID, NAME };
+    enum CreateMode { ID, NAME };           // Which mode to find the building template with
 
     // Lists
     // Collection of building templates
@@ -24,14 +27,24 @@ namespace Assets.Scripts.Managers
     private List<GameObject> _buildings;    // List of current active buildings
 
     // Objects
-    private Transform _currentBuild;        // Current building to be placed
-    public GameObject prefab;
+    public Transform _currentBuild;         // Current building to be placed
 
     private float _currBuildY;              // Current building Y placement
+    
+    private Rect _rotateLeftRect;           //Rect for the rotate left button. Used to prevent over clicking.
+    private Rect _rotateRightRect;          //Rect for the rotate right button. Used to prevent over clicking.
+    
+    public Texture2D _leftArrow;            //Images for buttons
+    public Texture2D _rightArrow;           //Images for buttons
+    
+    public Terrain terrain;                 //Allows the script to find the highest y point to place the building
 
     void Start()
     { // Load the buildings from Resources
-
+      //627H & 880W //Test values to make sure that unity properlly streches the buttons to the right size.
+      _rotateLeftRect = new Rect((Screen.width/44),Screen.height - (Screen.height/11),(Screen.width / 8.8f),(Screen.height / 31.35f));
+      _rotateRightRect = new Rect((Screen.width/4.4f),Screen.height - (Screen.height/11),(Screen.width / 8.8f),(Screen.height / 31.35f));
+      
       LoadBuildings();
 
     } // Start()
@@ -48,13 +61,28 @@ namespace Assets.Scripts.Managers
 
         if (Input.GetMouseButtonDown(0))
         { // If left click, place the building
-          PlaceBuilding();
+          if (!_rotateLeftRect.Contains(new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y)) &&
+          !_rotateRightRect.Contains(new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y)))
+          {
+            PlaceBuilding();
+          }
         }
         else if (Input.GetMouseButtonDown(1))
         { // If right click, cancel build
           DeleteCurrBuild();
         }
+        else if (Input.GetKeyDown(KeyCode.L))
+        {
+          Vector3 newRotation = new Vector3(0,-45,0);
+          _currentBuild.Rotate(newRotation);
+        }
+        else if (Input.GetKeyDown(KeyCode.R))
+        {
+          Vector3 newRotation = new Vector3(0,45,0);
+          _currentBuild.Rotate(newRotation);
+        }
       }
+      
 
     } // Update()
 
@@ -90,20 +118,16 @@ namespace Assets.Scripts.Managers
       { // If raycast hits collider, update position of _currentBuild
 
         Vector3 newPos = new Vector3(hit.point.x, _currBuildY, hit.point.z);
+        
+        //Resets _currBuildY = a usable variable
+        _currBuildY = 1;
+        //Gets the highest usable y point on the terrain.
+        newPos.y = terrain.SampleHeight(newPos);
+        
         _currentBuild.position = newPos;
       }
 
     } // UpdateMouseBuilding()
-
-
-    private void CalcCurrentY()
-    { // Calculate the the Y coordinate for the current building selection
-      // to be placed 
-
-      _currBuildY = _currentBuild.GetComponent<Collider>().bounds.size.y / 2;
-
-    } // CalcCurrentY()
-
 
     public void Create(string buildName)
     { // Get the index of the building with the name provided, then set the
@@ -111,7 +135,6 @@ namespace Assets.Scripts.Managers
 
       buildName = "Buildings/Prefabs/" + buildName;
       _currentBuild = ((GameObject)Instantiate(Resources.Load(buildName))).transform;
-      CalcCurrentY();
 
     } // Create()
 
@@ -174,6 +197,28 @@ namespace Assets.Scripts.Managers
       }
 
     } // LoadBuildings()
+    
+    private void OnGUI()
+    { // Display buttons for rotation 
+      if (_currentBuild != null)
+      {
+        //Remove this next line to remove all trace of text
+        GUI.Label(new Rect(_rotateLeftRect.x + (Screen.width/58),_rotateLeftRect.y - (Screen.height/31.35f),_rotateLeftRect.width,_rotateLeftRect.height), "Rotate Left");
+        if(GUI.Button(_rotateLeftRect, _leftArrow))
+        {
+          Vector3 newRotation = new Vector3(0,-45,0);
+          _currentBuild.Rotate(newRotation);
+        }
+        
+        //Remove this next line to remove all trace of text
+        GUI.Label(new Rect(_rotateRightRect.x + (Screen.width/58),_rotateRightRect.y - (Screen.height/31.35f),_rotateRightRect.width,_rotateRightRect.height), "Rotate Right");
+        if(GUI.Button(_rotateRightRect, _rightArrow))
+        {
+          Vector3 newRotation = new Vector3(0,45,0);
+          _currentBuild.Rotate(newRotation);
+        }
+      }
+    } // OnGUI()
 
   } // BuildingManager
 }
