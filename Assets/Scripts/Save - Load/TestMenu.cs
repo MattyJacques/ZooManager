@@ -69,7 +69,7 @@ public class TestMenu : MonoBehaviour {
 				if(GUILayout.Button(g.LastLaunchDateTime.time)) {
 					GameData.current = g;
 					//Move on to game...
-					Application.LoadLevel(1);
+					Application.LoadLevel(2);
 				}
 
 			}
