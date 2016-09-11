@@ -36,6 +36,8 @@ namespace Assets.Scripts.Managers
     
     public Texture2D _leftArrow;             //Images for buttons
     public Texture2D _rightArrow;            //Images for buttons
+    
+    public Terrain terrain;
 
     void Start()
     { // Load the buildings from Resources
@@ -116,20 +118,14 @@ namespace Assets.Scripts.Managers
       { // If raycast hits collider, update position of _currentBuild
 
         Vector3 newPos = new Vector3(hit.point.x, _currBuildY, hit.point.z);
+        
+        _currBuildY = 1;
+        newPos.y = terrain.SampleHeight(newPos);
+        
         _currentBuild.position = newPos;
       }
 
     } // UpdateMouseBuilding()
-
-
-    private void CalcCurrentY()
-    { // Calculate the Y coordinate for the current building selection
-      // to be placed 
-
-      _currBuildY = _currentBuild.GetComponent<Collider>().bounds.size.y / 2;
-
-    } // CalcCurrentY()
-
 
     public void Create(string buildName)
     { // Get the index of the building with the name provided, then set the
@@ -137,7 +133,6 @@ namespace Assets.Scripts.Managers
 
       buildName = "Buildings/Prefabs/" + buildName;
       _currentBuild = ((GameObject)Instantiate(Resources.Load(buildName))).transform;
-      CalcCurrentY();
 
     } // Create()
 
