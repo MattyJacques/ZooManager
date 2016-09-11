@@ -44,7 +44,7 @@ public class TestMenu : MonoBehaviour {
 			GUILayout.Box("Save da time.");
 			GUILayout.Space(5);
 
-			GameData.current.LastLaunchDateTime.time = System.DateTime.UtcNow.ToString ();
+			GameData.current.lastLaunchDateTime.time = System.DateTime.UtcNow.ToString ();
 
 			if(GUILayout.Button("Save")) {
 				//Save the current Game as a new saved Game
@@ -66,7 +66,7 @@ public class TestMenu : MonoBehaviour {
 			GUILayout.Space(10);
 
 			foreach(GameData g in SaveSystem.savedGames) {
-				if(GUILayout.Button(g.LastLaunchDateTime.time)) {
+				if(GUILayout.Button(g.lastLaunchDateTime.time)) {
 					GameData.current = g;
 					//Move on to game...
 					Application.LoadLevel(2);

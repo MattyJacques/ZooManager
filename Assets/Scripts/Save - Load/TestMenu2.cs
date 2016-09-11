@@ -6,32 +6,32 @@ public class TestMenu2 : MonoBehaviour {
 	// Use this for initialization
 	void Update () {
 		Debug.Log (GameData.current.ach.noot.ToString ());
-		if (GameData.current.ach.nootnum >= 3) 
+        if (!GameData.current.ach.noot && GameData.current.ach.nootnum >= 3) 
 		{
 			GameData.current.ach.noot = true;
 			SaveSystem.Save ();
 		}
-		if (GameData.current.ach.clapnum >= 97) 
+        if (!GameData.current.ach.clap && GameData.current.ach.clapnum >= 97) 
 		{
 			GameData.current.ach.clap = true;
 			SaveSystem.Save ();
 		}
-		if (GameData.current.ach.lifenum >= 1) 
+        if (!GameData.current.ach.life && GameData.current.ach.lifenum >= 1) 
 		{
 			GameData.current.ach.life = true;
 			SaveSystem.Save ();
 		}
-		if (GameData.current.ach.onenum >= 1) 
+        if (!GameData.current.ach.oneOfMany && GameData.current.ach.onenum >= 1) 
 		{
-			GameData.current.ach.oneofmany = true;
+			GameData.current.ach.oneOfMany = true;
 			SaveSystem.Save ();
 		}
-		if (GameData.current.ach.hownum >= 1) 
+        if (!GameData.current.ach.howDidYou && GameData.current.ach.hownum >= 1) 
 		{
-			GameData.current.ach.howdidyou = true;
+			GameData.current.ach.howDidYou = true;
 			SaveSystem.Save ();
 		}
-		if (GameData.current.ach.cashnum >= 1000000) 
+        if (!GameData.current.ach.cash && GameData.current.ach.cashnum >= 1000000) 
 		{
 			GameData.current.ach.cash = true;
 			SaveSystem.Save ();
