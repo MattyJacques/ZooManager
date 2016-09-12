@@ -28,7 +28,8 @@ namespace Assets.Scripts.UI
     private string _inputString = "";
 
     private GameObject _player;
-    private Component _buildMgr;
+    private Component _buildMGR;
+    private Component _animalMGR;
 
     private bool _consoleEnabled = true;    // Whether the console is shown and active
     private bool _swapConsoleFunction;      // Switch between entering data and finding IDs
@@ -51,7 +52,8 @@ namespace Assets.Scripts.UI
     {
       //Find gameobjects etc.
       _player = GameObject.FindWithTag("Player");
-      _buildMgr = GetComponent("BuildingManager");
+      _buildMGR = GetComponent("BuildingManager");
+      _animalMGR = GetComponent("AnimalManager");
 
       //Filling SPAWN_ITEMS
       DirectoryInfo directoryInfo = new DirectoryInfo("Assets/Resources");
@@ -89,7 +91,7 @@ namespace Assets.Scripts.UI
 
       if (!_consoleEnabled)
       {
-        if (_buildMgr.GetComponent<Assets.Scripts.Managers.BuildingManager>()._currentBuild == null)
+        if (_buildMGR.GetComponent<Assets.Scripts.Managers.BuildingManager>()._currentBuild == null)
         {
           _consoleEnabled = true;
         }
@@ -109,11 +111,11 @@ namespace Assets.Scripts.UI
       _commands.Add(submitString);
 
       //KEYWORDS
+      const string create = "create";
       const string spawn = "spawn";
       const string cull = "cull";
       const string clear = "clear";
       const string destroy = "destroy";
-      const string create = "create";
 
       string[] inputParams = submitString.Split(' ');
       int inputParamsLength = inputParams.Length;
@@ -129,7 +131,7 @@ namespace Assets.Scripts.UI
           {
             Debug.Log("Create Command");
             string type = inputParams[1];
-            _buildMgr.GetComponent<Assets.Scripts.Managers.BuildingManager>().Create(type);
+            _buildMGR.GetComponent<Assets.Scripts.Managers.BuildingManager>().Create(type);
             
           }
           break;
@@ -140,21 +142,23 @@ namespace Assets.Scripts.UI
         #region Spawn
 
         case spawn:
-          
+
           //FORMAT: spawn <type> <amount> <location> <additional params>
           if (inputParamsLength > 1)
           {
-            
+
             string type = inputParams[1];
             inputParams.GetValue(1);
             int amount = 1;
-            string location = "";
+            Vector3 location = Vector3.zero;
 
             foreach (string s in inputParams)
             {
-              if (s.StartsWith("("))
+              if (s.StartsWith("(") && s.EndsWith(")"))
               {
-                location = s;
+                location = s.Substring(s.IndexOf('(') + 1, s.Length - 2)
+                           .Split(',')
+                           .ParseVec3();
                 break;
               }
             }
@@ -171,62 +175,24 @@ namespace Assets.Scripts.UI
               }
             }
 
-            //Spawn the require amount
-            for (int i = 0; i < amount; i++)
+            _animalMGR.GetComponent<Assets.Scripts.Managers.AnimalManager>().
+                       Create(type, amount, location);
+
+
+            /*#region Begin dealing with additional parameters
+
+            for (int j = 0; j < inputParamsLength; j++)
             {
-              GameObject objectToSpawn = new GameObject();
-              objectToSpawn.name = objectToSpawn.GetInstanceID().ToString();
-              
-              #region Add Class
-
-              if (type.Contains("/"))
+              string currentParam = inputParams[j];
+              if (currentParam.Contains(":"))
               {
-                if (!AddClassToGameObject(objectToSpawn, type.Substring(type.LastIndexOf("/"))))
-                {
-                  break;
-                }
+                int indexOfColon = currentParam.IndexOf(':');
+                string param = currentParam.Substring(0, indexOfColon - 1);
+                float value = float.Parse(currentParam.Substring(indexOfColon + 1));
               }
-              else
-              {
-                if (!AddClassToGameObject(objectToSpawn, type))
-                {
-                  break;
-                }
-              }
-
-              #endregion Add Class
-
-              #region Move it to correct location
-
-              if (location.Contains("(") && location.Contains(")"))
-              {
-                objectToSpawn.transform.position =
-                location.Substring(location.IndexOf('(') + 1, location.Length - 2)
-                                  .Split(',')
-                                  .ParseVec3();
-              }
-              else
-              {
-                objectToSpawn.transform.position = _transform.position;
-              }
-
-              #endregion Move it to correct location
-
-              #region Begin dealing with additional parameters
-
-              for (int j = 0; j < inputParamsLength; j++)
-              {
-                string currentParam = inputParams[j];
-                if (currentParam.Contains(":"))
-                {
-                  int indexOfColon = currentParam.IndexOf(':');
-                  string param = currentParam.Substring(0, indexOfColon - 1);
-                  float value = float.Parse(currentParam.Substring(indexOfColon + 1));
-                }
-              }
-
-              #endregion End dealing with additional parameters
             }
+
+            #endregion End dealing with additional parameters~*/
           }
           else
           {
