@@ -6,6 +6,11 @@
 // Author       : Dan Budworth-Mead
 // Date         : 21/08/2016
 
+//Last Edit
+//Update Purpose: Update the controls and fix the console selection bug
+//Author        : Jacob Miller
+//Date          : 09/10/2016
+
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -26,14 +31,16 @@ namespace Assets.Scripts.UI
     private Component _buildMGR;
     private Component _animalMGR;
 
-    private bool _consoleEnabled;
+    private bool _consoleEnabled = true;    // Whether the console is shown and active
+    private bool _swapConsoleFunction;      // Switch between entering data and finding IDs
 
     //List of spawnable items
     private List<string> _spawnItems = new List<string>();
     private List<string> _commands = new List<string>();
 
     private Transform _transform;
-
+    
+    // Rect for the console text box
     private Rect _consoleRect = new Rect(10, 10, 1000000, 20);
 
 #pragma warning disable
@@ -68,31 +75,36 @@ namespace Assets.Scripts.UI
         }
       }
       if (PRINT_LOADING_PREFABS) Debug.Log("End loading prefabs");
-
-      _consoleEnabled = false;
-    }
+    }// Start()
 
     private void OnPointerDownDelegate(PointerEventData data)
     {
         print("test");
-    }
+    }//OnPointerDownDelegate()
 
     private void Update()
     {
       if (Input.GetKeyDown(KeyCode.BackQuote))
       {
-        _consoleEnabled = !_consoleEnabled;
+        _swapConsoleFunction = !_swapConsoleFunction;
       }
 
-      if (_consoleEnabled && Input.GetMouseButtonDown(0) &&
+      if (!_consoleEnabled)
+      {
+        if (_buildMgr.GetComponent<Assets.Scripts.Managers.BuildingManager>()._currentBuild == null)
+        {
+          _consoleEnabled = true;
+        }
+      }
+      else if (_swapConsoleFunction && _consoleEnabled && Input.GetMouseButtonDown(0) &&
           !_consoleRect.Contains(new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y)))
       {
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Physics.Raycast(ray, out hit);
-        _inputString += hit.collider.GetInstanceID();
+        _inputString += "ID: " + hit.collider.GetInstanceID();
       }
-    }
+    }// Update()
 
     public void Submit(string submitString)
     {
@@ -120,7 +132,6 @@ namespace Assets.Scripts.UI
             Debug.Log("Create Command");
             string type = inputParams[1];
             _buildMGR.GetComponent<Assets.Scripts.Managers.BuildingManager>().Create(type);
-            
             
           }
           break;
@@ -229,23 +240,27 @@ namespace Assets.Scripts.UI
       Vector2 consoleSize = _consoleRect.size;
       consoleSize.x = xSize;
       _consoleRect.size = consoleSize;
-      _inputString = GUI.TextField(new Rect(10, 10, consoleSize.x, 20), _inputString);
-      if (Event.current.keyCode == KeyCode.Return && _inputString != "")
+      if (_consoleEnabled)
       {
-        Submit(_inputString);
-        ClearConsole();
-      }
+        _inputString = GUI.TextField(new Rect(10, 10, consoleSize.x, 20), _inputString);
+        if (Event.current.keyCode == KeyCode.Return && _inputString != "")
+        {
+          Submit(_inputString);
+          ClearConsole();
+          _consoleEnabled = false;
+        }
 
-      for (int i = 0; i < _commands.Count; i++)
-      {
-        GUI.Label(new Rect(10, i*14 + 32, Screen.width, 20), _commands[_commands.Count - i - 1]);
+        for (int i = 0; i < _commands.Count; i++)
+        {
+          GUI.Label(new Rect(10, i*14 + 32, Screen.width, 20), _commands[_commands.Count - i - 1]);
+        }
       }
     } // OnGUI()
 
     private void ClearConsole()
     {
         _inputString = "";
-    }
+    }// ClearConsole()
 
     //Private methods
     private bool AddClassToGameObject(GameObject obj, string s)
