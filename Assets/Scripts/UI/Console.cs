@@ -29,6 +29,7 @@ namespace Assets.Scripts.UI
 
     private GameObject _player;
     private Component _buildMgr;
+    private Component _animalMgr;
     private Component _paveMgr;
 
     private bool _consoleEnabled = true;    // Whether the console is shown and active
@@ -39,13 +40,14 @@ namespace Assets.Scripts.UI
     private List<string> _commands = new List<string>();
 
     private Transform _transform;
-    
+
     // Rect for the console text box
     private Rect _consoleRect = new Rect(10, 10, 1000000, 20);
 
 #pragma warning disable
     //Print stuff to Unity debugging console
-    [SerializeField] private bool PRINT_LOADING_PREFABS, PRINT_SPAWNING_PREFABS;
+    [SerializeField]
+    private bool PRINT_LOADING_PREFABS, PRINT_SPAWNING_PREFABS;
 #pragma warning restore
 
     private void Start()
@@ -53,6 +55,7 @@ namespace Assets.Scripts.UI
       //Find gameobjects etc.
       _player = GameObject.FindWithTag("Player");
       _buildMgr = GetComponent("BuildingManager");
+      _animalMgr = GetComponent("AnimalManager");
       _paveMgr = GetComponent("PaveManager");
 
       //Filling SPAWN_ITEMS
@@ -79,7 +82,7 @@ namespace Assets.Scripts.UI
 
     private void OnPointerDownDelegate(PointerEventData data)
     {
-        print("test");
+      print("test");
     }//OnPointerDownDelegate()
 
     private void Update()
@@ -91,7 +94,7 @@ namespace Assets.Scripts.UI
 
       if (!_consoleEnabled)
       {
-        if (_buildMgr.GetComponent<Assets.Scripts.Managers.BuildingManager>()._currentBuild == null && _paveMgr.GetComponent<Assets.Scripts.Managers.PaveManager>()._currentPavement == null )
+        if (_buildMgr.GetComponent<Assets.Scripts.Managers.BuildingManager>()._currentBuild == null && _paveMgr.GetComponent<Assets.Scripts.Managers.PaveManager>()._currentPavement == null)
         {
           _consoleEnabled = true;
         }
@@ -125,7 +128,7 @@ namespace Assets.Scripts.UI
       switch (keyword)
       {
         #region Pave
-        
+
         case pave:
           //FORMAT: pave type
           if (inputParamsLength == 2)
@@ -135,9 +138,9 @@ namespace Assets.Scripts.UI
             _paveMgr.GetComponent<Assets.Scripts.Managers.PaveManager>().Pave(type);
           }
           break;
-        
+
         #endregion
-        
+
         #region Create
 
         case create:
@@ -147,7 +150,7 @@ namespace Assets.Scripts.UI
             Debug.Log("Create Command");
             string type = inputParams[1];
             _buildMgr.GetComponent<Assets.Scripts.Managers.BuildingManager>().Create(type);
-            
+
           }
           break;
 
@@ -157,21 +160,23 @@ namespace Assets.Scripts.UI
         #region Spawn
 
         case spawn:
-          
+
           //FORMAT: spawn <type> <amount> <location> <additional params>
           if (inputParamsLength > 1)
           {
-            
+
             string type = inputParams[1];
             inputParams.GetValue(1);
             int amount = 1;
-            string location = "";
+            Vector3 location = Vector3.zero;
 
             foreach (string s in inputParams)
             {
-              if (s.StartsWith("("))
+              if (s.StartsWith("(") && s.EndsWith(")"))
               {
-                location = s;
+                location = s.Substring(s.IndexOf('(') + 1, s.Length - 2)
+                           .Split(',')
+                           .ParseVec3();
                 break;
               }
             }
@@ -188,62 +193,24 @@ namespace Assets.Scripts.UI
               }
             }
 
-            //Spawn the require amount
-            for (int i = 0; i < amount; i++)
+            _animalMgr.GetComponent<Assets.Scripts.Managers.AnimalManager>().
+                       Create(type, amount, location);
+
+            /*#region Begin dealing with additional parameters
+
+            for (int j = 0; j < inputParamsLength; j++)
             {
-              GameObject objectToSpawn = new GameObject();
-              objectToSpawn.name = objectToSpawn.GetInstanceID().ToString();
-              
-              #region Add Class
-
-              if (type.Contains("/"))
+              string currentParam = inputParams[j];
+              if (currentParam.Contains(":"))
               {
-                if (!AddClassToGameObject(objectToSpawn, type.Substring(type.LastIndexOf("/"))))
-                {
-                  break;
-                }
+                int indexOfColon = currentParam.IndexOf(':');
+                string param = currentParam.Substring(0, indexOfColon - 1);
+                float value = float.Parse(currentParam.Substring(indexOfColon + 1));
               }
-              else
-              {
-                if (!AddClassToGameObject(objectToSpawn, type))
-                {
-                  break;
-                }
-              }
-
-              #endregion Add Class
-
-              #region Move it to correct location
-
-              if (location.Contains("(") && location.Contains(")"))
-              {
-                objectToSpawn.transform.position =
-                location.Substring(location.IndexOf('(') + 1, location.Length - 2)
-                                  .Split(',')
-                                  .ParseVec3();
-              }
-              else
-              {
-                objectToSpawn.transform.position = _transform.position;
-              }
-
-              #endregion Move it to correct location
-
-              #region Begin dealing with additional parameters
-
-              for (int j = 0; j < inputParamsLength; j++)
-              {
-                string currentParam = inputParams[j];
-                if (currentParam.Contains(":"))
-                {
-                  int indexOfColon = currentParam.IndexOf(':');
-                  string param = currentParam.Substring(0, indexOfColon - 1);
-                  float value = float.Parse(currentParam.Substring(indexOfColon + 1));
-                }
-              }
-
-              #endregion End dealing with additional parameters
             }
+
+            #endregion End dealing with additional parameters*/
+
           }
           else
           {
@@ -251,7 +218,7 @@ namespace Assets.Scripts.UI
           }
           break;
 
-          #endregion
+        #endregion
 
         #region Cull
 
@@ -280,13 +247,13 @@ namespace Assets.Scripts.UI
           _commands.Clear();
           break;
 
-        #endregion
+          #endregion
       } // switch()
     } // Submit()
 
     private void OnGUI()
     {
-      float xSize = _inputString.Length*7.5f;
+      float xSize = _inputString.Length * 7.5f;
       xSize = Mathf.Clamp(xSize, 200, 400);
       Vector2 consoleSize = _consoleRect.size;
       consoleSize.x = xSize;
@@ -303,26 +270,26 @@ namespace Assets.Scripts.UI
 
         for (int i = 0; i < _commands.Count; i++)
         {
-          GUI.Label(new Rect(10, i*14 + 32, Screen.width, 20), _commands[_commands.Count - i - 1]);
+          GUI.Label(new Rect(10, i * 14 + 32, Screen.width, 20), _commands[_commands.Count - i - 1]);
         }
       }
     } // OnGUI()
 
     private void ClearConsole()
     {
-        _inputString = "";
+      _inputString = "";
     }// ClearConsole()
 
     //Private methods
     private bool AddClassToGameObject(GameObject obj, string s)
     {
-        if (!obj.AddComponent(Type.GetType(s)))
-        {
-            _commands.Add("Could not find \"" + s + "\" class");
-            Destroy(obj);
-            return false;
-        }
-        return true;
+      if (!obj.AddComponent(Type.GetType(s)))
+      {
+        _commands.Add("Could not find \"" + s + "\" class");
+        Destroy(obj);
+        return false;
+      }
+      return true;
     } // AddClassToGameObject()
   }
 }
