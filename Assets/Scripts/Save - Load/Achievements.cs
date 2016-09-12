@@ -10,12 +10,14 @@ public class Achievements
 	public bool oneOfMany;
 	public bool howDidYou;
 	public bool cash;
+	public int didIWin;
 	public int nootnum;
 	public int clapnum;
 	public int lifenum;
 	public int onenum;
 	public int hownum;
 	public int cashnum;
+	public int animnum;
 
 
 	public Achievements() 
@@ -26,12 +28,14 @@ public class Achievements
 		this.oneOfMany = false;
 		this.howDidYou = false;
 		this.cash = false;
+		this.didIWin = 0;
 		this.nootnum = 0;
 		this.clapnum = 0;
 		this.lifenum = 0;
 		this.onenum = 0;
 		this.hownum = 0;
 		this.cashnum = 0;
+		this.animnum = 0;
   } // Achievements()
 
 } // Achievements
