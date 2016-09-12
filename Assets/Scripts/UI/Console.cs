@@ -91,7 +91,7 @@ namespace Assets.Scripts.UI
 
       if (!_consoleEnabled)
       {
-        if (_buildMgr.GetComponent<Assets.Scripts.Managers.BuildingManager>()._currentBuild == null)
+        if (_buildMGR.GetComponent<Assets.Scripts.Managers.BuildingManager>()._currentBuild == null)
         {
           _consoleEnabled = true;
         }
