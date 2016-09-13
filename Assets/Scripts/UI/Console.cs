@@ -94,7 +94,7 @@ namespace Assets.Scripts.UI
 
       if (!_consoleEnabled)
       {
-        if (_buildMgr.GetComponent<Assets.Scripts.Managers.BuildingManager>()._currentBuild == null && _paveMgr.GetComponent<Assets.Scripts.Managers.PaveManager>()._currentPavement == null)
+        if (_buildMgr.GetComponent<Assets.Scripts.Managers.BuildingManager>()._currentBuild == null)
         {
           _consoleEnabled = true;
         }
@@ -127,7 +127,7 @@ namespace Assets.Scripts.UI
 
       switch (keyword)
       {
-        #region Pave
+        /*#region Pave
 
         case pave:
           //FORMAT: pave type
@@ -139,7 +139,7 @@ namespace Assets.Scripts.UI
           }
           break;
 
-        #endregion
+        #endregion*/
 
         #region Create
 
@@ -151,6 +151,12 @@ namespace Assets.Scripts.UI
             string type = inputParams[1];
             _buildMgr.GetComponent<Assets.Scripts.Managers.BuildingManager>().Create(type);
 
+          }
+          else if (inputParamsLength == 3)
+          {
+            Debug.Log("Pave Command");
+            string type = inputParams[2];
+            _buildMgr.GetComponent<Assets.Scripts.Managers.BuildingManager>().Pave(type);
           }
           break;
 
