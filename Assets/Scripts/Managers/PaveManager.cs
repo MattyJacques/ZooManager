@@ -59,7 +59,6 @@ namespace Assets.Scripts.Managers
       resetPoles();
       
       LoadPave();
-
     } // Start()
   
     void resetPoles()
@@ -115,52 +114,9 @@ namespace Assets.Scripts.Managers
         resetPoles();
        }
       
-      if (_startPole.position != new Vector3(-1000,-1000,-1000) && _endPole.position != new Vector3(-1000,-1000,-1000))
-      {//Start paving
-        _pathPaving = true;
-        //set the starting point
-         _currentPavement.position = _startPole.position;
-        //Marking the current spot to remember where to come back to
-        Vector3 currentPlace = _currentPavement.position;
-        //Place the first one at the start
-        PlaceBuilding();
-        while(_currentPavement.position.x != _endPole.position.x && _currentPavement.position.z != _endPole.position.z)
-        {//Proccess logic for pathing
-          _currentPavement.position = currentPlace;
-          Vector3 distance = _currentPavement.position - _endPole.position;
-         
-          if (Mathf.Abs(distance.x) > Mathf.Abs(distance.z))
-          {
-            if (_endPole.position.x > _currentPavement.position.x)
-            {
-              _currentPavement.position = _currentPavement.position + new Vector3 ( 1, 0, 0);
-            }
-            else
-            {
-              _currentPavement.position = _currentPavement.position - new Vector3 ( 1, 0, 0);
-            }
-          }
-          else
-          {
-            if (_endPole.position.z > _currentPavement.position.z)
-            {
-              _currentPavement.position = _currentPavement.position + new Vector3 ( 0, 0, 1);
-            }
-            else
-            {
-              _currentPavement.position = _currentPavement.position - new Vector3 ( 0, 0, 1);
-            }
-          }
-          currentPlace = _currentPavement.position;
-          PlaceBuilding();
-        }
-        
-        resetPoles();
-      }
-      
+      paving();
 
     } // Update()
-
 
     private void PlaceBuilding()
     { // Place the building in the world, add to buildings list
@@ -276,7 +232,51 @@ namespace Assets.Scripts.Managers
       }
 
     } // Pave()
-
+    
+    private void paving()
+    {
+      if (_startPole.position != new Vector3(-1000,-1000,-1000) && _endPole.position != new Vector3(-1000,-1000,-1000))
+      {//Start paving
+        _pathPaving = true;
+        //set the starting point
+         _currentPavement.position = _startPole.position;
+        //Marking the current spot to remember where to come back to
+        Vector3 currentPlace = _currentPavement.position;
+        //Place the first one at the start
+        PlaceBuilding();
+        while(_currentPavement.position.x != _endPole.position.x && _currentPavement.position.z != _endPole.position.z)
+        {//Proccess logic for pathing
+          _currentPavement.position = currentPlace;
+          Vector3 distance = _currentPavement.position - _endPole.position;
+         
+          if (Mathf.Abs(distance.x) > Mathf.Abs(distance.z))
+          {
+            if (_endPole.position.x > _currentPavement.position.x)
+            {
+              _currentPavement.position = _currentPavement.position + new Vector3 ( 1, 0, 0);
+            }
+            else
+            {
+              _currentPavement.position = _currentPavement.position - new Vector3 ( 1, 0, 0);
+            }
+          }
+          else
+          {
+            if (_endPole.position.z > _currentPavement.position.z)
+            {
+              _currentPavement.position = _currentPavement.position + new Vector3 ( 0, 0, 1);
+            }
+            else
+            {
+              _currentPavement.position = _currentPavement.position - new Vector3 ( 0, 0, 1);
+            }
+          }
+          currentPlace = _currentPavement.position;
+          PlaceBuilding();
+        }
+        resetPoles();
+      }
+    }
     private int GetBuildingIndex(int id, string name, CreateMode mode)
     { // Get the template index using the name or id, whichever mode is passed in
       // Returns -1 if not found
