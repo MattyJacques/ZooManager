@@ -23,15 +23,21 @@ namespace Assets.Scripts.Managers
 
     // Objects
     public GameObject _pole;
+    public Transform _startPole;
+    public Transform _endPole;
+    private bool _pathPaving = false;
+    private bool _snapping = false;
     public Transform _currentPavement;      // Current paveing to be placed
 
     private float _currentPaveY;            // Current paveing Y placement
     
     private Rect _rotateLeftRect;           //Rect for the rotate left button. Used to prevent over clicking.
     private Rect _rotateRightRect;          //Rect for the rotate right button. Used to prevent over clicking.
+    private Rect _lockRect;                 //Rect for the lock button. Used to snap
     
     public Texture2D _leftArrow;            //Images for buttons
     public Texture2D _rightArrow;           //Images for buttons
+    public Texture2D _lockTexture;           //Images for lock
     
     public Terrain terrain;                 //Allows the script to find the highest y point to place the building
 
@@ -44,6 +50,13 @@ namespace Assets.Scripts.Managers
       //627H & 880W //Test values to make sure that unity properlly streches the buttons to the right size.
       _rotateLeftRect = new Rect((Screen.width/44),Screen.height - (Screen.height/11),(Screen.width / 8.8f),(Screen.height / 31.35f));
       _rotateRightRect = new Rect((Screen.width/4.4f),Screen.height - (Screen.height/11),(Screen.width / 8.8f),(Screen.height / 31.35f));
+      _lockRect = new Rect((Screen.width/44),Screen.height - (Screen.height/6),(Screen.width / 8.8f),(Screen.height / 31.35f));
+      
+      _startPole = new GameObject().transform;
+      _endPole = new GameObject().transform;
+      
+      _startPole.position = new Vector3(-1000,-1000,-1000);
+      _endPole.position = new Vector3(-1000,-1000,-1000);
       
       LoadPave();
 
@@ -59,17 +72,28 @@ namespace Assets.Scripts.Managers
 
         UpdateMouseBuild();
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0) || Input.GetMouseButtonDown(0))
         { // If left click, place the building
           if (!_rotateLeftRect.Contains(new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y)) &&
-          !_rotateRightRect.Contains(new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y)))
+          !_rotateRightRect.Contains(new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y)) &&
+          !_lockRect.Contains(new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y)))
           {
-            PlaceBuilding();
+            if (Input.GetKey(KeyCode.LeftControl) && Input.GetMouseButtonDown(0))
+            {//PathFind instead
+              PlacePole();
+            }
+            else if (!Input.GetKey(KeyCode.LeftControl))
+            {
+              PlaceBuilding();
+            }
           }
         }
         else if (Input.GetMouseButtonDown(1))
         { // If right click, cancel build
           DeleteCurrBuild();
+          _startPole.position = new Vector3(-1000,-1000,-1000);
+          _endPole.position = new Vector3(-1000,-1000,-1000);
+          _pathPaving = false;
         }
         else if (Input.GetKeyDown(KeyCode.L))
         {
@@ -81,6 +105,53 @@ namespace Assets.Scripts.Managers
           Vector3 newRotation = new Vector3(0,45,0);
           _currentPavement.Rotate(newRotation);
         }
+      }
+       if (_currentPavement == null)
+       {
+        _startPole.position = new Vector3(-1000,-1000,-1000);
+        _endPole.position = new Vector3(-1000,-1000,-1000);
+        _pathPaving = false;
+       }
+      
+      if (_startPole.position != new Vector3(-1000,-1000,-1000) && _endPole.position != new Vector3(-1000,-1000,-1000))
+      {
+        _pathPaving = true;
+         _currentPavement.position = _startPole.position;
+        Vector3 currentPlace = _currentPavement.position;
+        PlaceBuilding();
+        while(_currentPavement.position.x != _endPole.position.x && _currentPavement.position.z != _endPole.position.z)
+        {
+          _currentPavement.position = currentPlace;
+          Vector3 distance = _currentPavement.position - _endPole.position;
+         
+          if (Mathf.Abs(distance.x) > Mathf.Abs(distance.z))
+          {
+            if (_endPole.position.x > _currentPavement.position.x)
+            {
+              _currentPavement.position = _currentPavement.position + new Vector3 ( 1, 0, 0);
+            }
+            else
+            {
+              _currentPavement.position = _currentPavement.position - new Vector3 ( 1, 0, 0);
+            }
+          }
+          else
+          {
+            if (_endPole.position.z > _currentPavement.position.z)
+            {
+              _currentPavement.position = _currentPavement.position + new Vector3 ( 0, 0, 1);
+            }
+            else
+            {
+              _currentPavement.position = _currentPavement.position - new Vector3 ( 0, 0, 1);
+            }
+          }
+          currentPlace = _currentPavement.position;
+          PlaceBuilding();
+        }
+        
+        _startPole.position = new Vector3(-1000,-1000,-1000);
+        _endPole.position = new Vector3(-1000,-1000,-1000);
       }
       
 
@@ -110,10 +181,11 @@ namespace Assets.Scripts.Managers
       }
       //Placement stuffs
       _pavements.Add(_currentPavement.gameObject);
-      _currentPavement = null;
+      if (!_pathPaving)
+        _currentPavement = null;
       numberOfPavs++;
       //Take money
-      _fakeMoney -= 5;
+      //_fakeMoney -= 5;
       if (_fakeMoney >= 5.0f)
       {//If you have enough money then keep making roads
         Pave(_paveType);
@@ -125,7 +197,22 @@ namespace Assets.Scripts.Managers
         
      
     } // PlaceBuilding()
-
+    
+    private void PlacePole()
+    {
+    
+      if (_startPole.position == new Vector3(-1000,-1000,-1000))
+      {
+        _startPole.position = new Vector3((int)_currentPavement.position.x,(int)_currentPavement.position.y,(int)_currentPavement.position.z);
+        Debug.Log(_startPole.position);
+      }
+      else if (_endPole.position == new Vector3(-1000,-1000,-1000))
+      {
+        _endPole.position = new Vector3((int)_currentPavement.position.x,(int)_currentPavement.position.y,(int)_currentPavement.position.z);
+        Debug.Log(_endPole.position);
+      }
+      
+    }
 
     private void DeleteCurrBuild()
     { // Delete that current building that has been instantiated
@@ -149,19 +236,15 @@ namespace Assets.Scripts.Managers
 
         Vector3 newPos = new Vector3(hit.point.x, _currentPaveY, hit.point.z);
         
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetKey(KeyCode.LeftShift) || _snapping)
         {//Snap
-          //48 / 10 = 4.8 -> (int) 4
-          //4 * 10 = 40
-          /*int roundX = (int)(newPos.x / 2);
-          newPos.x = roundX * 2;
-          int roundZ = (int)(newPos.z / 2);
-          newPos.z = roundZ * 2;*/
+        
           int roundX = (int)newPos.x;
           int roundZ = (int)newPos.z;
           newPos.x = roundX;
           newPos.z = roundZ;
-        }
+          
+        } 
         
         //Resets _currentPaveY = a usable variable
         _currentPaveY = 1;
@@ -264,6 +347,13 @@ namespace Assets.Scripts.Managers
         {
           Vector3 newRotation = new Vector3(0,45,0);
           _currentPavement.Rotate(newRotation);
+        }
+        
+        //Remove this next line to remove all trace of text
+        GUI.Label(new Rect(_lockRect.x + (Screen.width/58),_lockRect.y - (Screen.height/31.35f),_lockRect.width,_lockRect.height), "Snap");
+        if(GUI.Button(_lockRect, _lockTexture))
+        {
+          _snapping = !_snapping;
         }
       }
     } // OnGUI()
