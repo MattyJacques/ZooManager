@@ -22,11 +22,12 @@ namespace Assets.Scripts.Managers
     private List<GameObject> _pavements;    // List of current active paveings
 
     // Objects
-    public GameObject _pole;
-    public Transform _startPole;
-    public Transform _endPole;
-    private bool _pathPaving = false;
-    private bool _snapping = false;
+    public GameObject _pole;                //The prefab used to generate the poles
+    public Transform _startPole;            //Where pathing will start
+    public Transform _endPole;              //Where pathing will end
+    private bool _pathPaving = false;       //Check if we are pathing and whether to reset _currentPavement or not
+    
+    private bool _snapping = false;         //Snapping button
     public Transform _currentPavement;      // Current paveing to be placed
 
     private float _currentPaveY;            // Current paveing Y placement
@@ -55,13 +56,18 @@ namespace Assets.Scripts.Managers
       _startPole = new GameObject().transform;
       _endPole = new GameObject().transform;
       
-      _startPole.position = new Vector3(-1000,-1000,-1000);
-      _endPole.position = new Vector3(-1000,-1000,-1000);
+      resetPoles();
       
       LoadPave();
 
     } // Start()
-
+  
+    void resetPoles()
+    {
+      _startPole.position = new Vector3(-1000,-1000,-1000);
+      _endPole.position = new Vector3(-1000,-1000,-1000);
+      _pathPaving = false;
+    }
     
     void Update()
     { // Check if building is currently following mouse position
@@ -91,9 +97,7 @@ namespace Assets.Scripts.Managers
         else if (Input.GetMouseButtonDown(1))
         { // If right click, cancel build
           DeleteCurrBuild();
-          _startPole.position = new Vector3(-1000,-1000,-1000);
-          _endPole.position = new Vector3(-1000,-1000,-1000);
-          _pathPaving = false;
+          resetPoles();
         }
         else if (Input.GetKeyDown(KeyCode.L))
         {
@@ -108,19 +112,20 @@ namespace Assets.Scripts.Managers
       }
        if (_currentPavement == null)
        {
-        _startPole.position = new Vector3(-1000,-1000,-1000);
-        _endPole.position = new Vector3(-1000,-1000,-1000);
-        _pathPaving = false;
+        resetPoles();
        }
       
       if (_startPole.position != new Vector3(-1000,-1000,-1000) && _endPole.position != new Vector3(-1000,-1000,-1000))
-      {
+      {//Start paving
         _pathPaving = true;
+        //set the starting point
          _currentPavement.position = _startPole.position;
+        //Marking the current spot to remember where to come back to
         Vector3 currentPlace = _currentPavement.position;
+        //Place the first one at the start
         PlaceBuilding();
         while(_currentPavement.position.x != _endPole.position.x && _currentPavement.position.z != _endPole.position.z)
-        {
+        {//Proccess logic for pathing
           _currentPavement.position = currentPlace;
           Vector3 distance = _currentPavement.position - _endPole.position;
          
@@ -150,8 +155,7 @@ namespace Assets.Scripts.Managers
           PlaceBuilding();
         }
         
-        _startPole.position = new Vector3(-1000,-1000,-1000);
-        _endPole.position = new Vector3(-1000,-1000,-1000);
+        resetPoles();
       }
       
 
@@ -203,13 +207,17 @@ namespace Assets.Scripts.Managers
     
       if (_startPole.position == new Vector3(-1000,-1000,-1000))
       {
+        Destroy(_startPole.gameObject);
+        string poleName = "Pavings/Prefabs/Pole";
+        _startPole = ((GameObject)Instantiate(Resources.Load(poleName))).transform;
         _startPole.position = new Vector3((int)_currentPavement.position.x,(int)_currentPavement.position.y,(int)_currentPavement.position.z);
-        Debug.Log(_startPole.position);
       }
       else if (_endPole.position == new Vector3(-1000,-1000,-1000))
       {
+        Destroy(_endPole.gameObject);
+        string poleName = "Pavings/Prefabs/Pole";
+        _endPole = ((GameObject)Instantiate(Resources.Load(poleName))).transform;
         _endPole.position = new Vector3((int)_currentPavement.position.x,(int)_currentPavement.position.y,(int)_currentPavement.position.z);
-        Debug.Log(_endPole.position);
       }
       
     }
@@ -221,7 +229,6 @@ namespace Assets.Scripts.Managers
       _currentPavement = null;
 
     } // DeleteCurrBuild()
-
 
     private void UpdateMouseBuild()
     { // Update the position of the building object that is following the
@@ -302,7 +309,6 @@ namespace Assets.Scripts.Managers
       return templateIndex;
 
     } // GetTemplateIndex()
-
 
     private void LoadPave()
     { // Load buildings from Assets/Resources
