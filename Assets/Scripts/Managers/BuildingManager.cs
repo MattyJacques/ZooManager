@@ -38,8 +38,12 @@ namespace Assets.Scripts.Managers
 
     public Texture2D _leftArrow;            //Images for buttons
     public Texture2D _rightArrow;           //Images for buttons
+    public Texture2D _lockTexture;           //Images for lock
 
     public Terrain terrain;                 //Allows the script to find the highest y point to place the building
+    
+    public bool _isPave = false;            //Are you placing pavement or building
+    public PaveScript _pave;                //Assistance in placing script
 
     void Start()
     { // Load the buildings from Resources
@@ -49,10 +53,13 @@ namespace Assets.Scripts.Managers
       _rotateRightRect = new Rect((Screen.width / 4.4f), Screen.height - (Screen.height / 11), (Screen.width / 8.8f), (Screen.height / 31.35f));
 
       LoadBuildings();
+      
+      //Set values
+      _pave = new PaveScript();
+      _pave.Start();
 
     } // Start()
-
-    
+  
     void Update()
     { // Check if building is currently following mouse position
 
@@ -61,20 +68,29 @@ namespace Assets.Scripts.Managers
         // and check for mouse input
 
         UpdateMouseBuild();
-
-        if (Input.GetMouseButtonDown(0))
+        
+        if (Input.GetMouseButtonDown(0) || (_isPave && Input.GetMouseButtonDown(0)))
         { // If left click, place the building
 
           if (!_rotateLeftRect.Contains(new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y)) &&
               !_rotateRightRect.Contains(new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y)))
           {
-            PlaceBuilding();
+            if (_isPave && !_pave._lockRect.Contains(new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y)))
+            {//Determine if you are placing placement poles
+              if (_pave.passInput(_currentBuild.position))
+                PlacePavement();
+            }
+            else if (!_isPave)
+            {
+              PlaceBuilding();
+            }
           }
 
         }
         else if (Input.GetMouseButtonDown(1))
         { // If right click, cancel build
           DeleteCurrBuild();
+          _pave.resetPoles();
         }
         else if (Input.GetKeyDown(KeyCode.L))
         {
@@ -86,11 +102,69 @@ namespace Assets.Scripts.Managers
           Vector3 newRotation = new Vector3(0, 45, 0);
           _currentBuild.Rotate(newRotation);
         }
+        if (_currentBuild == null)
+        {
+          _pave.resetPoles(); 
+        }
+        else if (_pave._startPole.position != new Vector3(-1000,-1000,-1000) && _pave._endPole.position != new Vector3(-1000,-1000,-1000))
+        {
+          paving();
+        }
       }
 
     } // Update()
+  
+    public void Pave(string type)
+    {//Loads the pavement as _currentBuild
+      _isPave = true;
+      _pave._paveType = type;
+      type = "Pavings/Prefabs/" + type;
+      _currentBuild = ((GameObject)Instantiate(Resources.Load(type))).transform;
+      _currentBuild.name = _currentBuild.name + _pave._numberOfPavs;
+    }//Pave()
 
-
+    private void paving()
+    {//The logic of pathing
+      _pave._pathPaving = true;
+      //set the starting point
+       _currentBuild.position = _pave._startPole.position;
+      //Marking the current spot to remember where to come back to
+      Vector3 currentPlace = _currentBuild.position;
+      //Place the first one at the start
+      PlacePavement();
+      while(_currentBuild.position.x != _pave._endPole.position.x && _currentBuild.position.z != _pave._endPole.position.z)
+      {//Proccess logic for pathing
+        _currentBuild.position = currentPlace;
+        Vector3 distance = _currentBuild.position - _pave._endPole.position;
+       
+        if (Mathf.Abs(distance.x) > Mathf.Abs(distance.z))
+        {
+          if (_pave._endPole.position.x > _currentBuild.position.x)
+          {
+            _currentBuild.position = _currentBuild.position + new Vector3 ( 1, 0, 0);
+          }
+          else
+          {
+            _currentBuild.position = _currentBuild.position - new Vector3 ( 1, 0, 0);
+          }
+        }
+        else
+        {
+          if (_pave._endPole.position.z > _currentBuild.position.z)
+          {
+            _currentBuild.position = _currentBuild.position + new Vector3 ( 0, 0, 1);
+          }
+          else
+          {
+            _currentBuild.position = _currentBuild.position - new Vector3 ( 0, 0, 1);
+          }
+        }
+        currentPlace = _currentBuild.position;
+        PlacePavement();
+      }
+      _pave.  resetPoles();
+    }//paving()
+    
     private void PlaceBuilding()
     { // Place the building in the world, add to buildings list
       // stop mouse position updating building position
@@ -100,6 +174,34 @@ namespace Assets.Scripts.Managers
      
     } // PlaceBuilding()
 
+    private void PlacePavement()
+    { // Place the building in the world, add to buildings list
+      // stop mouse position updating building position
+      bool place = true;
+      Collider[] colliders;
+       if((colliders = Physics.OverlapSphere(_currentBuild.position, 0.39f /* Radius */)).Length > 1) //Presuming the object you are testing also has a collider 0 otherwise
+       {//Checks to see if anything is in the way
+        foreach(Collider collider in colliders)
+        {
+          GameObject go = collider.gameObject; //This is the game object you collided with
+          if(go.transform.name != _currentBuild.name &&  go.transform.name != "Terrain") 
+          {
+            Debug.Log(go.transform.name);
+            place = false;
+          }
+        }
+       }
+      if (!place)
+      {//if something is in the way then dont place it
+        return;
+      }
+      //Placement stuffs
+      //_pavements.Add(_currentBuild.gameObject);
+      if (!_pave._pathPaving)
+        _currentBuild = null;
+      _pave._numberOfPavs++;
+      Pave(_pave._paveType);
+    }
 
     private void DeleteCurrBuild()
     { // Delete that current building that has been instantiated
@@ -109,18 +211,22 @@ namespace Assets.Scripts.Managers
 
     } // DeleteCurrBuild()
 
-
     private void UpdateMouseBuild()
     { // Update the position of the building object that is following the
       // mouse position to the new mouse position
 
+      if (_isPave)
+      {
+        _currentBuild.position = _pave.UpdateMouseBuild(_currentBuild.position, terrain);
+        return;
+      }
       // Create raycast from screen point using mouse position
       Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
       RaycastHit hit;
 
       if (Physics.Raycast(ray, out hit))
       { // If raycast hits collider, update position of _currentBuild
-
+        
         Vector3 newPos = new Vector3(hit.point.x, _currBuildY, hit.point.z);
 
         //Resets _currBuildY = a usable variable
@@ -132,7 +238,6 @@ namespace Assets.Scripts.Managers
       }
 
     } // UpdateMouseBuilding()
-
 
     public void Create(string buildName)
     { // Get the index of the building with the name provided, then set the
@@ -148,7 +253,6 @@ namespace Assets.Scripts.Managers
       }
 
     } // Create()
-
 
     private int GetBuildingIndex(int id, string name, CreateMode mode)
     { // Get the template index using the name or id, whichever mode is passed in
@@ -183,7 +287,6 @@ namespace Assets.Scripts.Managers
 
     } // GetTemplateIndex()
 
-
     private void LoadBuildings()
     { // Load buildings from Assets/Resources
 
@@ -209,7 +312,6 @@ namespace Assets.Scripts.Managers
 
     } // LoadBuildings()
 
-
     private void OnGUI()
     { // Display buttons for rotation 
       if (_currentBuild != null)
@@ -228,6 +330,16 @@ namespace Assets.Scripts.Managers
         {
           Vector3 newRotation = new Vector3(0, 45, 0);
           _currentBuild.Rotate(newRotation);
+        }
+        
+        if (_isPave)
+        {
+          //Remove this next line to remove all trace of text
+          GUI.Label(new Rect(_pave._lockRect.x + (Screen.width/58),_pave._lockRect.y - (Screen.height/31.35f),_pave._lockRect.width,_pave._lockRect.height), "Snap");
+          if(GUI.Button(_pave._lockRect, _lockTexture))
+          {
+            _pave._snapping = !_pave._snapping;
+          }
         }
       }
     } // OnGUI()

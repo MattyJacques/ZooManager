@@ -28,8 +28,9 @@ namespace Assets.Scripts.UI
     private string _inputString = "";
 
     private GameObject _player;
-    private Component _buildMGR;
-    private Component _animalMGR;
+    private Component _buildMgr;
+    private Component _animalMgr;
+    private Component _paveMgr;
 
     private bool _consoleEnabled = true;    // Whether the console is shown and active
     private bool _swapConsoleFunction;      // Switch between entering data and finding IDs
@@ -39,21 +40,23 @@ namespace Assets.Scripts.UI
     private List<string> _commands = new List<string>();
 
     private Transform _transform;
-    
+
     // Rect for the console text box
     private Rect _consoleRect = new Rect(10, 10, 1000000, 20);
 
 #pragma warning disable
     //Print stuff to Unity debugging console
-    [SerializeField] private bool PRINT_LOADING_PREFABS, PRINT_SPAWNING_PREFABS;
+    [SerializeField]
+    private bool PRINT_LOADING_PREFABS, PRINT_SPAWNING_PREFABS;
 #pragma warning restore
 
     private void Start()
     {
       //Find gameobjects etc.
       _player = GameObject.FindWithTag("Player");
-      _buildMGR = GetComponent("BuildingManager");
-      _animalMGR = GetComponent("AnimalManager");
+      _buildMgr = GetComponent("BuildingManager");
+      _animalMgr = GetComponent("AnimalManager");
+      _paveMgr = GetComponent("PaveManager");
 
       //Filling SPAWN_ITEMS
       DirectoryInfo directoryInfo = new DirectoryInfo("Assets/Resources");
@@ -79,7 +82,7 @@ namespace Assets.Scripts.UI
 
     private void OnPointerDownDelegate(PointerEventData data)
     {
-        print("test");
+      print("test");
     }//OnPointerDownDelegate()
 
     private void Update()
@@ -91,7 +94,7 @@ namespace Assets.Scripts.UI
 
       if (!_consoleEnabled)
       {
-        if (_buildMGR.GetComponent<Assets.Scripts.Managers.BuildingManager>()._currentBuild == null)
+        if (_buildMgr.GetComponent<Assets.Scripts.Managers.BuildingManager>()._currentBuild == null)
         {
           _consoleEnabled = true;
         }
@@ -111,11 +114,12 @@ namespace Assets.Scripts.UI
       _commands.Add(submitString);
 
       //KEYWORDS
-      const string create = "create";
       const string spawn = "spawn";
       const string cull = "cull";
       const string clear = "clear";
       const string destroy = "destroy";
+      const string create = "create";
+      const string pave = "pave";
 
       string[] inputParams = submitString.Split(' ');
       int inputParamsLength = inputParams.Length;
@@ -123,6 +127,20 @@ namespace Assets.Scripts.UI
 
       switch (keyword)
       {
+        /*#region Pave
+
+        case pave:
+          //FORMAT: pave type
+          if (inputParamsLength == 2)
+          {
+            Debug.Log("Pave Command");
+            string type = inputParams[1];
+            _paveMgr.GetComponent<Assets.Scripts.Managers.PaveManager>().Pave(type);
+          }
+          break;
+
+        #endregion*/
+
         #region Create
 
         case create:
@@ -131,8 +149,14 @@ namespace Assets.Scripts.UI
           {
             Debug.Log("Create Command");
             string type = inputParams[1];
-            _buildMGR.GetComponent<Assets.Scripts.Managers.BuildingManager>().Create(type);
-            
+            _buildMgr.GetComponent<Assets.Scripts.Managers.BuildingManager>().Create(type);
+
+          }
+          else if (inputParamsLength == 3)
+          {
+            Debug.Log("Pave Command");
+            string type = inputParams[2];
+            _buildMgr.GetComponent<Assets.Scripts.Managers.BuildingManager>().Pave(type);
           }
           break;
 
@@ -175,9 +199,8 @@ namespace Assets.Scripts.UI
               }
             }
 
-            _animalMGR.GetComponent<Assets.Scripts.Managers.AnimalManager>().
+            _animalMgr.GetComponent<Assets.Scripts.Managers.AnimalManager>().
                        Create(type, amount, location);
-
 
             /*#region Begin dealing with additional parameters
 
@@ -192,7 +215,8 @@ namespace Assets.Scripts.UI
               }
             }
 
-            #endregion End dealing with additional parameters~*/
+            #endregion End dealing with additional parameters*/
+
           }
           else
           {
@@ -200,7 +224,7 @@ namespace Assets.Scripts.UI
           }
           break;
 
-          #endregion
+        #endregion
 
         #region Cull
 
@@ -229,13 +253,13 @@ namespace Assets.Scripts.UI
           _commands.Clear();
           break;
 
-        #endregion
+          #endregion
       } // switch()
     } // Submit()
 
     private void OnGUI()
     {
-      float xSize = _inputString.Length*7.5f;
+      float xSize = _inputString.Length * 7.5f;
       xSize = Mathf.Clamp(xSize, 200, 400);
       Vector2 consoleSize = _consoleRect.size;
       consoleSize.x = xSize;
@@ -252,26 +276,26 @@ namespace Assets.Scripts.UI
 
         for (int i = 0; i < _commands.Count; i++)
         {
-          GUI.Label(new Rect(10, i*14 + 32, Screen.width, 20), _commands[_commands.Count - i - 1]);
+          GUI.Label(new Rect(10, i * 14 + 32, Screen.width, 20), _commands[_commands.Count - i - 1]);
         }
       }
     } // OnGUI()
 
     private void ClearConsole()
     {
-        _inputString = "";
+      _inputString = "";
     }// ClearConsole()
 
     //Private methods
     private bool AddClassToGameObject(GameObject obj, string s)
     {
-        if (!obj.AddComponent(Type.GetType(s)))
-        {
-            _commands.Add("Could not find \"" + s + "\" class");
-            Destroy(obj);
-            return false;
-        }
-        return true;
+      if (!obj.AddComponent(Type.GetType(s)))
+      {
+        _commands.Add("Could not find \"" + s + "\" class");
+        Destroy(obj);
+        return false;
+      }
+      return true;
     } // AddClassToGameObject()
   }
 }
