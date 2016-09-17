@@ -44,6 +44,7 @@ namespace Assets.Scripts.Managers
     
     public bool _isPave = false;            //Are you placing pavement or building
     public PaveScript _pave;                //Assistance in placing script
+    public  AStar _aStar;
 
     void Start()
     { // Load the buildings from Resources
@@ -170,6 +171,7 @@ namespace Assets.Scripts.Managers
       // stop mouse position updating building position
 
       _buildings.Add(_currentBuild.gameObject);
+      _aStar.placePoint("wall",(int)_currentBuild.position.x/ 5,(int)_currentBuild.position.z/5);
       _currentBuild = null;
      
     } // PlaceBuilding()

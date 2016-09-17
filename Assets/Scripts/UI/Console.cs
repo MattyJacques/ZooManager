@@ -28,6 +28,7 @@ namespace Assets.Scripts.UI
     private string _inputString = "";
 
     private GameObject _player;
+    public  AStar _aStar;
     private Component _buildMgr;
     private Component _animalMgr;
     private Component _paveMgr;
@@ -119,7 +120,7 @@ namespace Assets.Scripts.UI
       const string clear = "clear";
       const string destroy = "destroy";
       const string create = "create";
-      const string pave = "pave";
+      const string point = "point";
 
       string[] inputParams = submitString.Split(' ');
       int inputParamsLength = inputParams.Length;
@@ -127,19 +128,21 @@ namespace Assets.Scripts.UI
 
       switch (keyword)
       {
-        /*#region Pave
+        #region point
 
-        case pave:
-          //FORMAT: pave type
-          if (inputParamsLength == 2)
+        case point:
+          //FORMAT: point type
+          if (inputParamsLength == 4)
           {
-            Debug.Log("Pave Command");
+            Debug.Log("point Command");
+            int xcoord = Convert.ToInt32(inputParams[2]);
+            int zcoord = Convert.ToInt32(inputParams[3]);
             string type = inputParams[1];
-            _paveMgr.GetComponent<Assets.Scripts.Managers.PaveManager>().Pave(type);
+            _aStar.placePoint(type,xcoord,zcoord);
           }
           break;
 
-        #endregion*/
+        #endregion
 
         #region Create
 
