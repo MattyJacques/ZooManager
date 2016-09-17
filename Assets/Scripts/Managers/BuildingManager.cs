@@ -3,11 +3,6 @@
 // Author       : Matthew Jacques
 // Date         : 03/09/2016
 
-//Last Edit
-//Update Purpose: Updated the building placement procedure.
-//Author        : Jacob Miller
-//Date          : 09/11/2016
-
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -56,7 +51,7 @@ namespace Assets.Scripts.Managers
       LoadBuildings();
       
       //Set values
-      _pave = new PaveScript();
+      _pave = gameObject.AddComponent<PaveScript>() as PaveScript;
       _pave.Start();
 
     } // Start()
