@@ -31,7 +31,6 @@ namespace Assets.Scripts.UI
     public  AStar _aStar;
     private Component _buildMgr;
     private Component _animalMgr;
-    private Component _paveMgr;
 
     private bool _consoleEnabled = true;    // Whether the console is shown and active
     private bool _swapConsoleFunction;      // Switch between entering data and finding IDs
@@ -57,7 +56,6 @@ namespace Assets.Scripts.UI
       _player = GameObject.FindWithTag("Player");
       _buildMgr = GetComponent("BuildingManager");
       _animalMgr = GetComponent("AnimalManager");
-      _paveMgr = GetComponent("PaveManager");
 
       //Filling SPAWN_ITEMS
       DirectoryInfo directoryInfo = new DirectoryInfo("Assets/Resources");
@@ -120,7 +118,6 @@ namespace Assets.Scripts.UI
       const string clear = "clear";
       const string destroy = "destroy";
       const string create = "create";
-      const string point = "point";
 
       string[] inputParams = submitString.Split(' ');
       int inputParamsLength = inputParams.Length;
@@ -128,22 +125,6 @@ namespace Assets.Scripts.UI
 
       switch (keyword)
       {
-        #region point
-
-        case point:
-          //FORMAT: point type
-          if (inputParamsLength == 4)
-          {
-            Debug.Log("point Command");
-            int xcoord = Convert.ToInt32(inputParams[2]);
-            int zcoord = Convert.ToInt32(inputParams[3]);
-            string type = inputParams[1];
-            _aStar.placePoint(type,xcoord,zcoord);
-          }
-          break;
-
-        #endregion
-
         #region Create
 
         case create:

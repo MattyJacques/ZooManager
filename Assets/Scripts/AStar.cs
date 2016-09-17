@@ -15,7 +15,6 @@ public class AStar : MonoBehaviour
     public int currentNode = 0; 
     public Node targetNode;
     public GameObject testObject;
-    IEnumerator ie;
     
     public void placePoint(string type, int xcoord, int zcoord)
     {
@@ -42,8 +41,7 @@ public class AStar : MonoBehaviour
     }
     
     private IEnumerator InitMap()
-    {
-        ie = FindPath().GetEnumerator();            
+    {         
         map = new Node[width, height];
         for (int i = 0; i < width; i++)
         {
@@ -70,7 +68,7 @@ public class AStar : MonoBehaviour
       }
       else if (Input.GetKeyDown(KeyCode.E))
       {
-        StartCoroutine(pushPath());
+        StartCoroutine(FindPath());
       }
       if (pathNodes.Any())
       {
@@ -82,15 +80,7 @@ public class AStar : MonoBehaviour
       }
     }
     
-    private IEnumerator pushPath()
-    {
-      foreach (var a in FindPath()) 
-      {
-        yield return null;
-      }
-      StopAllCoroutines();
-    }
-    private IEnumerable FindPath()
+    private IEnumerator FindPath()
     {
         Node startNode = map.Cast<Node>().FirstOrDefault(a => a.type == 'a');
         Node endNode = map.Cast<Node>().FirstOrDefault(a => a.type == 'b');
