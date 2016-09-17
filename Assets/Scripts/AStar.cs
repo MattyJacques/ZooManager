@@ -1,21 +1,26 @@
-﻿using System.Linq;
+﻿// Title        : AStar.cs
+// Purpose      : Provides pathfinding for scripts
+// Author       : Jacob Miller
+// Date         : 09/17/2016
+
+using System.Linq;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 public class AStar : MonoBehaviour
 {
-    public enum NodeType { None, Wall, A, B }
-    public Node[,] _map;
-    private const int _width = 100;
-    private const int _height = 100;
-    private const int _scale = 5;
-    private Vector2 _startPos = new Vector2(1,1);
-    private Vector2 _endPos = new Vector2(85,63);
-    private List<Vector2> _walls = new List<Vector2>();
-    public List<Node> _pathNodes = new List<Node>();
-    public int _currentNode = 0; 
-    public Node _targetNode;
-    public GameObject _testObject;
+    public enum NodeType { None, Wall, A, B }             //The types of nodes possible
+    public Node[,] _map;                                  //Map of all nodes
+    private const int _width = 100;                       //Size of the nodes map width
+    private const int _height = 100;                      //Size of the nodes map height
+    private const int _scale = 5;                         //The scale of the terrain.
+    private Vector2 _startPos = new Vector2(1,1);         //FTPO where you start
+    private Vector2 _endPos = new Vector2(85,63);         //FTPO where you end
+    private List<Vector2> _walls = new List<Vector2>();   //List of wall locations
+    public List<Node> _pathNodes = new List<Node>();      //FTPO list of nodes in a path
+    public int _currentNode = 0;                          //FTPO cycle nodes value 
+    public Node _targetNode;                              //FTPO what node you are moving to
+    public GameObject _testObject;                        //FTPO
     
     public void placePoint(string type, int xcoord, int zcoord)
     {//Places the deisred type at a location on the map. Also removes the previous point for start and end
@@ -53,7 +58,6 @@ public class AStar : MonoBehaviour
           yield return null;
         }
         Debug.Log("Fin Init Map");
-				StopAllCoroutines();
     }//initMap()
     
     public void Update()
