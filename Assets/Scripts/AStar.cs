@@ -154,4 +154,14 @@ public class AStar : MonoBehaviour
       public int x { get { return (int)pos.x; } }
       public int y { get { return (int)pos.y; } }
     }//(class)Node
+    
+    public class AStarTracker
+    {
+      public Vector2 _startPos = new Vector2(1,1);          //where you start
+      public Vector2 _endPos = new Vector2(85,63);         //where you end
+      public List<Node> _pathNodes = new List<Node>();      //list of nodes in a path
+      public int _currentNode = 0;                          //cycle nodes value 
+      public Node _targetNode;                              //what node you are moving to
+      public Transform _testObject;                         //moving object
+    }
 }
