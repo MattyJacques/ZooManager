@@ -3,11 +3,6 @@
 // Author       : Matthew Jacques
 // Date         : 03/09/2016
 
-//Last Edit
-//Update Purpose: Updated the building placement procedure.
-//Author        : Jacob Miller
-//Date          : 09/11/2016
-
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -44,6 +39,7 @@ namespace Assets.Scripts.Managers
     
     public bool _isPave = false;            //Are you placing pavement or building
     public PaveScript _pave;                //Assistance in placing script
+    public  AStar _aStar;
 
     void Start()
     { // Load the buildings from Resources
@@ -55,7 +51,7 @@ namespace Assets.Scripts.Managers
       LoadBuildings();
       
       //Set values
-      _pave = new PaveScript();
+      _pave = gameObject.AddComponent<PaveScript>() as PaveScript;
       _pave.Start();
 
     } // Start()
@@ -170,6 +166,7 @@ namespace Assets.Scripts.Managers
       // stop mouse position updating building position
 
       _buildings.Add(_currentBuild.gameObject);
+      _aStar._map = _aStar.PlaceWall((int)_currentBuild.position.x/_aStar._scale,(int)_currentBuild.position.z/_aStar._scale, _aStar._map);
       _currentBuild = null;
      
     } // PlaceBuilding()
