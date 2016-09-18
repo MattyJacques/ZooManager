@@ -15,7 +15,7 @@ public class AStar : MonoBehaviour
     public int _scale = 5;                         //The scale of the terrain.
     private List<Vector2> _walls = new List<Vector2>();   //List of wall locations
     
-    public Node[,] placeWall(int xcoord, int zcoord, Node[,] map)
+    public Node[,] PlaceWall(int xcoord, int zcoord, Node[,] map)
     {//Places wall at a location on the map.
         
       Vector2 pos = new Vector2((int)(xcoord),(int)(zcoord));
@@ -23,14 +23,14 @@ public class AStar : MonoBehaviour
       _walls.Add(new Vector2((int)(xcoord),(int)(zcoord)));
       
       return map;
-    }// placePoint()
+    }// PlaceWall()
     
-    public void removePoint(int xcoord, int zcoord)
+    public void RemovePoint(int xcoord, int zcoord)
     {//Removes the desired point
       _map[(int)xcoord,(int)zcoord].type = '-';
-    }// removePoint()
+    }// RemovePoint()
     
-    private IEnumerator initMap()
+    private IEnumerator InitMap()
     {//Assigns the _map data with all empty nodes         
         _map = new Node[_width, _height];
         for (int i = 0; i < _width; i++)
@@ -42,14 +42,14 @@ public class AStar : MonoBehaviour
           yield return null;
         }
         Debug.Log("Fin Init Map");
-    }//initMap()
+    }//InitMap()
     
     public void Start()
     {
-      StartCoroutine (initMap());
+      StartCoroutine (InitMap());
     }//Start()
     
-    public IEnumerable<List<Node>> findPath(Vector2 startPos, Vector2 endPos)
+    public IEnumerable<List<Node>> FindPath(Vector2 startPos, Vector2 endPos)
     {//Pathfinding
       var tempMap = _map;
       List<Node> pathNodes = new List<Node>();
@@ -93,6 +93,6 @@ public class AStar : MonoBehaviour
           Debug.Log(cur.x + ", " + cur.y);
       }
       yield return pathNodes;
-    }//findPath()
+    }//FindPath()
     
 }

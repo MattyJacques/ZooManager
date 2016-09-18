@@ -166,7 +166,7 @@ namespace Assets.Scripts.Managers
       // stop mouse position updating building position
 
       _buildings.Add(_currentBuild.gameObject);
-      _aStar._map = _aStar.placeWall((int)_currentBuild.position.x/_aStar._scale,(int)_currentBuild.position.z/_aStar._scale, _aStar._map);
+      _aStar._map = _aStar.PlaceWall((int)_currentBuild.position.x/_aStar._scale,(int)_currentBuild.position.z/_aStar._scale, _aStar._map);
       _currentBuild = null;
      
     } // PlaceBuilding()

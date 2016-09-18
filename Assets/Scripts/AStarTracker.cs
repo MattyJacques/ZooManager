@@ -18,30 +18,30 @@ public class AStarTracker : MonoBehaviour
   public Transform _testObject;                         //moving object
   public AStar _aStar;                                  //AStar
   
-  public void findPoint()
+  public void FindPoint()
   {//starts the coroutine
-    StartCoroutine(assignCoroutine());
-  }//findPoint()
+    StartCoroutine(AssignCoroutine());
+  }//FindPoint()
   
-  public void findPoint(Vector2 startPos,Vector2 endPos)
+  public void FindPoint(Vector2 startPos,Vector2 endPos)
   {//Assigns values then starts the coroutine
     _startPos = startPos;
     _endPos = endPos;
-    StartCoroutine(assignCoroutine());
-  }//findPoint(V2,V2)
+    StartCoroutine(AssignCoroutine());
+  }//FindPoint(V2,V2)
   
-  public IEnumerator assignCoroutine()
+  public IEnumerator AssignCoroutine()
   {//Coroutine for calculating a path
     List<Node> aHold = new List<Node>();
-    foreach (var a in _aStar.findPath(_startPos,_endPos)) 
+    foreach (var a in _aStar.FindPath(_startPos,_endPos)) 
     {
       aHold = a;
       yield return null;
     }
     _pathNodes = aHold;
-  }//assignCoroutine()
+  }//AssignCoroutine()
   
-  public void moveTowardsNode()
+  public void MoveTowardsNode()
   {//Checks to see if pathNodes exist and and if you have started them
     if (_pathNodes.Any())
     {
@@ -49,11 +49,11 @@ public class AStarTracker : MonoBehaviour
       {
         _targetNode = _pathNodes[_currentNode];
       }
-      moveTowardsNodeMath();
+      MoveTowardsNodeMath();
     }
-  }//moveTowardsNode()
+  }//MoveTowardsNode()
   
-  private void moveTowardsNodeMath()
+  private void MoveTowardsNodeMath()
   {//Moves the test object along the pathnodes
     // rotate towards the target
     Vector3 nodePos = new Vector3(_targetNode.x*_aStar._scale,1,_targetNode.y*_aStar._scale);
@@ -67,6 +67,6 @@ public class AStarTracker : MonoBehaviour
       _currentNode ++ ;
       _targetNode = _pathNodes[_currentNode];
     }
- }//moveTowardsNodeMath()
+ }//MoveTowardsNodeMath()
  
 }//Class AStarTracker
