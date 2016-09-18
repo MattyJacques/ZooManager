@@ -1,25 +1,28 @@
-{"levelData":[
+{"levels":[
+{
+  "id": 1,
+  "winCondition": 1,
+  "loseCondition": 1,
+  "buildings":[
   {
-    "id":1,
-    "winCondition":1,
-    "loseCondition":1,
-  },
+    "name": "ticketbooth",
+    "posX": 1,
+    "posY": 1,
+    "posZ": 1,
+    "rotX": 90,
+    "rotY": 0,
+    "rotZ": 0,
+    "rotW":0
+  }],
+  "animals":[
   {
-	"name": "ticketbooth",
-	"posX": 1,
-	"posY": 1,
-	"posZ": 1,
-	"rotX": 90,
-	"rotY": 0,
-	"rotZ": 0
-  },
-  {
-	"name": "emperorpeng",
-	"posX": 1,
-	"posY": 1,
-	"posZ": 1,
-	"thirst": 100,
-	"hunger": 100,
-	"fun": 100
+    "name": "emperorpeng",
+    "posX": 1,
+    "posY": 1,
+    "posZ": 1,
+    "thirst": 100,
+    "hunger": 100,
+    "fun": 100
   }]
+}]
 }
