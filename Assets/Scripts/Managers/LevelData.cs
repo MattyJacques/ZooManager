@@ -24,8 +24,8 @@ public class LevelData : MonoBehaviour {
         
         void Update()
         {
-            foreach (LevelBuildingTemplate building in _templates.buildings) {
-                GameObject obj = Instantiate(Resources.Load("Buildings/Prefabs/" + building.name, typeof(GameObject)), new Vector3(building.posX,building.posY,building.posZ), new Quaternion (building.rotX, building.rotY, building.rotZ, building.rotW)) as GameObject;
+			foreach (LevelBuildingTemplate building in _templates.levels.buildings) {
+				GameObject obj = Instantiate(Resources.Load("Buildings/Prefabs/" + building.name, typeof(GameObject)), new Vector3(building.posX,building.posY,building.posZ), new Quaternion (building.rotX, building.rotY, building.rotZ, building.rotW)) as GameObject;
             } 
         } // Update()
 
