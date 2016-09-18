@@ -9,7 +9,7 @@ namespace Assets.Scripts.BehaviourTree
 
   public class Action : BehaveComponent
   {
-    private ActionDelegate _action;
+    private ActionDelegate _action;              // The action of the behaviour
 
     private Action() { }
 
@@ -20,11 +20,12 @@ namespace Assets.Scripts.BehaviourTree
 
 
     public override ReturnCode Behave()
-    {
+    { // Perform the assigned action, returning the return code of the
+      // behaviour
       try
       {
         switch (_action())
-        {
+        { // 
           case ReturnCode.Success:
             _returnCode = ReturnCode.Success;
             return _returnCode;
