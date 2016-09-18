@@ -19,15 +19,14 @@ public class LevelData : MonoBehaviour {
         { // Call to get the templates from JSON
 
             _templates = JSONReader.ReadJSON<LevelTemplateCollection>("LevelData");
-            
-        } // Start()
-        
-        void Update()
-        {
-			foreach (LevelBuildingTemplate building in _templates.levels.buildings) {
+			foreach (LevelBuildingTemplate building in _templates.levels[0].buildings) {
 				GameObject obj = Instantiate(Resources.Load("Buildings/Prefabs/" + building.name, typeof(GameObject)), new Vector3(building.posX,building.posY,building.posZ), new Quaternion (building.rotX, building.rotY, building.rotZ, building.rotW)) as GameObject;
-            } 
-        } // Update()
+			}
+			foreach (LevelAnimalTemplate animal in _templates.levels[0].animals) {
+				GameObject obj = Instantiate(Resources.Load("Animals/Prefabs/" + animal.name, typeof(GameObject)), new Vector3(animal.posX,animal.posY,animal.posZ), new Quaternion(0,0,0,0)) as GameObject;
+			} 
+        } // Start()
+  
 
   } // LevelData
 } //Namespace
