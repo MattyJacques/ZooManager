@@ -14,13 +14,19 @@ Platform assembly: F:\Unity Projects\ZooManager\build_Data\Managed\UnityEngine.U
 Loading F:\Unity Projects\ZooManager\build_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
 Platform assembly: F:\Unity Projects\ZooManager\build_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
 Loading F:\Unity Projects\ZooManager\build_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
-- Completed reload, in  0.159 seconds
+- Completed reload, in  0.223 seconds
 Platform assembly: F:\Unity Projects\ZooManager\build_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: F:\Unity Projects\ZooManager\build_Data\Managed\System.dll (this message is harmless)
 desktop: 1920x1080 60Hz; virtual: 3840x1080 at -1920,0
 <RI> Initializing input.
+<RI.Hid> Failed to create device file:
+ 2 The system cannot find the file specified.
+
+ 
+(Filename:  Line: 54)
+
 <RI> Input initialized.
 <RI> Initialized touch support.
-UnloadTime: 0.780580 ms
+UnloadTime: 16.876133 ms
 Setting up 1 worker threads for Enlighten.
-  Thread -> id: 1ca8 -> priority: 1 
+  Thread -> id: 25a4 -> priority: 1 
