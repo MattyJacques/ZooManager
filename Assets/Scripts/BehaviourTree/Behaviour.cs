@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using Assets.Scripts.Animals;
 
 
 namespace Assets.Scripts.BehaviourTree
@@ -19,6 +20,7 @@ namespace Assets.Scripts.BehaviourTree
   {
     private Selector _root;                // Root selector for running behaviour
     private ReturnCode _returnCode;        // Current return code of behaviour
+    private AnimalBase _animal;            // Animal reference for data
 
     public ReturnCode returnCode { get; set; }
 
