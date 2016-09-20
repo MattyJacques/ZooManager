@@ -2,7 +2,7 @@
 using System.Collections;
 using System;
 
-namespace Assets.Scripts.BehaviourTree
+namespace Assets.Scripts.BehaviourTree.Base
 {
   public class Selector : BehaveComponent
   {

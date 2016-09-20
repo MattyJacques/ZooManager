@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.BehaviourTree.Base;
 
 
 namespace Assets.Scripts.BehaviourTree
 {
   public class BehaviourCreator
   {
-    private List<Behaviour> _behaviours;
+    private List<Assets.Scripts.BehaviourTree.Base.Behaviour> _behaviours;
 
     public void CreateBehaviours()
     { // Create all of the behaviours needed, storing them in the list
@@ -15,25 +16,18 @@ namespace Assets.Scripts.BehaviourTree
     } // CreateBehaviours()
 
 
-    private Sequence CreateAnimalThirst()
-    { // Creates a sequence that will allow an animal object to check
-      // if thirsty, if so will find the nearest trough object and go
-      // drink
+    //private Sequence CreateAnimalThirst()
+    //{ // Creates a sequence that will allow an animal object to check
+    //  // if thirsty, if so will find the nearest trough object and go
+    //  // drink
 
-      Sequence thirstSequence;
-      Action drink = new Action(AnimalDrink);
-      Action setTarget = new Action(SetTarget);
+    //  Drink drinkNode;
 
+    //  Sequence thirstSequence = new Sequence;
 
-      return thirstSequence;
+    //  return thirstSequence;
 
-    } // CreateThirst()
-
-    private ReturnCode AnimalDrink()
-    { // Handle the animal drinking from a source of water
-      ReturnCode returnCode = ReturnCode.Success;
-      return returnCode;
-    } // Drink()
+    //} // CreateThirst()
 
 
     private ReturnCode SetTarget(Vector3 target)
@@ -43,11 +37,11 @@ namespace Assets.Scripts.BehaviourTree
     } // SetTarget()
 
 
-    public Behaviour CreateRoot(Selector theSelector)
+    public Assets.Scripts.BehaviourTree.Base.Behaviour CreateRoot(Selector theSelector)
     { // Create a behaviour tree using the Selector provided, return the
       // created tree
 
-      Behaviour newBehaviour = new Behaviour(theSelector);
+      Assets.Scripts.BehaviourTree.Base.Behaviour newBehaviour = new Assets.Scripts.BehaviourTree.Base.Behaviour(theSelector);
       return newBehaviour;
     } // CreateBehaviour()
 

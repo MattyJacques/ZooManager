@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace Assets.Scripts.BehaviourTree
+namespace Assets.Scripts.BehaviourTree.Base
 {
   public abstract class BehaveComponent
   {

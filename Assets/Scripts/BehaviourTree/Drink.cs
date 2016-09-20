@@ -1,31 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using Assets.Scripts.BehaviourTree.Base;
+using Assets.Scripts.Animals;
 
 
 namespace Assets.Scripts.BehaviourTree
 {
-  public delegate ReturnCode ActionDelegate();   // The action of the behaviour
-
-  public class Action : BehaveComponent
+  public class Drink : Assets.Scripts.BehaviourTree.Base.Action
   {
-    private ActionDelegate _action;              // The action of the behaviour
-
-    private Action() { }
-
-    public Action(ActionDelegate action)
-    { // Constructor to set up the action of the node
-      _action = action;
-    } // Action()
-
-
-    public override ReturnCode Behave()
+    public ReturnCode Behave(AnimalBase theBase)
     { // Perform the assigned action, returning the return code of the
       // behaviour
       try
       {
-        switch (_action())
-        { // 
+        switch (DrinkWater(theBase))
+        { // Act out drinking of water on the base provided, return
+          // the appropriate return code
           case ReturnCode.Success:
             _returnCode = ReturnCode.Success;
             return _returnCode;
@@ -50,5 +41,13 @@ namespace Assets.Scripts.BehaviourTree
       } // catch
     } // Behave()
 
-  } // Action()
+
+    private ReturnCode DrinkWater(AnimalBase theBase)
+    { // Handle the drinking of the water
+
+      theBase.Thirst = 100;
+      return ReturnCode.Success;
+    } // DrinkWater()
+
+  } // Drink
 }

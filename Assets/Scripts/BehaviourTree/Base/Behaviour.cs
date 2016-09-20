@@ -4,7 +4,7 @@ using System;
 using Assets.Scripts.Animals;
 
 
-namespace Assets.Scripts.BehaviourTree
+namespace Assets.Scripts.BehaviourTree.Base
 {
 
   public enum ReturnCode
