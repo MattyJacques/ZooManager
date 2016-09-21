@@ -8,7 +8,8 @@ using Assets.Scripts.Helpers;
 namespace Assets.Scripts.Managers
 {
 
-public class LevelData : MonoBehaviour {
+public class LevelData
+{
         // Which mode to find the animal template with
         enum CreateMode { ID, NAME };
         public AnimalManager manager;
