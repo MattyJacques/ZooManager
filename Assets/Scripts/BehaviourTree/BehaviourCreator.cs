@@ -16,70 +16,46 @@ namespace Assets.Scripts.BehaviourTree
     } // CreateBehaviours()
 
 
-    //private Sequence CreateAnimalThirst()
-    //{ // Creates a sequence that will allow an animal object to check
-    //  // if thirsty, if so will find the nearest trough object and go
-    //  // drink
+    private Sequence CreateAnimalThirst()
+    { // Creates a sequence that will allow an animal object to check
+      // if thirsty, if so will find the nearest trough object and go
+      // drink
 
-    //  Drink drinkNode;
+      // Create Arrays to hold sequence components
+      BehaveComponent[] findWaterComp = new BehaveComponent[3];
+      BehaveComponent[] thirstCheckComp = new BehaveComponent[2];
 
-    //  Sequence thirstSequence = new Sequence;
+      // Set FindWater components
+      findWaterComp[0] = new SetTarget();       // Find nearest water source
+      findWaterComp[1] = CreateMoveToTarget();
+      findWaterComp[2] = new Drink();               // Refill thirst
 
-    //  return thirstSequence;
+      // Set thirst components
+      thirstCheckComp[0] = new IsThirsty();
+      thirstCheckComp[1] = new Sequence(findWaterComp);
 
-    //} // CreateThirst()
+      // Create and return the finished thirst sequence
+      return new Sequence(thirstCheckComp);
 
-
-    private ReturnCode SetTarget(Vector3 target)
-    { // Find the closest target with the desired
-      ReturnCode returnCode = ReturnCode.Success;
-      return returnCode;
-    } // SetTarget()
-
-
-    public Assets.Scripts.BehaviourTree.Base.Behaviour CreateRoot(Selector theSelector)
-    { // Create a behaviour tree using the Selector provided, return the
-      // created tree
-
-      Assets.Scripts.BehaviourTree.Base.Behaviour newBehaviour = new Assets.Scripts.BehaviourTree.Base.Behaviour(theSelector);
-      return newBehaviour;
-    } // CreateBehaviour()
+    } // CreateThirst()
 
 
-    public Selector CreateSelector(BehaveComponent[] theComponents)
-    { // Create the selector using the nodes provided, return the
-      // created selector
+    private Sequence CreateMoveToTarget()
+    { // Create the sequence of behaviours that will allow an object to
+      // follow to path to a target
 
-      Selector newSelector = new Selector(theComponents);
-      return newSelector;
-    } // CreateSelector()
+      BehaveComponent[] moveToTargetComp = new BehaveComponent[4];
+      BehaveComponent[] pathCheckComp = new BehaveComponent[2];
 
+      pathCheckComp[0] = new HasPath();
+      pathCheckComp[1] = new GetPath();
 
-    public Sequence CreateSequence(BehaveComponent[] theComponents)
-    { // Create the sequence using the nodes provided, return the
-      // created sequence
+      moveToTargetComp[0] = new HasTarget();
+      moveToTargetComp[1] = new Selector(pathCheckComp);
 
-      Sequence newSequence = new Sequence(theComponents);
-      return newSequence;
-    } // CreateSequence()
-
-
-    public Conditional CreateCondition(ConditionalDelegate theDelegate)
-    { // Create the conditional node using the delegate provided,
-      // return the created conditional node
-
-      Conditional newCondition = new Conditional(theDelegate);
-      return newCondition;
-    } // CreateCondition()
-
-
-    public Action CreateAction(ActionDelegate theDelegate)
-    { // Create the action node using the action delegate provided,
-      // return the created node
-
-      Action newAction = new Action(theDelegate);
-      return newAction;
-    } // CreateAction()
+      return new Sequence(moveToTargetComp);
+      
+    } // CreateMoveToTarget()
 
   } // BehaviourCreator
 }

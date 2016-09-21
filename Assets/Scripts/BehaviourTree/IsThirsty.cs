@@ -4,28 +4,24 @@ using Assets.Scripts.BehaviourTree.Base;
 using System;
 using Assets.Scripts.Animals;
 
-
 namespace Assets.Scripts.BehaviourTree
 {
-  public class SetTarget : Assets.Scripts.BehaviourTree.Base.Action
+  public class IsThirsty : Conditional
   {
 
     public ReturnCode Behave(AnimalBase theBase)
-    { // Perform the assigned action, returning the return code of the
-      // behaviour
+    { // Perform the check to see if the base's thirst is below the
+      // desired level, returning the appropriate return code
+
       try
       {
-        switch (SetCurrTarget(theBase))
-        { // Act out drinking of water on the base provided, return
-          // the appropriate return code
-          case ReturnCode.Success:
+        switch (theBase.Thirst > 50)
+        { // Run the test condition, setting the return code appropriately
+          case true:
             _returnCode = ReturnCode.Success;
             return _returnCode;
-          case ReturnCode.Failure:
+          case false:
             _returnCode = ReturnCode.Failure;
-            return _returnCode;
-          case ReturnCode.Running:
-            _returnCode = ReturnCode.Running;
             return _returnCode;
           default:
             _returnCode = ReturnCode.Failure;
@@ -42,13 +38,5 @@ namespace Assets.Scripts.BehaviourTree
       } // catch
     } // Behave()
 
-
-    private ReturnCode SetCurrTarget(AnimalBase theBase)
-    { // Calculate the cloest source of water
-
-      return ReturnCode.Success;
-
-    } // SetCurrTarget()
-
-  } // SetTarget()
+  } // IsThirsty
 }

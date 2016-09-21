@@ -1,21 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Assets.Scripts.BehaviourTree.Base;
 using System;
+using Assets.Scripts.BehaviourTree.Base;
 using Assets.Scripts.Animals;
 
 
 namespace Assets.Scripts.BehaviourTree
 {
-  public class SetTarget : Assets.Scripts.BehaviourTree.Base.Action
+  public class GetPath : Assets.Scripts.BehaviourTree.Base.Action
   {
-
     public ReturnCode Behave(AnimalBase theBase)
     { // Perform the assigned action, returning the return code of the
       // behaviour
       try
       {
-        switch (SetCurrTarget(theBase))
+        switch (GetPathToTarget(theBase))
         { // Act out drinking of water on the base provided, return
           // the appropriate return code
           case ReturnCode.Success:
@@ -43,12 +42,12 @@ namespace Assets.Scripts.BehaviourTree
     } // Behave()
 
 
-    private ReturnCode SetCurrTarget(AnimalBase theBase)
-    { // Calculate the cloest source of water
+    private ReturnCode GetPathToTarget(AnimalBase theBase)
+    { // Handle the drinking of the water
 
+      
       return ReturnCode.Success;
+    } // DrinkWater()
 
-    } // SetCurrTarget()
-
-  } // SetTarget()
+  } // Drink
 }

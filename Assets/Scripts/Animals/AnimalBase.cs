@@ -24,6 +24,8 @@ namespace Assets.Scripts.Animals
     public float Thirst { get; set; }
     public float Age { get; set; }
     public float Boredom { get; set; }
+    public Transform Target { get; set; }
+    public GameObject Path { get; set; }
 
     [SerializeField]
     GameClock gameClock;

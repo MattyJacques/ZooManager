@@ -10,6 +10,8 @@ namespace Assets.Scripts.BehaviourTree.Base
   {
     private ConditionalDelegate _testCondition;
 
+    public Conditional() { }
+
     public Conditional(ConditionalDelegate testCondition)
     { // Constructor to set up the test for the condition
       _testCondition = testCondition;
