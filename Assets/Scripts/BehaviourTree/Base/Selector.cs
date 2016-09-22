@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using Assets.Scripts.Animals;
 
 namespace Assets.Scripts.BehaviourTree.Base
 {
@@ -14,13 +15,13 @@ namespace Assets.Scripts.BehaviourTree.Base
     } // Selector()
 
 
-    public override ReturnCode Behave()
+    public override ReturnCode Behave(AnimalBase theBase)
     {
       for (int i = 0; i < _behaviours.Length; i++)
       { // Loop through and process all behaviours in the the array
         try
         {
-          switch (_behaviours[i].Behave())
+          switch (_behaviours[i].Behave(theBase))
           { // Process current behaviour, checking return code
             case ReturnCode.Failure:
               continue;

@@ -7,14 +7,14 @@ using Assets.Scripts.Animals;
 
 namespace Assets.Scripts.BehaviourTree
 {
-  public class GetPath : Assets.Scripts.BehaviourTree.Base.Action
+  public class FollowPath : Base.Action
   {
     public ReturnCode Behave(AnimalBase theBase)
     { // Perform the assigned action, returning the return code of the
       // behaviour
       try
       {
-        switch (GetPathToTarget(theBase))
+        switch (FollowPathToTarget(theBase))
         { // Act out drinking of water on the base provided, return
           // the appropriate return code
           case ReturnCode.Success:
@@ -42,10 +42,10 @@ namespace Assets.Scripts.BehaviourTree
     } // Behave()
 
 
-    private ReturnCode GetPathToTarget(AnimalBase theBase)
-    { // Call to get the path to the current target
+    private ReturnCode FollowPathToTarget(AnimalBase theBase)
+    { // Handle the following of the current path to the target
 
-      
+
       return ReturnCode.Success;
     } // DrinkWater()
 

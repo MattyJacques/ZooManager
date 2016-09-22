@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Assets.Scripts.Animals;
 
 namespace Assets.Scripts.BehaviourTree.Base
 {
@@ -9,7 +10,7 @@ namespace Assets.Scripts.BehaviourTree.Base
 
     public BehaveComponent() { }
 
-    public abstract ReturnCode Behave();
+    public abstract ReturnCode Behave(AnimalBase theBase);
    
   } // Component
 }

@@ -8,10 +8,25 @@ namespace Assets.Scripts.BehaviourTree
 {
   public class BehaviourCreator
   {
-    private List<Assets.Scripts.BehaviourTree.Base.Behaviour> _behaviours;
+    private List<Base.Behaviour> _behaviours;
+
+
+    public Base.Behaviour GetBehaviour(int index)
+    { // Return the behaviour at the given index
+
+      return _behaviours[index];
+    } // GetBehaviour()
+
 
     public void CreateBehaviours()
     { // Create all of the behaviours needed, storing them in the list
+
+      _behaviours = new List<Base.Behaviour>();
+
+      BehaveComponent[] animalComponents = new BehaveComponent[1];
+      animalComponents[0] = CreateAnimalThirst();
+      Selector animalSelector = new Selector(animalComponents);
+      _behaviours.Add(new Base.Behaviour(animalSelector));
 
     } // CreateBehaviours()
 
@@ -52,6 +67,8 @@ namespace Assets.Scripts.BehaviourTree
 
       moveToTargetComp[0] = new HasTarget();
       moveToTargetComp[1] = new Selector(pathCheckComp);
+      moveToTargetComp[2] = new FollowPath();
+      moveToTargetComp[3] = new HasArrived();
 
       return new Sequence(moveToTargetComp);
       

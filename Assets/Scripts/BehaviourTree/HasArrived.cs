@@ -7,24 +7,21 @@ using Assets.Scripts.Animals;
 
 namespace Assets.Scripts.BehaviourTree
 {
-  public class GetPath : Assets.Scripts.BehaviourTree.Base.Action
+  public class HasArrived : Conditional
   {
     public ReturnCode Behave(AnimalBase theBase)
-    { // Perform the assigned action, returning the return code of the
-      // behaviour
+    { // Perform a check to see if the base has arrived at the target, 
+      // returning corrosponding return code
+
       try
       {
-        switch (GetPathToTarget(theBase))
-        { // Act out drinking of water on the base provided, return
-          // the appropriate return code
-          case ReturnCode.Success:
+        switch (theBase.UnityTransform.position == theBase.Target.position)
+        { // Run the test condition, setting the return code appropriately
+          case true:
             _returnCode = ReturnCode.Success;
             return _returnCode;
-          case ReturnCode.Failure:
+          case false:
             _returnCode = ReturnCode.Failure;
-            return _returnCode;
-          case ReturnCode.Running:
-            _returnCode = ReturnCode.Running;
             return _returnCode;
           default:
             _returnCode = ReturnCode.Failure;
@@ -41,13 +38,5 @@ namespace Assets.Scripts.BehaviourTree
       } // catch
     } // Behave()
 
-
-    private ReturnCode GetPathToTarget(AnimalBase theBase)
-    { // Call to get the path to the current target
-
-      
-      return ReturnCode.Success;
-    } // DrinkWater()
-
-  } // Drink
+  } // HasTarget
 }

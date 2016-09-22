@@ -14,13 +14,12 @@ namespace Assets.Scripts.BehaviourTree.Base
     Running                  // Currently active
   }
 
-  public delegate ReturnCode Return();     // INSERT WHAT THIS DOES
+  public delegate ReturnCode BehaveReturn();     // INSERT WHAT THIS DOES
 
   public class Behaviour
   {
     private Selector _root;                // Root selector for running behaviour
     private ReturnCode _returnCode;        // Current return code of behaviour
-    private AnimalBase _animal;            // Animal reference for data
 
     public ReturnCode returnCode { get; set; }
 
@@ -30,12 +29,12 @@ namespace Assets.Scripts.BehaviourTree.Base
     } // Behaviour()
 
 
-    public ReturnCode Behave()
+    public ReturnCode Behave(AnimalBase theBase)
     { // Process the behaviour of the current selector
 
       try
       {
-        switch (_root.Behave())
+        switch (_root.Behave(theBase))
         { // Process behaviour and return the correct return code
           case ReturnCode.Failure:
             _returnCode = ReturnCode.Failure;

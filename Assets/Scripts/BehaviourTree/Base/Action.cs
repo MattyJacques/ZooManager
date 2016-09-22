@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using Assets.Scripts.Animals;
 
 
 namespace Assets.Scripts.BehaviourTree.Base
 {
-  public delegate ReturnCode ActionDelegate();   // The action of the behaviour
+  public delegate ReturnCode ActionDelegate(AnimalBase theBase);   // The action of the behaviour
 
   public class Action : BehaveComponent
   {
@@ -19,12 +20,12 @@ namespace Assets.Scripts.BehaviourTree.Base
     } // Action()
 
 
-    public override ReturnCode Behave()
+    public override ReturnCode Behave(AnimalBase theBase)
     { // Perform the assigned action, returning the return code of the
       // behaviour
       try
       {
-        switch (_action())
+        switch (_action(theBase))
         { // 
           case ReturnCode.Success:
             _returnCode = ReturnCode.Success;

@@ -7,7 +7,7 @@ using Assets.Scripts.Animals;
 
 namespace Assets.Scripts.BehaviourTree
 {
-  public class SetTarget : Assets.Scripts.BehaviourTree.Base.Action
+  public class SetTarget : Base.Action
   {
 
     public ReturnCode Behave(AnimalBase theBase)

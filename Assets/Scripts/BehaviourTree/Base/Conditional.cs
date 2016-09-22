@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using Assets.Scripts.Animals;
 
 namespace Assets.Scripts.BehaviourTree.Base
 {
-  public delegate bool ConditionalDelegate();
+  public delegate bool ConditionalDelegate(AnimalBase theBase);
 
   public class Conditional : BehaveComponent
   {
@@ -18,13 +19,13 @@ namespace Assets.Scripts.BehaviourTree.Base
     } // Conditional
 
 
-    public override ReturnCode Behave()
+    public override ReturnCode Behave(AnimalBase theBase)
     { // Perform the given behaviour by testing the condition given in
       // the constructor
 
       try
       {
-        switch (_testCondition())
+        switch (_testCondition(theBase))
         { // Run the test condition, setting the return code appropriately
           case true:
             _returnCode = ReturnCode.Success;

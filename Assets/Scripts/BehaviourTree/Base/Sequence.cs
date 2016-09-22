@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using Assets.Scripts.Animals;
 
 namespace Assets.Scripts.BehaviourTree.Base
 {
@@ -14,7 +15,7 @@ namespace Assets.Scripts.BehaviourTree.Base
     } // Sequence
 
 
-    public override ReturnCode Behave()
+    public override ReturnCode Behave(AnimalBase theBase)
     { // Process the given behaviour, returning to return code
 
       bool isRunning = false;
@@ -23,7 +24,7 @@ namespace Assets.Scripts.BehaviourTree.Base
       { // Process all of the behaviours in the array for this sequence
         try
         {
-          switch (_behaviours[i].Behave())
+          switch (_behaviours[i].Behave(theBase))
           { // Process current behaviour, if a behaviour is currently running
             // set isRunning to true, if we fail or default return the return
             // code, else continue
