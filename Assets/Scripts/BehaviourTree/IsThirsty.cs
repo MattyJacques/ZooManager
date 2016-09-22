@@ -9,7 +9,7 @@ namespace Assets.Scripts.BehaviourTree
   public class IsThirsty : Conditional
   {
 
-    public ReturnCode Behave(AnimalBase theBase)
+    public override ReturnCode Behave(AnimalBase theBase)
     { // Perform the check to see if the base's thirst is below the
       // desired level, returning the appropriate return code
 

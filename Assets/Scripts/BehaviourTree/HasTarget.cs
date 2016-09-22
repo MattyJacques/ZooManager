@@ -9,7 +9,7 @@ namespace Assets.Scripts.BehaviourTree
 {
   public class HasTarget : Conditional
   {
-    public ReturnCode Behave(AnimalBase theBase)
+    public override ReturnCode Behave(AnimalBase theBase)
     { // Perform a check to see if the base has a target, returning
       // corrosponding return code
 

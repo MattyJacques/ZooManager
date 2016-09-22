@@ -9,7 +9,7 @@ namespace Assets.Scripts.BehaviourTree
 {
   public class FollowPath : Base.Action
   {
-    public ReturnCode Behave(AnimalBase theBase)
+    public override ReturnCode Behave(AnimalBase theBase)
     { // Perform the assigned action, returning the return code of the
       // behaviour
       try

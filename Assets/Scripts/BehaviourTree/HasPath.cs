@@ -9,7 +9,7 @@ namespace Assets.Scripts.BehaviourTree
 {
   public class HasPath : Conditional
   {
-    public ReturnCode Behave(AnimalBase theBase)
+    public override ReturnCode Behave(AnimalBase theBase)
     { // Perform a check to see if the base has a path, returning
       // corrosponding return code
 
