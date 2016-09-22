@@ -1,0 +1,28 @@
+{"levels":[
+{
+  "id": 1,
+  "winCondition": 1,
+  "loseCondition": 1,
+  "buildings":[
+  {
+    "name": "ticketbooth",
+    "posX": 262,
+    "posY": 0,
+    "posZ": 194,
+    "rotX": 0,
+    "rotY": 0,
+    "rotZ": 0,
+    "rotW":0
+  }],
+  "animals":[
+  {
+    "name": "EmperorPenguin",
+    "posX": 284,
+    "posY": 1,
+    "posZ": 205,
+    "thirst": 100,
+    "hunger": 100,
+    "fun": 100
+  }]
+}]
+}
