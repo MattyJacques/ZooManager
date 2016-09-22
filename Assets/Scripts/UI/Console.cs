@@ -26,6 +26,7 @@ namespace Assets.Scripts.UI
     public  AStar _aStar;
     private Component _buildMgr;
     private Component _animalMgr;
+    private Component _fundsMgr;
 
     private bool _consoleEnabled = true;    // Whether the console is shown and active
     private bool _swapConsoleFunction;      // Switch between entering data and finding IDs
@@ -51,6 +52,7 @@ namespace Assets.Scripts.UI
       _player = GameObject.FindWithTag("Player");
       _buildMgr = GetComponent("BuildingManager");
       _animalMgr = GetComponent("AnimalManager");
+      _fundsMgr = GetComponent("FundManager");
 
       //Filling SPAWN_ITEMS
       DirectoryInfo directoryInfo = new DirectoryInfo("Assets/Resources");
@@ -113,6 +115,7 @@ namespace Assets.Scripts.UI
       const string clear = "clear";
       const string destroy = "destroy";
       const string create = "create";
+      const string fund = "fund";
 
       string[] inputParams = submitString.Split(' ');
       int inputParamsLength = inputParams.Length;
@@ -120,6 +123,41 @@ namespace Assets.Scripts.UI
 
       switch (keyword)
       {
+        #region Fund
+        case fund:
+          if (inputParamsLength == 4)
+          {
+            Debug.Log("Create Command");
+            float amount = float.Parse(inputParams[1]);
+            string type = inputParams[2];
+            string forWhat = inputParams[3];
+            Recipt.Type curType = Recipt.Type.NA;
+            switch(type)//{Product,Paid,Task,Payday,NA};
+            {
+              case "Product":
+                curType = Recipt.Type.Product;
+                break;
+              case "Paid":
+                curType = Recipt.Type.Paid;
+                break;
+              case "Task":
+                curType = Recipt.Type.Task;
+                break;
+              case "Payday":
+                curType = Recipt.Type.Payday;
+                break;
+              default:
+                curType = Recipt.Type.NA;
+                break;
+            }
+            if (amount > 0)//float amount, Recipt.Type type = Recipt.Type.NA, string whatFor = "N/A")
+              _fundsMgr.GetComponent<Assets.Scripts.Managers.FundManager>().AddFunds(amount,curType,forWhat);
+            else
+              _fundsMgr.GetComponent<Assets.Scripts.Managers.FundManager>().AllocateFunds(amount,curType,forWhat);
+          }
+          break;
+        #endregion
+        
         #region Create
 
         case create:
