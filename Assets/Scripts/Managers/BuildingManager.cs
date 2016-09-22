@@ -104,7 +104,7 @@ namespace Assets.Scripts.Managers
         }
         else if (_pave._startPole.position != new Vector3(-1000,-1000,-1000) && _pave._endPole.position != new Vector3(-1000,-1000,-1000))
         {
-          paving();
+          Paving();
         }
       }
 
@@ -119,7 +119,7 @@ namespace Assets.Scripts.Managers
       _currentBuild.name = _currentBuild.name + _pave._numberOfPavs;
     }//Pave()
 
-    private void paving()
+    private void Paving()
     {//The logic of pathing
       _pave._pathPaving = true;
       //set the starting point
@@ -159,7 +159,7 @@ namespace Assets.Scripts.Managers
         PlacePavement();
       }
       _pave.  resetPoles();
-    }//paving()
+    }//Paving()
     
     private void PlaceBuilding()
     { // Place the building in the world, add to buildings list
