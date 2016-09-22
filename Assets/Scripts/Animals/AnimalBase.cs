@@ -5,73 +5,91 @@
 
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
+using Assets.Scripts.UI;
 
-public class AnimalBase : MonoBehaviour
+namespace Assets.Scripts.Animals
 {
-    //Protected member variables
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public double Price { get; set; }
-    public List<string> Food { get; set; }
-    public List<string> Fun { get; set; }
-    public List<string> Tags { get; set; }
-    public float Lifespan { get; set; }
-    public float Age { get; set; }
+
+  public class AnimalBase
+  {
+    // This reference can be used to move the animal around without needing to make AnimalBase a MonoBehaviour
+    public Transform UnityTransform { get; set; }
+
+    // Template values never get set, they represent the animal's permanent properties (max age, speed, etc)
+    public AnimalTemplate Template { get; set; }
+
+    // The animal's temporary properties change over the life of the animal
     public float Health { get; set; }
-    public float HealthRate { get; set; }
     public float Hunger { get; set; }
-    public float HungerRate { get; set; }
     public float Thirst { get; set; }
-    public float ThirstRate { get; set; }
+    public float Age { get; set; }
     public float Boredom { get; set; }
 
     [SerializeField]
     GameClock gameClock;
 
-    // Use this for initialization
-    protected virtual void Start()
+    public AnimalBase(AnimalTemplate template)
     {
-	    
-	}
+      Template = template;
+    }
 
     // Update is called once per frame
-    protected virtual void Update()
+    protected void Update()
     {
-        float deltaTime = Time.deltaTime;
-        if (Health > 0)
-        {
-            //Handles Thirst
-            if (Thirst > 0) { Thirst -= ThirstRate * deltaTime; }
-            Thirst = Mathf.Clamp(Thirst, 0, 100);
+      float deltaTime = Time.deltaTime;
+      if (Health > 0)
+      {
+        //Handles thirst
+        if (Thirst > 0) { Thirst -= Template.thirstRate * deltaTime; }
+        Thirst = Mathf.Clamp(Thirst, 0, 100);
 
-            //Handles Hunger
-            if (Hunger > 0) { Hunger -= HungerRate * deltaTime; }
-            Hunger = Mathf.Clamp(Hunger, 0, 100);
+        //Handles hunger
+        if (Hunger > 0) { Hunger -= Template.hungerRate * deltaTime; }
+        Hunger = Mathf.Clamp(Hunger, 0, 100);
 
-            //Handles Health
-            if (Hunger > 50 && Health > 50) { Health += HealthRate * deltaTime; }
-            if (Hunger == 0 || Thirst == 0) { Health -= HealthRate * deltaTime; }
+        //Handles health
+        if (Hunger > 50 && Health > 50) { Health += Template.healthRate * deltaTime; }
+        if (Hunger == 0 || Thirst == 0) { Health -= Template.healthRate * deltaTime; }
 
-            //Handles Age
-            Age += deltaTime;
-            if (Age < Lifespan) { Cull(); }
-        }
-        else if (Health < 0) { Health = 0; }
-        else if (Health == 0)
-        {
-            //Do dying stuff
-        }
-	}
+        //Handles age
+        Age += deltaTime;
+        if (Age < Template.lifespan) { Cull(); }
+      }
+      else if (Health < 0) { Health = 0; }
+      else if (Health == 0)
+      {
+        //Do dying stuff
+      }
+    }
 
     public virtual void Feed(float food, float water)
     {
-        Hunger += food;
-        Thirst += water;
+      Hunger += food;
+      Thirst += water;
     }
 
     public virtual void Cull()
     {
-        Health = 0;
+      Health = 0;
     }
+	public virtual void CheckedNeeds() 
+	{
+		if (Health < 50) 
+		{
+			Debug.Log ("feeling sick!");
+		}
+		if (Hunger < 50) 
+		{
+			Debug.Log ("feeling hungry!");
+		}
+		if (Thirst < 50) 
+		{
+			Debug.Log ("feeling thirsty!");
+		}
+		if (Boredom < 50) 
+		{
+			Debug.Log ("feeling bored!");
+		}
+	}
+  }
 }
