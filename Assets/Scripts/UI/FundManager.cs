@@ -27,22 +27,26 @@ namespace Assets.Scripts.UI
         GUI.Label(tempRect, recipt.Print());
       }
     } // OnGUI()
-    
-    public void AddFunds(float amount)
-    {
-      _money += amount;
-      _fundLog.Add(new Recipt(Recipt.Type.NA,amount,"N/A"));
-    }
-    public void AddFunds(float amount, Recipt.Type type)
-    {
-      _money += amount;
-      _fundLog.Add(new Recipt(type,amount,"N/A"));
-    }
-    public void AddFunds(float amount, Recipt.Type type, string whatFor)
+        
+    public void AddFunds(float amount, Recipt.Type type = Recipt.Type.NA, string whatFor = "N/A")
     {
       _money += amount;
       _fundLog.Add(new Recipt(type,amount,whatFor));
+    }//AddFunds type float for
+    
+    public bool AllocateFunds(float withdraw, Recipt.Type type = Recipt.Type.NA, string whatFor = "N/A")
+    {
+      withdraw = Mathf.Abs(withdraw);
+      if (_money - withdraw >= 0)
+      {
+        AddFunds(-withdraw,type,whatFor);
+        return true;
+      }
+      else
+      {
+        return false;
+      }
     }
+    
   }
 }
-
