@@ -1,5 +1,5 @@
 ﻿// Title        : BuildingManager.cs
-// Purpose      : Initiates templates, manages instances of animals
+// Purpose      : Initiates templates, manages instances of buildings
 // Author       : Matthew Jacques
 // Date         : 03/09/2016
 

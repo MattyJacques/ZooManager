@@ -6,11 +6,6 @@
 // Author       : Dan Budworth-Mead
 // Date         : 21/08/2016
 
-//Last Edit
-//Update Purpose: Update the controls and fix the console selection bug
-//Author        : Jacob Miller
-//Date          : 09/10/2016
-
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
