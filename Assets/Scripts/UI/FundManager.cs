@@ -12,27 +12,30 @@ namespace Assets.Scripts.Managers
 {
   public class FundManager : MonoBehaviour 
   {
-    public Rect _locRect = new Rect(Screen.width - (Screen.width / 10),(Screen.height / 10),20,20);
-    public float _money = 0.0f;
-    public List<Recipt> _fundLog = new List<Recipt>();
-    public List<Texture2D> _icons = new List<Texture2D>();
-    public bool showlog = false;
+    public Rect _locRect = new Rect(Screen.width - (Screen.width / 10),(Screen.height / 10),20,20); //Location of the starting pos
+    public float _money = 0.0f;                                                                     //how much money the zoo has
+    public List<Recipt> _fundLog = new List<Recipt>();                                              //List of all transactions
+    public List<Texture2D> _icons = new List<Texture2D>();                                          //list of all icons for the log
+    public bool showlog = false;                                                                    //Whether log is shown or not
     
     private void OnGUI()
-    { // Display buttons for rotation 
+    { // Display money and the log
       
       GUI.Label(_locRect, _money.ToString());
-      Rect tempRect = _locRect;
-      tempRect.x += 20;
-      Rect tempImgRect = _locRect;
-      foreach(Recipt recipt in _fundLog)
+      if (showlog)
       {
-        tempRect.y += 20;
-        tempImgRect.y += 20;
-        tempRect.width = recipt.Print().Length * 7.5f;
-        
-        GUI.Label(tempRect, recipt.Print());
-        GUI.DrawTexture(tempImgRect,_icons[(int)recipt._type]);
+        Rect tempRect = _locRect;
+        tempRect.x += 20;
+        Rect tempImgRect = _locRect;
+        foreach(Recipt recipt in _fundLog)
+        {
+          tempRect.y += 20;
+          tempImgRect.y += 20;
+          tempRect.width = recipt.Print().Length * 7.5f;
+          
+          GUI.Label(tempRect, recipt.Print());
+          GUI.DrawTexture(tempImgRect,_icons[(int)recipt._type]);
+        }
       }
     } // OnGUI()
         
@@ -51,6 +54,11 @@ namespace Assets.Scripts.Managers
         return true;
       }
         return false;
+    }
+    
+    public void ShowLog()
+    {//Shows/hides the log
+      showlog = !showlog;
     }
     
   }

@@ -125,7 +125,11 @@ namespace Assets.Scripts.UI
       {
         #region Fund
         case fund:
-          if (inputParamsLength == 4)
+          if (inputParamsLength == 1)
+          {
+            _fundsMgr.GetComponent<Assets.Scripts.Managers.FundManager>().ShowLog();
+          }
+          else if (inputParamsLength == 4)
           {
             Debug.Log("Create Command");
             float amount = float.Parse(inputParams[1]);
