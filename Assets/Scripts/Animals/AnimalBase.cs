@@ -12,6 +12,9 @@ namespace Assets.Scripts.Animals
 
   public class AnimalBase
   {
+
+    public enum FeedType { Food, Water }     // Enum for feed() to tell which stat to increase
+
     // This reference can be used to move the animal around without needing to make AnimalBase a MonoBehaviour
     public Transform UnityTransform { get; set; }
 
@@ -24,20 +27,21 @@ namespace Assets.Scripts.Animals
     public float Thirst { get; set; }
     public float Age { get; set; }
     public float Boredom { get; set; }
-    public Transform Target { get; set; }
-    public GameObject Path { get; set; }
+    public GameObject Target { get; set; }
+    public GameObject Path { get; set; }      // Change to path object
+    public BehaviourTree.Base.Behaviour Behave { get; set; }
 
     [SerializeField]
     GameClock gameClock;
 
     public AnimalBase(AnimalTemplate template)
-    {
+    { // Constructor to set up the template and behaviour tree
       Template = template;
-    }
+    } // AnimalBase()
 
-    // Update is called once per frame
     protected void Update()
-    {
+    { // Process the needs of the base then process the behaviour for AI
+
       float deltaTime = Time.deltaTime;
       if (Health > 0)
       {
@@ -62,36 +66,45 @@ namespace Assets.Scripts.Animals
       {
         //Do dying stuff
       }
-    }
+    } // Update()
 
-    public virtual void Feed(float food, float water)
-    {
-      Hunger += food;
-      Thirst += water;
-    }
+    public virtual void Feed(FeedType type, int amount)
+    { // Increase the hunger or thirst meter, depending on type
+      if (type == FeedType.Food)
+      {
+        Hunger += amount;
+      }
+      else
+      {
+        Thirst += amount;
+      }
+    } // Feed()
 
     public virtual void Cull()
-    {
+    { // Kill the animal
       Health = 0;
-    }
-	public virtual void CheckedNeeds() 
-	{
-		if (Health < 50) 
-		{
-			Debug.Log ("feeling sick!");
-		}
-		if (Hunger < 50) 
-		{
-			Debug.Log ("feeling hungry!");
-		}
-		if (Thirst < 50) 
-		{
-			Debug.Log ("feeling thirsty!");
-		}
-		if (Boredom < 50) 
-		{
-			Debug.Log ("feeling bored!");
-		}
-	}
+    } // Cull()
+
+	  public virtual void CheckNeeds() 
+	  { // Perform the behaviour for this base
+      Behave.Behave(this);
+
+    //  if (Health < 50) 
+		  //{
+			 // Debug.Log ("feeling sick!");
+		  //}
+		  //if (Hunger < 50) 
+		  //{
+			 // Debug.Log ("feeling hungry!");
+		  //}
+		  //if (Thirst < 50) 
+		  //{
+			 // Debug.Log ("feeling thirsty!");
+		  //}
+		  //if (Boredom < 50) 
+		  //{
+			 // Debug.Log ("feeling bored!");
+		  //}
+	  } // CheckNeeds()
   }
 }

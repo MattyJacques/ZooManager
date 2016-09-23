@@ -39,12 +39,12 @@ namespace Assets.Scripts.BehaviourTree
       BehaveComponent[] thirstCheckComp = new BehaveComponent[2];
 
       // Set FindWater components
-      findWaterComp[0] = new Action(SetCurrTarget);       // Find nearest water source
+      findWaterComp[0] = new Action(SetTarget);       // Find nearest water source
       findWaterComp[1] = CreateMoveToTarget();
       findWaterComp[2] = new Action(DrinkWater);               // Refill thirst
 
       // Set thirst components
-      thirstCheckComp[0] = new Conditional(CheckThirst);
+      thirstCheckComp[0] = new Conditional(IsThirsty);
       thirstCheckComp[1] = new Sequence(findWaterComp);
 
       // Create and return the finished thirst sequence
@@ -59,59 +59,65 @@ namespace Assets.Scripts.BehaviourTree
       BehaveComponent[] moveToTargetComp = new BehaveComponent[4];
       BehaveComponent[] pathCheckComp = new BehaveComponent[2];
 
-      pathCheckComp[0] = new Conditional(HasCurrPath);
-      pathCheckComp[1] = new Action(GetPathToTarget);
+      pathCheckComp[0] = new Conditional(HasPath);
+      pathCheckComp[1] = new Action(GetPath);
 
-      moveToTargetComp[0] = new Conditional(HasCurrTarget);
+      moveToTargetComp[0] = new Conditional(HasTarget);
       moveToTargetComp[1] = new Selector(pathCheckComp);
-      moveToTargetComp[2] = new Action(FollowPathToTarget);
-      moveToTargetComp[3] = new Conditional(HasArrivedAtTarget);
+      moveToTargetComp[2] = new Action(FollowPath);
+      moveToTargetComp[3] = new Conditional(HasArrived);
 
       return new Sequence(moveToTargetComp);
 
     } // CreateMoveToTarget()
 
-    private ReturnCode SetCurrTarget(AnimalBase theBase)
+    private ReturnCode SetTarget(AnimalBase theBase)
     { // Calculate the cloest source of water
-
+      Debug.Log("SetTarget(), returning success");
       return ReturnCode.Success;
     } // SetCurrTarget()
 
     private ReturnCode DrinkWater(AnimalBase theBase)
     { // Handle the drinking of the water
-
-      theBase.Thirst = 100;
+      Debug.Log("DrinkWater(), returning success");
+      theBase.Feed(AnimalBase.FeedType.Food, 100);
       return ReturnCode.Success;
     } // DrinkWater()
 
-    private ReturnCode GetPathToTarget(AnimalBase theBase)
+    private ReturnCode GetPath(AnimalBase theBase)
     { // Call to get the path to the current target
+      Debug.Log("GetPath(), returning success");
       return ReturnCode.Success;
     } // GetPath()
 
-    private ReturnCode FollowPathToTarget(AnimalBase theBase)
+    private ReturnCode FollowPath(AnimalBase theBase)
     { // Handle the following of the current path to the target
+      Debug.Log("FollowPath(), returning success");
       return ReturnCode.Success;
     } // FollowPath()
 
-    private bool CheckThirst(AnimalBase theBase)
+    private bool IsThirsty(AnimalBase theBase)
     { // Check if the animal base's thirst is at a level we class as thirsty
-      return theBase.Thirst > 50;
+      Debug.Log("IsThirsty(), returning " + (theBase.Thirst < 50));
+      return theBase.Thirst < 50;
     } // CheckThirst()
 
-    private bool HasCurrPath(AnimalBase theBase)
+    private bool HasPath(AnimalBase theBase)
     { // Check if the base has a set path already
+      Debug.Log("HasPath(), returning " + (theBase.Path != null));
       return theBase.Path != null;
     } // HasPath()
 
-    private bool HasCurrTarget(AnimalBase theBase)
+    private bool HasTarget(AnimalBase theBase)
     { // Return true if the base currently has a target
-      return theBase.Path != null;
+      Debug.Log("HasTarget(), returning " + (theBase.Target != null));
+      return theBase.Target != null;
     } // HasTarget()
 
-    private bool HasArrivedAtTarget(AnimalBase theBase)
+    private bool HasArrived(AnimalBase theBase)
     { // Return true if we have arrived at target
-      return theBase.UnityTransform.position == theBase.Target.position;
+      Debug.Log("HasArrived(), returning " + (theBase.UnityTransform.position == theBase.Target.transform.position));
+      return theBase.UnityTransform.position == theBase.Target.transform.position;
     } // HasArrived()
 
   } // BehaviourCreator
