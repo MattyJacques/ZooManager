@@ -58,7 +58,7 @@ namespace Assets.Scripts.Managers
   
     void Update()
     { // Check if building is currently following mouse position
-
+
       if (_currentBuild)
       { // If there is currently a building being placed, update position
         // and check for mouse input
@@ -341,5 +341,19 @@ namespace Assets.Scripts.Managers
       }
     } // OnGUI()
 
+    public void DoService(string type, int id)
+    {
+      switch(type)
+      {
+        case "Feed":
+          //get buildings animal from the id and feed it
+          //_fundMngr.AllocateFunds(10,Recipt.Type.Task,"Feed all of them lions");
+          break;
+        default:
+          //Nofn
+          break;
+      }
+    }
+    
   } // BuildingManager
 }
