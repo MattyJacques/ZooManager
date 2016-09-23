@@ -15,6 +15,7 @@ namespace Assets.Scripts.Managers
     public Rect _locRect = new Rect(Screen.width - (Screen.width / 10),(Screen.height / 10),20,20);
     public float _money = 0.0f;
     public List<Recipt> _fundLog = new List<Recipt>();
+    public List<Texture2D> _icons = new List<Texture2D>();
     public bool showlog = false;
     
     private void OnGUI()
@@ -22,11 +23,16 @@ namespace Assets.Scripts.Managers
       
       GUI.Label(_locRect, _money.ToString());
       Rect tempRect = _locRect;
+      tempRect.x += 20;
+      Rect tempImgRect = _locRect;
       foreach(Recipt recipt in _fundLog)
       {
         tempRect.y += 20;
+        tempImgRect.y += 20;
         tempRect.width = recipt.Print().Length * 7.5f;
+        
         GUI.Label(tempRect, recipt.Print());
+        GUI.DrawTexture(tempImgRect,_icons[(int)recipt._type]);
       }
     } // OnGUI()
         
