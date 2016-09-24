@@ -135,26 +135,26 @@ namespace Assets.Scripts.UI
             float amount = float.Parse(inputParams[1]);
             string type = inputParams[2];
             string forWhat = inputParams[3];
-            Recipt.Type curType = Recipt.Type.NA;
+            Receipt.Type curType = Receipt.Type.NA;
             switch(type)//{Product,Paid,Task,Payday,NA};
             {
               case "Product":
-                curType = Recipt.Type.Product;
+                curType = Receipt.Type.Product;
                 break;
               case "Paid":
-                curType = Recipt.Type.Paid;
+                curType = Receipt.Type.Paid;
                 break;
               case "Task":
-                curType = Recipt.Type.Task;
+                curType = Receipt.Type.Task;
                 break;
               case "Payday":
-                curType = Recipt.Type.Payday;
+                curType = Receipt.Type.Payday;
                 break;
               default:
-                curType = Recipt.Type.NA;
+                curType = Receipt.Type.NA;
                 break;
             }
-            if (amount > 0)//float amount, Recipt.Type type = Recipt.Type.NA, string whatFor = "N/A")
+            if (amount > 0)//float amount, Receipt.Type type = Receipt.Type.NA, string whatFor = "N/A")
               _fundsMgr.GetComponent<Assets.Scripts.Managers.FundManager>().AddFunds(amount,curType,forWhat);
             else
               _fundsMgr.GetComponent<Assets.Scripts.Managers.FundManager>().AllocateFunds(amount,curType,forWhat);
