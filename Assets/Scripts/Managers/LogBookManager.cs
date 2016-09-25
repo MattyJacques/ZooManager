@@ -1,4 +1,9 @@
-﻿using UnityEngine;
+﻿// Title        : LogBookManager.cs
+// Purpose      : Holds all information of money and stats
+// Author       : Jacob Miller
+// Date         : 24/09/2016
+
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
@@ -6,21 +11,21 @@ using System.Linq;
 
 namespace Assets.Scripts.Managers
 {
-  public class LogBook : MonoBehaviour 
+  public class LogBookManager : MonoBehaviour 
   {
-    private enum Pages {Stats,Funds,Misc};
-    private Pages _page = Pages.Stats;
-    public bool _showlog = false;
-    public Rect _locRect = new Rect(Screen.width / 8,(Screen.height / 10),250,300);
-    public List<Rect> _buttonRects = new List<Rect>();
-    public List<Rect> _templateRects = new List<Rect>();
-    public List<Texture2D> _pages = new List<Texture2D>();
-    public List<Texture2D> _icons = new List<Texture2D>();
-    public List<Receipt> _fundLog = new List<Receipt>();
+    private enum Pages {Stats,Funds,Misc};                                              //The types of pages you can do. Allows for as many pages as needed  
+    private Pages _page = Pages.Stats;                                                  //The page you are on
+    private bool _showlog = false;                                                      //Whether the log is visible or not
+    public Rect _locRect = new Rect(Screen.width / 8,(Screen.height / 10),250,300);     //Location of the book
+    public List<Rect> _buttonRects = new List<Rect>();                                  //Tabs rect
+    public List<Rect> _templateRects = new List<Rect>();                                //Filter buttons rect
+    public List<Texture2D> _pages = new List<Texture2D>();                              //Page images
+    public List<Texture2D> _icons = new List<Texture2D>();                              //List of icons
+    public List<Receipt> _fundLog = new List<Receipt>();                                //List of receipts
     public float _money = 0.0f;                                                         //how much money the zoo has
 
-    bool shouldFilter = false;
-    Receipt.Type filter = Receipt.Type.NA;
+    private bool shouldFilter = false;                                                  //Is the filter on
+    private Receipt.Type filter = Receipt.Type.NA;                                      //Filter type
       
     void Update () 
     {//Updates the log book

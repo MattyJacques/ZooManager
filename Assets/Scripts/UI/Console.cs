@@ -127,7 +127,7 @@ namespace Assets.Scripts.UI
         case fund:
           if (inputParamsLength == 1)
           {
-            _fundsMgr.GetComponent<Assets.Scripts.Managers.LogBook>().ShowLog();
+            _fundsMgr.GetComponent<Assets.Scripts.Managers.LogBookManager>().ShowLog();
           }
           else if (inputParamsLength == 4)
           {
@@ -155,9 +155,9 @@ namespace Assets.Scripts.UI
                 break;
             }
             if (amount > 0)//float amount, Receipt.Type type = Receipt.Type.NA, string whatFor = "N/A")
-              _fundsMgr.GetComponent<Assets.Scripts.Managers.LogBook>().AddFunds(amount,curType,forWhat);
+              _fundsMgr.GetComponent<Assets.Scripts.Managers.LogBookManager>().AddFunds(amount,curType,forWhat);
             else
-              _fundsMgr.GetComponent<Assets.Scripts.Managers.LogBook>().AllocateFunds(amount,curType,forWhat);
+              _fundsMgr.GetComponent<Assets.Scripts.Managers.LogBookManager>().AllocateFunds(amount,curType,forWhat);
           }
           break;
         #endregion
