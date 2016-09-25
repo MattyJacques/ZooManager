@@ -52,7 +52,7 @@ namespace Assets.Scripts.UI
       _player = GameObject.FindWithTag("Player");
       _buildMgr = GetComponent("BuildingManager");
       _animalMgr = GetComponent("AnimalManager");
-      _fundsMgr = GetComponent("FundManager");
+      _fundsMgr = GetComponent("LogBook");
 
       //Filling SPAWN_ITEMS
       DirectoryInfo directoryInfo = new DirectoryInfo("Assets/Resources");
@@ -127,7 +127,7 @@ namespace Assets.Scripts.UI
         case fund:
           if (inputParamsLength == 1)
           {
-            _fundsMgr.GetComponent<Assets.Scripts.Managers.FundManager>().ShowLog();
+            _fundsMgr.GetComponent<Assets.Scripts.Managers.LogBook>().ShowLog();
           }
           else if (inputParamsLength == 4)
           {
@@ -155,9 +155,9 @@ namespace Assets.Scripts.UI
                 break;
             }
             if (amount > 0)//float amount, Receipt.Type type = Receipt.Type.NA, string whatFor = "N/A")
-              _fundsMgr.GetComponent<Assets.Scripts.Managers.FundManager>().AddFunds(amount,curType,forWhat);
+              _fundsMgr.GetComponent<Assets.Scripts.Managers.LogBook>().AddFunds(amount,curType,forWhat);
             else
-              _fundsMgr.GetComponent<Assets.Scripts.Managers.FundManager>().AllocateFunds(amount,curType,forWhat);
+              _fundsMgr.GetComponent<Assets.Scripts.Managers.LogBook>().AllocateFunds(amount,curType,forWhat);
           }
           break;
         #endregion
