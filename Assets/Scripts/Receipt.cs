@@ -20,7 +20,7 @@ public class Receipt
   
   public string Print()
   {//Return all availible info
-    return("Type: " + _type + " Amount: " + _transAmount + " For: " + _for);
+    return("Type: " + _type + " Amount: " + _transAmount + "\n" + " For: " + _for);
   }
   
 }
