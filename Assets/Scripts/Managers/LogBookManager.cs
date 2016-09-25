@@ -31,7 +31,6 @@ namespace Assets.Scripts.Managers
     {//Updates the log book
       if (Input.GetMouseButtonDown(0) && _showlog)
       {
-        int turnPage = (int)_page;
         int iter = 0;
         foreach(Rect rect in _buttonRects)
         {
