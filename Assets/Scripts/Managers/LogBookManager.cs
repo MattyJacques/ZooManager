@@ -16,7 +16,8 @@ namespace Assets.Scripts.Managers
     private enum Pages {Stats,Funds,Misc};                                              //The types of pages you can do. Allows for as many pages as needed  
     private Pages _page = Pages.Stats;                                                  //The page you are on
     private bool _showlog = false;                                                      //Whether the log is visible or not
-    public Rect _locRect = new Rect(Screen.width / 8,(Screen.height / 10),250,300);     //Location of the book
+    public Rect _locRect = new Rect(Screen.width / 8,(Screen.height / 10),750,450);     //Location of the book
+    public Rect _logButtonRect;                                                         //Location of the log button
     public List<Rect> _buttonRects = new List<Rect>();                                  //Tabs rect
     public List<Rect> _templateRects = new List<Rect>();                                //Filter buttons rect
     public List<Texture2D> _pages = new List<Texture2D>();                              //Page images
@@ -57,6 +58,13 @@ namespace Assets.Scripts.Managers
           DrawFunds();          
         }
       }
+      Rect tempRect = _logButtonRect;
+      if (_showlog)
+        tempRect.x -= _locRect.width;
+      if(GUI.Button(tempRect,_icons[5]))
+      {
+        ShowLog();
+      }
     } // OnGUI()
     
     private void DrawFunds()
@@ -71,7 +79,8 @@ namespace Assets.Scripts.Managers
       }
       
       Rect tempRect = _locRect;
-      tempRect.x += 60;
+      tempRect.x += 110;
+      tempRect.y += 40;
       Rect tempImgRect = tempRect;
       tempRect.x += 20;
       tempImgRect.width = 20;
@@ -93,7 +102,7 @@ namespace Assets.Scripts.Managers
           GUI.DrawTexture(tempImgRect,_icons[(int)receipt._type]);
           
           iter++;
-          if (iter == 5)
+          if (iter == 9)
           { return;}
         }
       }

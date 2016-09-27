@@ -52,7 +52,7 @@ namespace Assets.Scripts.UI
       _player = GameObject.FindWithTag("Player");
       _buildMgr = GetComponent("BuildingManager");
       _animalMgr = GetComponent("AnimalManager");
-      _fundsMgr = GetComponent("LogBook");
+      _fundsMgr = GetComponent("LogBookManager");
 
       //Filling SPAWN_ITEMS
       DirectoryInfo directoryInfo = new DirectoryInfo("Assets/Resources");
