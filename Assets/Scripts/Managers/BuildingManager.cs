@@ -58,7 +58,7 @@ namespace Assets.Scripts.Managers
   
     void Update()
     { // Check if building is currently following mouse position
-
+
       if (_currentBuild)
       { // If there is currently a building being placed, update position
         // and check for mouse input
