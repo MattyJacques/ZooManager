@@ -251,6 +251,19 @@ namespace Assets.Scripts.Managers
 
     } // Create()
 
+    public void Create(LevelBuildingTemplate template)
+    { // Create a building object using the template provided
+
+      // Build path then load the object
+      string buildName = "Buildings/Prefabs/" + template.name;
+      UnityEngine.Object loadedObject = Resources.Load(buildName);
+
+      if (loadedObject)
+      { // If the object has been loaded, instantiate and store object
+        _buildings.Add((GameObject)Instantiate(loadedObject));
+      }
+    } // Create()
+
     private int GetBuildingIndex(int id, string name, CreateMode mode)
     { // Get the template index using the name or id, whichever mode is passed in
       // Returns -1 if not found
