@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.Animals;
 using Assets.Scripts.Helpers;
+using Assets.Scripts.BehaviourTree;
 
 
 namespace Assets.Scripts.Managers
@@ -25,11 +26,14 @@ namespace Assets.Scripts.Managers
     // List of all active animals
     List<AnimalBase> _animals = new List<AnimalBase> { };
 
+    BehaviourCreator _behaviours;         // Creates all behaviours for animals
 
     void Start()
     { // Call to get the templates from JSON
-    
+
+      _behaviours = new BehaviourCreator();
       _templates = JSONReader.ReadJSON<AnimalTemplateCollection>("Animals/Animals");
+      _behaviours.CreateBehaviours();
 
     } // Start()
 			
@@ -37,7 +41,7 @@ namespace Assets.Scripts.Managers
 	  {
 			foreach (AnimalBase animal in _animals) 
 			{
-				animal.CheckedNeeds();
+				animal.CheckNeeds();
 			}
 	  }
 
