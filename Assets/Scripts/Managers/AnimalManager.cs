@@ -69,6 +69,23 @@ namespace Assets.Scripts.Managers
     } // Create(name)
 
 
+    public void Create(LevelAnimalTemplate template)
+    { // Create an animal instance using the template loaded from the level
+      // loader
+
+      // Find index in array
+      int index = GetTemplateIndex(0, template.name, CreateMode.NAME);
+
+      if (index >= 0)
+      { // Make sure template was found before creating the animal
+        CreateAnimal(index, 1, new Vector3(template.posX,
+                                           template.posY,
+                                           template.posZ));
+      }
+
+    } // Create()
+
+
     private int GetTemplateIndex(int id, string name, CreateMode mode)
     { // Get the template index using the name or id, whichever mode is passed in
       // Returns -1 if not found
