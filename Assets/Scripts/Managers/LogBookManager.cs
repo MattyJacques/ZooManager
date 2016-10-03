@@ -19,7 +19,7 @@ namespace Assets.Scripts.Managers
     public Rect _locRect = new Rect(Screen.width / 8,(Screen.height / 10),750,450);     //Location of the book
     public Rect _logButtonRect;                                                         //Location of the log button
     public List<Rect> _buttonRects = new List<Rect>();                                  //Tabs rect
-    public List<Rect> _templateRects = new List<Rect>();                                //Filter buttons rect
+    private Rect _templateRects = new Rect(586, 20, 40, 40);                            //Filter buttons rect
     public List<Texture2D> _pages = new List<Texture2D>();                              //Page images
     public List<Texture2D> _icons = new List<Texture2D>();                              //List of icons
     public List<Receipt> _fundLog = new List<Receipt>();                                //List of receipts
@@ -27,7 +27,7 @@ namespace Assets.Scripts.Managers
 
     private bool shouldFilter = false;                                                  //Is the filter on
     private Receipt.Type filter = Receipt.Type.NA;                                      //Filter type
-      
+    
     void Update () 
     {//Updates the log book
       if (Input.GetMouseButtonDown(0) && _showlog)
@@ -61,7 +61,7 @@ namespace Assets.Scripts.Managers
       Rect tempRect = _logButtonRect;
       if (_showlog)
         tempRect.x -= _locRect.width;
-      if(GUI.Button(tempRect,_icons[5]))
+      if(GUI.Button(tempRect,_icons[6]))
       {
         ShowLog();
       }
@@ -69,16 +69,18 @@ namespace Assets.Scripts.Managers
     
     private void DrawFunds()
     {//Draws the fund page for the log book
-      for(int i = 0; i <= 4; i++)
+      Rect tempRect = _templateRects;
+      for(int i = 0; i <= 5; i++)
       {
-        if(GUI.Button(_templateRects[i], _icons[i]))
+        if(GUI.Button(tempRect, _icons[i]))
         {
           filter = (Receipt.Type)i;
           shouldFilter = true;
         }
+        tempRect.x += 45;
       }
       
-      Rect tempRect = _locRect;
+      tempRect = _locRect;
       tempRect.x += 110;
       tempRect.y += 40;
       Rect tempImgRect = tempRect;
@@ -122,7 +124,7 @@ namespace Assets.Scripts.Managers
         AddFunds(-withdraw,type,whatFor);
         return true;
       }
-        return false;
+      return false;
     }//AllocateFunds()
     
     public void ShowLog()
