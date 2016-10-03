@@ -110,8 +110,8 @@ namespace Assets.Scripts.Managers
     
     public void AddFunds(float amount, Receipt.Type type = Receipt.Type.NA, string whatFor = "N/A")
     {//Used to add money // Use AllocateFunds if you are subtracting
+      _fundLog.Add(new Receipt(type, _money, amount, whatFor));
       _money += amount;
-      _fundLog.Add(new Receipt(type,amount,whatFor));
     }//AddFunds type float for
     
     public bool AllocateFunds(float withdraw, Receipt.Type type = Receipt.Type.NA, string whatFor = "N/A")
