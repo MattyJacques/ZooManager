@@ -39,7 +39,7 @@ namespace Assets.Scripts.Managers
     
     public bool _isPave = false;            //Are you placing pavement or building
     public PaveScript _pave;                //Assistance in placing script
-    public  AStar _aStar;
+    private  AStar _aStar;
 
     void Start()
     { // Load the buildings from Resources
@@ -53,6 +53,7 @@ namespace Assets.Scripts.Managers
       //Set values
       _pave = gameObject.AddComponent<PaveScript>() as PaveScript;
       _pave.Start();
+      _aStar = gameObject.GetComponent<AStar>() as AStar;
 
     } // Start()
   
@@ -65,7 +66,7 @@ namespace Assets.Scripts.Managers
 
         UpdateMouseBuild();
         
-        if (Input.GetMouseButtonDown(0) || (_isPave && Input.GetMouseButtonDown(0)))
+        if (Input.GetMouseButtonDown(0) || (_isPave && Input.GetMouseButton(0)))
         { // If left click, place the building
 
           if (!_rotateLeftRect.Contains(new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y)) &&
