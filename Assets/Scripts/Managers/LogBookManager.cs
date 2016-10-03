@@ -18,10 +18,10 @@ namespace Assets.Scripts.Managers
     private bool _showlog = false;                                                      //Whether the log is visible or not
     public Rect _locRect = new Rect(Screen.width / 8,(Screen.height / 10),750,450);     //Location of the book
     public Rect _logButtonRect;                                                         //Location of the log button
-    public List<Rect> _buttonRects = new List<Rect>();                                  //Tabs rect
+    private List<Rect> _buttonRects = new List<Rect>();                                  //Tabs rect
     private Rect _templateRects = new Rect(586, 20, 40, 40);                            //Filter buttons rect
-    public List<Texture2D> _pages = new List<Texture2D>();                              //Page images
-    public List<Texture2D> _icons = new List<Texture2D>();                              //List of icons
+    private List<Texture2D> _pages = new List<Texture2D>();                              //Page images
+    private List<Texture2D> _icons = new List<Texture2D>();                             //List of icons
     public List<Receipt> _fundLog = new List<Receipt>();                                //List of receipts
     public float _money = 0.0f;                                                         //how much money the zoo has
 
@@ -45,6 +45,27 @@ namespace Assets.Scripts.Managers
       }
     }//Update()
     
+    void Awake()
+    {
+      string[] listOIcons = new string[] {"productIcon", "moneyIcon", "taskIcon", "paidIcon", "naIcon", "graphButton", "logIcon" };
+      foreach(string fetchIco in listOIcons)
+      {
+        string folder = "TestArt/" + fetchIco;
+        _icons.Add(((Texture2D)(Resources.Load(folder))));
+      }
+      string[] listOPages = new string[] {"logbook", "logbookp2", "logbookp3" };
+      foreach(string fetchPage in listOPages)
+      {
+        string folder = "TestArt/" + fetchPage;
+        _pages.Add(((Texture2D)(Resources.Load(folder))));
+      }
+      
+      _buttonRects.Add(new Rect(0,   0, 120, 120));
+      _buttonRects.Add(new Rect(0, 121, 120, 120));
+      _buttonRects.Add(new Rect(0, 241, 120, 120));
+      
+    }//LoadIco
+    
     private void OnGUI()
     {// Draw stuffs
       GUI.Label(new Rect(Screen.width - (Screen.width/20),0,20,20), _money.ToString());
@@ -61,6 +82,7 @@ namespace Assets.Scripts.Managers
       Rect tempRect = _logButtonRect;
       if (_showlog)
         tempRect.x -= _locRect.width;
+      
       if(GUI.Button(tempRect,_icons[6]))
       {
         ShowLog();
