@@ -6,7 +6,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Assets.Scripts.Animals;
+using Assets.Scripts.Characters.Animals;
 using Assets.Scripts.Helpers;
 using Assets.Scripts.BehaviourTree;
 
