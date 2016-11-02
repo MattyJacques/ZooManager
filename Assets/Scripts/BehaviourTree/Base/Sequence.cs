@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
-using Assets.Scripts.Animals;
+using Assets.Scripts.Characters;
 
 namespace Assets.Scripts.BehaviourTree.Base
 {
@@ -15,7 +15,7 @@ namespace Assets.Scripts.BehaviourTree.Base
     } // Sequence
 
 
-    public override ReturnCode Behave(AnimalBase theBase)
+    public override ReturnCode Behave(AIBase theBase)
     { // Process the given behaviour, returning to return code
 
       bool isRunning = false;

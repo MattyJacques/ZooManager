@@ -1,6 +1,6 @@
 ﻿
 
-namespace Assets.Scripts.Animals
+namespace Assets.Scripts.Characters.Animals
 {
   [System.Serializable]
   public class AnimalTemplateCollection

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
-using Assets.Scripts.Animals;
+using Assets.Scripts.Characters;
 
 
 namespace Assets.Scripts.BehaviourTree.Base
@@ -29,7 +29,7 @@ namespace Assets.Scripts.BehaviourTree.Base
     } // Behaviour()
 
 
-    public ReturnCode Behave(AnimalBase theBase)
+    public ReturnCode Behave(AIBase theBase)
     { // Process the behaviour of the current selector
 
       try
