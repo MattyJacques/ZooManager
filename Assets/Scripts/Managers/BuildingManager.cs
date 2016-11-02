@@ -1,5 +1,5 @@
 ﻿// Title        : BuildingManager.cs
-// Purpose      : Initiates templates, manages instances of animals
+// Purpose      : Initiates templates, manages instances of buildings
 // Author       : Matthew Jacques
 // Date         : 03/09/2016
 
@@ -39,7 +39,7 @@ namespace Assets.Scripts.Managers
     
     public bool _isPave = false;            //Are you placing pavement or building
     public PaveScript _pave;                //Assistance in placing script
-    private AStar _aStar;
+    private  AStar _aStar;
 
     void Start()
     { // Load the buildings from Resources
@@ -105,7 +105,7 @@ namespace Assets.Scripts.Managers
         }
         else if (_pave._startPole.position != new Vector3(-1000,-1000,-1000) && _pave._endPole.position != new Vector3(-1000,-1000,-1000))
         {
-          paving();
+          Paving();
         }
       }
 
@@ -120,7 +120,7 @@ namespace Assets.Scripts.Managers
       _currentBuild.name = _currentBuild.name + _pave._numberOfPavs;
     }//Pave()
 
-    private void paving()
+    private void Paving()
     {//The logic of pathing
       _pave._pathPaving = true;
       //set the starting point
@@ -160,7 +160,7 @@ namespace Assets.Scripts.Managers
         PlacePavement();
       }
       _pave.  resetPoles();
-    }//paving()
+    }//Paving()
     
     private void PlaceBuilding()
     { // Place the building in the world, add to buildings list
@@ -250,7 +250,7 @@ namespace Assets.Scripts.Managers
         _currentBuild = ((GameObject)Instantiate(loadedObject)).transform;
       }
 
-    } // Create()
+    } // Create(string)
 
     public void Create(LevelBuildingTemplate template)
     { // Create a building object using the template provided
@@ -263,7 +263,7 @@ namespace Assets.Scripts.Managers
       { // If the object has been loaded, instantiate and store object
         _buildings.Add((GameObject)Instantiate(loadedObject));
       }
-    } // Create()
+    } // Create(template)
 
     private int GetBuildingIndex(int id, string name, CreateMode mode)
     { // Get the template index using the name or id, whichever mode is passed in
@@ -355,5 +355,19 @@ namespace Assets.Scripts.Managers
       }
     } // OnGUI()
 
+    public void DoService(string type, int id)
+    {
+      switch(type)
+      {
+        case "Feed":
+          //get buildings animal from the id and feed it
+          //_fundMngr.AllocateFunds(10,Recipt.Type.Task,"Feed all of them lions");
+          break;
+        default:
+          //Nofn
+          break;
+      }
+    }
+    
   } // BuildingManager
 }

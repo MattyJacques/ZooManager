@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.BehaviourTree.Base;
-using Assets.Scripts.Animals;
+using Assets.Scripts.Characters;
 
 
 namespace Assets.Scripts.BehaviourTree
@@ -71,50 +71,50 @@ namespace Assets.Scripts.BehaviourTree
 
     } // CreateMoveToTarget()
 
-    private ReturnCode SetTarget(AnimalBase theBase)
+    private ReturnCode SetTarget(AIBase theBase)
     { // Calculate the cloest source of water
       Debug.Log("SetTarget(), returning success");
       return ReturnCode.Success;
     } // SetCurrTarget()
 
-    private ReturnCode DrinkWater(AnimalBase theBase)
+    private ReturnCode DrinkWater(AIBase theBase)
     { // Handle the drinking of the water
       Debug.Log("DrinkWater(), returning success");
-      theBase.Feed(AnimalBase.FeedType.Food, 100);
+      theBase.Feed(AIBase.FeedType.Food, 100);
       return ReturnCode.Success;
     } // DrinkWater()
 
-    private ReturnCode GetPath(AnimalBase theBase)
+    private ReturnCode GetPath(AIBase theBase)
     { // Call to get the path to the current target
       Debug.Log("GetPath(), returning success");
       return ReturnCode.Success;
     } // GetPath()
 
-    private ReturnCode FollowPath(AnimalBase theBase)
+    private ReturnCode FollowPath(AIBase theBase)
     { // Handle the following of the current path to the target
       Debug.Log("FollowPath(), returning success");
       return ReturnCode.Success;
     } // FollowPath()
 
-    private bool IsThirsty(AnimalBase theBase)
+    private bool IsThirsty(AIBase theBase)
     { // Check if the animal base's thirst is at a level we class as thirsty
       Debug.Log("IsThirsty(), returning " + (theBase.Thirst < 50));
       return theBase.Thirst < 50;
     } // CheckThirst()
 
-    private bool HasPath(AnimalBase theBase)
+    private bool HasPath(AIBase theBase)
     { // Check if the base has a set path already
       Debug.Log("HasPath(), returning " + (theBase.Path != null));
       return theBase.Path != null;
     } // HasPath()
 
-    private bool HasTarget(AnimalBase theBase)
+    private bool HasTarget(AIBase theBase)
     { // Return true if the base currently has a target
       Debug.Log("HasTarget(), returning " + (theBase.Target != null));
       return theBase.Target != null;
     } // HasTarget()
 
-    private bool HasArrived(AnimalBase theBase)
+    private bool HasArrived(AIBase theBase)
     { // Return true if we have arrived at target
       Debug.Log("HasArrived(), returning " + (theBase.UnityTransform.position == theBase.Target.transform.position));
       return theBase.UnityTransform.position == theBase.Target.transform.position;
