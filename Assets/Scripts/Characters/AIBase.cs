@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Assets.Scripts.Managers;
 
 
 namespace Assets.Scripts.Characters
 {
   public class AIBase
   {
-    public enum FeedType { Food, Water }     // Enum for feed() to tell which stat to increase
+    public enum FeedType { Food, Water }          // Enum for feed() to tell which stat to increase
 
     // This reference can be used to move the character around without needing to make AIBase a MonoBehaviour
     public Transform UnityTransform { get; set; }
@@ -17,6 +18,7 @@ namespace Assets.Scripts.Characters
     public float Thirst { get; set; }
     public float Age { get; set; }
     public float Boredom { get; set; }
+    public BuildingManager.TargetType NextTarget { get; set; }
     public GameObject Target { get; set; }
     public GameObject Path { get; set; }      // Change to path object
     public BehaviourTree.Base.Behaviour Behave { get; set; }

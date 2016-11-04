@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.BehaviourTree.Base;
 using Assets.Scripts.Characters;
+using Assets.Scripts.Managers;
 
 
 namespace Assets.Scripts.BehaviourTree
@@ -72,7 +73,11 @@ namespace Assets.Scripts.BehaviourTree
     } // CreateMoveToTarget()
 
     private ReturnCode SetTarget(AIBase theBase)
-    { // Calculate the cloest source of water
+    { // Calculate the cloest source matching next target type
+
+      theBase.Target = BuildingManager.GetClosestOfType(theBase.UnityTransform.position
+                                                        , theBase.NextTarget);
+
       Debug.Log("SetTarget(), returning success");
       return ReturnCode.Success;
     } // SetCurrTarget()
@@ -98,8 +103,18 @@ namespace Assets.Scripts.BehaviourTree
 
     private bool IsThirsty(AIBase theBase)
     { // Check if the animal base's thirst is at a level we class as thirsty
+      // If so set the next target of the base to water and return true
+
       Debug.Log("IsThirsty(), returning " + (theBase.Thirst < 50));
-      return theBase.Thirst < 50;
+
+      bool isThirst = theBase.Thirst < 50;
+
+      if (isThirst)
+      {
+        theBase.NextTarget = BuildingManager.TargetType.Water;
+      }
+
+      return isThirst;
     } // CheckThirst()
 
     private bool HasPath(AIBase theBase)

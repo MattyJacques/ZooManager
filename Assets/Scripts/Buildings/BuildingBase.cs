@@ -5,12 +5,14 @@
 
 using UnityEngine;
 using System.Collections;
+using Assets.Scripts.Managers;
 
 public class BuildingBase
 {
 
   // Template values never get set, they represent the building's permanent properties
   public BuildingTemplate _template { get; set; }
+  public BuildingManager.TargetType Type { get; set; }
 
   BuildingBase(BuildingTemplate template)
   { // Initialise the template for the building
