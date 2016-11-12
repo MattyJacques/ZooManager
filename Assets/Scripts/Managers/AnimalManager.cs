@@ -6,6 +6,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Assets.Scripts.Characters.Animals;
 using Assets.Scripts.Helpers;
 using Assets.Scripts.BehaviourTree;
@@ -23,6 +24,9 @@ namespace Assets.Scripts.Managers
     // Holds all animal templates read from JSON array
     public AnimalTemplateCollection _templates;
 
+    private static List<GameObject> _animalPrefabs;    // List of all available animals
+    Dictionary<int, string> _prefabIndex;
+
     // List of all active animals
     List<AnimalBase> _animals = new List<AnimalBase> { };
 
@@ -31,19 +35,24 @@ namespace Assets.Scripts.Managers
     void Start()
     { // Call to get the templates from JSON
 
+      // Setup behaviour tree
       _behaviours = new BehaviourCreator();
       _templates = JSONReader.ReadJSON<AnimalTemplateCollection>("Animals/Animals");
       _behaviours.CreateBehaviours();
 
+      // Load all animal prefabs
+      _prefabIndex = new Dictionary<int, string>();
+      LoadAnimals();
+
     } // Start()
-			
-	  void Update()
-	  {
-			foreach (AnimalBase animal in _animals) 
-			{
-				animal.CheckNeeds();
-			}
-	  }
+
+    void Update()
+    {
+      foreach (AnimalBase animal in _animals)
+      {
+        animal.CheckNeeds();
+      }
+    }
 
     public void Create(int id, int amount, Vector3 location)
     { // Create an animal instance using the ID field of the templates
@@ -143,6 +152,31 @@ namespace Assets.Scripts.Managers
 
     } // Create()
 
+    private void LoadAnimals()
+    { // Load animals from Assets/Resources
+
+      DirectoryInfo directoryInfo = new DirectoryInfo("Assets/Resources/Animals");
+      DirectoryInfo[] subDirectories = directoryInfo.GetDirectories();
+
+      _animalPrefabs = new List<GameObject>();
+
+      int count = 0;
+
+      foreach (DirectoryInfo dir in subDirectories)
+      {
+        Debug.Log("Searching directory: " + dir.Name);
+
+        foreach (FileInfo file in dir.GetFiles())
+        {
+          if (file.Name.EndsWith("prefab"))
+          {
+            _animalPrefabs.Add((GameObject)Resources.Load(dir.Name + "/" + file.Name));
+            _prefabIndex.Add(_prefabIndex.Count, Path.GetFileNameWithoutExtension(file.Name));
+            Debug.Log("Loaded " + dir.Name + "/" + file.Name);
+          }
+        }
+      }
+    } // LoadAnimals()
 
   } // AnimalManager
 
