@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using Assets.Scripts.Buildings;
 using System;
+using Assets.Scripts.Characters;
 
 namespace Assets.Scripts.Managers
 {
@@ -18,10 +19,13 @@ namespace Assets.Scripts.Managers
     // Which mode to find the building template with
     enum CreateMode { ID, NAME };
 
+    public enum TargetType { Food, Water, Fun }   // Enum for target type to aid with SetTarget behaviour
+
     // Lists
     // Collection of building templates
     private BuildingTemplateCollection _buildingTemplates;
-    private List<GameObject> _buildings;    // List of current active buildings
+    private static List<GameObject> _buildings;    // List of current active buildings
+    private static List<BuildingBase> _buildingBases;
 
     // Objects
     public Transform _currentBuild;        // Current building to be placed
@@ -110,7 +114,41 @@ namespace Assets.Scripts.Managers
       }
 
     } // Update()
-  
+
+    internal static GameObject GetClosestOfType(Vector3 position, 
+                                                TargetType nextTarget)
+    { // Get the closest building that has the type provided as an argument.
+      // THIS DOES NOT TAKE INTO ACCOUNT THE DISTANCE VIA PATH, THIS WILL NEED
+      // TO BE EDITED
+
+      int index = -1;
+      float currLowest = float.MaxValue;
+      float currTest = 0f;
+      GameObject retBuilding = null;
+
+      for (int i = 0; i < _buildings.Count; i++)
+      { // Check all buildings with matching type for closest
+
+        if (_buildingBases[i].Type == nextTarget)
+        {
+          currTest = Vector3.Distance(position, _buildings[i].transform.position);
+          if (currTest < currLowest)
+          {
+            index = i;
+            currLowest = currTest;
+          }
+        }
+      }
+
+      if (index != -1)
+      {
+        retBuilding = _buildings[index];
+      }
+
+      return retBuilding;
+
+    } // GetClosestOfType
+
     public void Pave(string type)
     {//Loads the pavement as _currentBuild
       _isPave = true;
