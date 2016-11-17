@@ -121,7 +121,7 @@ namespace Assets.Scripts.Managers
                                             _animalCollection[index].Prefab);
 
         // Update location of object
-        newBase.UnityTransform.position = location;
+        newBase.Model.transform.position = location;
 
         // Add animal to instances list
         _animals.Add(newBase);

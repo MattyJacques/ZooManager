@@ -9,9 +9,6 @@ namespace Assets.Scripts.Characters
   {
     public enum FeedType { Food, Water }          // Enum for feed() to tell which stat to increase
 
-    // This reference can be used to move the character around without needing to make AIBase a MonoBehaviour
-    public Transform UnityTransform { get; set; }
-
     // The animal's temporary properties change over the life of the animal
     public float Health { get; set; }    // How healthy the animal is, low is dying
     public float Hunger { get; set; }    // How hungry the animal is, low is hungry
