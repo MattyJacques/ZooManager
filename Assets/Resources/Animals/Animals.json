@@ -1,7 +1,7 @@
 {"animalTemplates":[
   {
-    "id":1,
-    "animalname":"EmperorPenguin",
+    "id":"EmperorPenguin",
+    "animalname":"Emperor Penguin",
     "price":1,
     "habitat":"Arctic",
     "food":["Fish"],
@@ -13,8 +13,8 @@
     "lifespan":18
   },
   {
-    "id":2,
-    "name":"IndianPeafowl",
+    "id":"IndianPeafowl",
+    "name":"Indian Peafowl",
     "price":2,
     "habitat":"Forest",
     "food":["Fruit","Insects"],
@@ -26,8 +26,8 @@
     "lifespan":20
   },
   {
-    "id":3,
-    "animalname":"AfricanLion",
+    "id":"AfricanLion",
+    "animalname":"African Lion",
     "price":1,
     "habitat":"Savannah",
     "food":["Meat"],
@@ -39,8 +39,8 @@
     "lifespan":18
   },
   {
-    "id":4,
-    "animalname":"SumatranTiger",
+    "id":"SumatranTiger",
+    "animalname":"Sumatran Tiger",
     "price":1,
     "habitat":"Rainforest",
     "food":["Meat"],
@@ -52,8 +52,8 @@
     "lifespan":18
   },
   {
-    "id":5,
-    "animalname":"GrizzlyBear",
+    "id":"GrizzlyBear",
+    "animalname":"Grizzly Bear",
     "price":1,
     "habitat":"Forest",
     "food":["Meat", "Insects", "Fruit", "Fish"],
@@ -65,8 +65,8 @@
     "lifespan":18
   },
   {
-    "id":6,
-    "animalname":"PlainsZebra",
+    "id":"PlainsZebra",
+    "animalname":"Plains Zebra",
     "price":1,
     "habitat":"Savannah",
     "food":["Grass"],
@@ -78,8 +78,8 @@
     "lifespan":18
   },
   {
-    "id":7,
-    "animalname":"CommonChimpanzee",
+    "id":"CommonChimpanzee",
+    "animalname":"Common Chimpanzee",
     "price":1,
     "habitat":"Rainforest",
     "food":["Meat", "Insects", "Fruit", "Leaves"],

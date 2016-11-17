@@ -1,7 +1,7 @@
 ﻿[System.Serializable]
 public class AnimalTemplate
 {
-  public int id;
+  public string id;
   public string animalname;
   public int price;
   public string habitat;

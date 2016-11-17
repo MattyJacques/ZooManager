@@ -19,9 +19,10 @@ namespace Assets.Scripts.Characters.Animals
     [SerializeField]
     GameClock gameClock;
 
-    public AnimalBase(AnimalTemplate template)
+    public AnimalBase(AnimalTemplate template, GameObject model)
     { // Constructor to set up the template and behaviour tree
       Template = template;
+      Model = model;
     } // AnimalBase()
 
     protected void Update()

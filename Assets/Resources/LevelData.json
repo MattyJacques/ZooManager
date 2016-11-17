@@ -5,7 +5,7 @@
   "loseCondition": 1,
   "buildings":[
   {
-    "name": "ticketbooth",
+    "id": "TicketBooth",
     "posX": 262,
     "posY": 0,
     "posZ": 194,
@@ -16,7 +16,7 @@
   }],
   "animals":[
   {
-    "name": "EmperorPenguin",
+    "id": "EmperorPenguin",
     "posX": 284,
     "posY": 1,
     "posZ": 205,

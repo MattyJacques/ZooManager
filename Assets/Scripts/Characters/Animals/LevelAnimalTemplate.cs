@@ -1,7 +1,7 @@
 ﻿[System.Serializable]
 public class LevelAnimalTemplate
 {
-    public string name;
+    public string id;
     public float posX;
     public float posY;
     public float posZ;

@@ -18,14 +18,18 @@ namespace Assets.Scripts.Managers
   public class AnimalManager : MonoBehaviour
   {
 
-    // Which mode to find the animal template with
-    enum CreateMode { ID, NAME };
+    struct Animal
+    { // Struct to hold all the information on an animal, this includes the ID,
+      // the template and the prefab
+      public string ID { get; set; }
+      public AnimalTemplate Template { get; set; }
+      public GameObject Prefab { get; set; }
+    };
 
     // Holds all animal templates read from JSON array
     public AnimalTemplateCollection _templates;
 
-    private static List<GameObject> _animalPrefabs;    // List of all available animals
-    Dictionary<int, string> _prefabIndex;
+    private List<Animal> _animalCollection;
 
     // List of all active animals
     List<AnimalBase> _animals = new List<AnimalBase> { };
@@ -40,8 +44,8 @@ namespace Assets.Scripts.Managers
       _templates = JSONReader.ReadJSON<AnimalTemplateCollection>("Animals/Animals");
       _behaviours.CreateBehaviours();
 
-      // Load all animal prefabs
-      _prefabIndex = new Dictionary<int, string>();
+      // Load all animals
+      _animalCollection = new List<Animal>();
       LoadAnimals();
 
     } // Start()
@@ -54,11 +58,11 @@ namespace Assets.Scripts.Managers
       }
     }
 
-    public void Create(int id, int amount, Vector3 location)
+    public void Create(string id, int amount, Vector3 location)
     { // Create an animal instance using the ID field of the templates
 
       // Find index in array
-      int index = GetTemplateIndex(id, "", CreateMode.ID);
+      int index = GetAnimalIndex(id);
 
       if (index >= 0)
       { // Make sure template was found before creating the animal
@@ -67,27 +71,12 @@ namespace Assets.Scripts.Managers
 
     } // Create(id)
 
-
-    public void Create(string name, int amount, Vector3 location)
-    { // Create an animal instance using the name field of the templates
-
-      // Find index in array
-      int index = GetTemplateIndex(0, name, CreateMode.NAME);
-
-      if (index >= 0)
-      { // Make sure template was found before creating the animal
-        CreateAnimal(index, amount, location);
-      }
-
-    } // Create(name)
-
-
     public void Create(LevelAnimalTemplate template)
     { // Create an animal instance using the template loaded from the level
       // loader
 
       // Find index in array
-      int index = GetTemplateIndex(0, template.name, CreateMode.NAME);
+      int index = GetAnimalIndex(template.id);
 
       if (index >= 0)
       { // Make sure template was found before creating the animal
@@ -96,39 +85,26 @@ namespace Assets.Scripts.Managers
                                            template.posZ));
       }
 
-    } // Create()
+    } // Create(LevelAnimalTemplate)
 
 
-    private int GetTemplateIndex(int id, string name, CreateMode mode)
-    { // Get the template index using the name or id, whichever mode is passed in
-      // Returns -1 if not found
+    private int GetAnimalIndex(string id)
+    { // Get the index of the Animal struct within the _animalCollection
 
-      int templateIndex = -1;              // Holds the template index found
+      int animalIndex = -1;              // Holds the template index found
 
       for (int i = 0; i < _templates.animalTemplates.Length; i++)
       { // Check if there is a match for every template in the array
 
-        if (mode == CreateMode.ID)
-        { // If mode is ID, check for matching ID
 
-          if (_templates.animalTemplates[i].id == id)
-          { // Check for matching ID, if found set index and break out of loop
-            templateIndex = i;
-            break;
-          }
-        }
-        else if (mode == CreateMode.NAME)
-        { // If mode is name, check for matching name
-
-          if (_templates.animalTemplates[i].animalname == name)
-          { // Check for matching name, if found set index and break out of loop
-            templateIndex = i;
-            break;
-          }
+        if (_templates.animalTemplates[i].id == id)
+        { // Check for matching ID, if found set index and break out of loop
+          animalIndex = i;
+          break;
         }
       }
 
-      return templateIndex;
+      return animalIndex;
 
     } // GetTemplateIndex()
 
@@ -141,7 +117,8 @@ namespace Assets.Scripts.Managers
       { // Create as many animals as needed
 
         // Create new animal with found template
-        AnimalBase newBase = new AnimalBase(_templates.animalTemplates[index]);
+        AnimalBase newBase = new AnimalBase(_animalCollection[index].Template,
+                                            _animalCollection[index].Prefab);
 
         // Update location of object
         newBase.UnityTransform.position = location;
@@ -158,10 +135,6 @@ namespace Assets.Scripts.Managers
       DirectoryInfo directoryInfo = new DirectoryInfo("Assets/Resources/Animals");
       DirectoryInfo[] subDirectories = directoryInfo.GetDirectories();
 
-      _animalPrefabs = new List<GameObject>();
-
-      int count = 0;
-
       foreach (DirectoryInfo dir in subDirectories)
       {
         Debug.Log("Searching directory: " + dir.Name);
@@ -169,9 +142,21 @@ namespace Assets.Scripts.Managers
         foreach (FileInfo file in dir.GetFiles())
         {
           if (file.Name.EndsWith("prefab"))
-          {
-            _animalPrefabs.Add((GameObject)Resources.Load(dir.Name + "/" + file.Name));
-            _prefabIndex.Add(_prefabIndex.Count, Path.GetFileNameWithoutExtension(file.Name));
+          { // Create a new Animal struct with the ID, prefab and template of
+            // the animal found
+            Animal newAnimal = new Animal();
+            newAnimal.ID = Path.GetFileNameWithoutExtension(file.Name);
+            newAnimal.Prefab = (GameObject)Resources.Load(dir.Name + "/" + file.Name);
+            
+            foreach (AnimalTemplate template in _templates.animalTemplates)
+            {
+              if (template.id == newAnimal.ID)
+              {
+                newAnimal.Template = template;
+                break;
+              }
+            }
+
             Debug.Log("Loaded " + dir.Name + "/" + file.Name);
           }
         }
