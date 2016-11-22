@@ -1,0 +1,155 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+}
+
+.flex-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.flex-item {
+    flex-grow: 0;
+}
+
+.flex-fill {
+    flex-grow: 1000;
+}
+
+.g-button-bar {
+    background-color: rgba(255,255,255,0.6);
+    flex-direction: row;
+    justify-content: space-between;
+    display: flex;
+}
+
+.g-button-bar nav {
+	position: relative;
+	z-index: 1;
+	white-space: nowrap;
+    padding: 0px 7px;
+}
+
+.g-button-bar nav.left {
+     min-width: 300px;
+display: flex;
+}
+
+.g-button-bar nav.middle {
+display: flex;
+}
+
+.g-button-bar nav.right {
+    min-width: 300px;
+display: flex;
+}
+
+.g-button-bar nav a {
+	position: relative;
+	display: inline-flex;
+	padding: 1.5em 1.5em 1em;
+	color: inherit;
+	text-decoration: none;
+	margin: -6px -7px;
+}
+
+.g-button-bar nav a::before {
+	border: .1em solid #ddd;
+}
+
+.g-button-bar nav a::before {
+	content: ''; /* To generate the box */
+	position: absolute;
+	top: 0; right: 0; bottom: .5em; left: 0;
+	z-index: -1;
+	border-bottom: none;
+	border-radius: 10px 10px 0 0;
+	background: #eee;
+	box-shadow: 0 2px hsla(0,0%,100%,.5) inset;
+	transform: perspective(9px) rotateX(2deg);
+	transform-origin: bottom;
+}
+
+.g-button-bar nav.left a {
+	padding: 1.5em 2em 1em 1em;
+	margin: -6px -7px;
+}
+
+.g-button-bar nav.left a::before {
+	transform-origin: bottom left;
+}
+
+.g-button-bar nav.right a {
+	padding: 1.5em 1em 1em 2em;
+	margin: -7px -7px;
+}
+
+.g-button-bar nav.right a::before {
+	transform-origin: bottom right;
+}
+
+.g-button-bar nav a.selected {
+	z-index: 2;
+}
+
+.g-button-bar nav a.selected::before {
+	margin-bottom: 0px;
+	border-top-width: 1px;
+}
+
+.g-button-bar nav a.selected::before {
+	background: #fff;
+}
+.g-button-bar nav a i {
+    max-height: 20px;
+}
+.g-button-bar nav.left a i {
+    margin-right: 5px;
+}
+
+.g-status-bar {
+    background-color: #0083c3;
+    color: #ffffff;
+    padding: 10px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    flex-direction: row;
+    justify-content: space-between;
+    display: flex;
+}
+
+.g-status-bar .g-label-white {
+    background-color: #ffffff;
+    color: #0083c3;
+    border-radius: 10px;
+    padding: 1px 10px;
+    margin-right: 10px;
+}
+
+.g-status-bar nav.left {
+    min-width: 300px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.g-status-bar nav.middle {
+    display: flex;
+    justify-content: center;
+}
+
+.g-status-bar nav.right {
+    min-width: 300px;
+    display: flex;
+    justify-content: flex-end;
+}
+.title {
+font-weight: 600;
+}
