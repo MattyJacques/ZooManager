@@ -1,0 +1,294 @@
+fileFormatVersion: 2
+guid: 5530b137a260106479f6ac29196dcba5
+timeCreated: 1479480268
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Don't read this!!!
+    100002: Foot.L
+    100004: Foot.L_end
+    100006: Foot.R
+    100008: Foot.R_end
+    100010: Forearm.L
+    100012: Forearm.R
+    100014: Hand.L
+    100016: Hand.L_end
+    100018: Hand.R
+    100020: Hand.R_end
+    100022: Head
+    100024: Head_end
+    100026: Hip
+    100028: LowerLeg.L
+    100030: LowerLeg.R
+    100032: Neck
+    100034: //RootNode
+    100036: PlaceholderVisitor
+    100038: Shoulder.L
+    100040: Shoulder.R
+    100042: Spine1
+    100044: Spine2
+    100046: UpperArm.L
+    100048: UpperArm.R
+    100050: UpperLeg.L
+    100052: UpperLeg.R
+    400000: Don't read this!!!
+    400002: Foot.L
+    400004: Foot.L_end
+    400006: Foot.R
+    400008: Foot.R_end
+    400010: Forearm.L
+    400012: Forearm.R
+    400014: Hand.L
+    400016: Hand.L_end
+    400018: Hand.R
+    400020: Hand.R_end
+    400022: Head
+    400024: Head_end
+    400026: Hip
+    400028: LowerLeg.L
+    400030: LowerLeg.R
+    400032: Neck
+    400034: //RootNode
+    400036: PlaceholderVisitor
+    400038: Shoulder.L
+    400040: Shoulder.R
+    400042: Spine1
+    400044: Spine2
+    400046: UpperArm.L
+    400048: UpperArm.R
+    400050: UpperLeg.L
+    400052: UpperLeg.R
+    4300000: PlaceholderVisitor
+    7400000: Idle
+    7400002: Walk
+    9500000: //RootNode
+    13700000: PlaceholderVisitor
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Idle
+      takeName: Don't read this!!!|Don't read this!!!Action
+      firstFrame: 0
+      lastFrame: 0
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Don't read this!!!
+        weight: 1
+      - path: Don't read this!!!/Hip
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/Spine2
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/Spine2/Neck
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/Spine2/Neck/Head
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/Spine2/Neck/Head/Head_end
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/Spine2/Neck/Shoulder.L
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/Spine2/Neck/Shoulder.L/UpperArm.L
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/Spine2/Neck/Shoulder.L/UpperArm.L/Forearm.L
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/Spine2/Neck/Shoulder.L/UpperArm.L/Forearm.L/Hand.L
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/Spine2/Neck/Shoulder.L/UpperArm.L/Forearm.L/Hand.L/Hand.L_end
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/Spine2/Neck/Shoulder.R
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/Spine2/Neck/Shoulder.R/UpperArm.R
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/Spine2/Neck/Shoulder.R/UpperArm.R/Forearm.R
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/Spine2/Neck/Shoulder.R/UpperArm.R/Forearm.R/Hand.R
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/Spine2/Neck/Shoulder.R/UpperArm.R/Forearm.R/Hand.R/Hand.R_end
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/UpperLeg.L
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/UpperLeg.L/LowerLeg.L
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/UpperLeg.L/LowerLeg.L/Foot.L
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/UpperLeg.L/LowerLeg.L/Foot.L/Foot.L_end
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/UpperLeg.R
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/UpperLeg.R/LowerLeg.R
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/UpperLeg.R/LowerLeg.R/Foot.R
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/UpperLeg.R/LowerLeg.R/Foot.R/Foot.R_end
+        weight: 1
+      - path: PlaceholderVisitor
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Walk
+      takeName: Don't read this!!!|Don't read this!!!Action
+      firstFrame: 5
+      lastFrame: 24
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Don't read this!!!
+        weight: 1
+      - path: Don't read this!!!/Hip
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/Spine2
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/Spine2/Neck
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/Spine2/Neck/Head
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/Spine2/Neck/Head/Head_end
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/Spine2/Neck/Shoulder.L
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/Spine2/Neck/Shoulder.L/UpperArm.L
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/Spine2/Neck/Shoulder.L/UpperArm.L/Forearm.L
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/Spine2/Neck/Shoulder.L/UpperArm.L/Forearm.L/Hand.L
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/Spine2/Neck/Shoulder.L/UpperArm.L/Forearm.L/Hand.L/Hand.L_end
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/Spine2/Neck/Shoulder.R
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/Spine2/Neck/Shoulder.R/UpperArm.R
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/Spine2/Neck/Shoulder.R/UpperArm.R/Forearm.R
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/Spine2/Neck/Shoulder.R/UpperArm.R/Forearm.R/Hand.R
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/Spine2/Neck/Shoulder.R/UpperArm.R/Forearm.R/Hand.R/Hand.R_end
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/UpperLeg.L
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/UpperLeg.L/LowerLeg.L
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/UpperLeg.L/LowerLeg.L/Foot.L
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/UpperLeg.L/LowerLeg.L/Foot.L/Foot.L_end
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/UpperLeg.R
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/UpperLeg.R/LowerLeg.R
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/UpperLeg.R/LowerLeg.R/Foot.R
+        weight: 1
+      - path: Don't read this!!!/Hip/Spine1/UpperLeg.R/LowerLeg.R/Foot.R/Foot.R_end
+        weight: 1
+      - path: PlaceholderVisitor
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
