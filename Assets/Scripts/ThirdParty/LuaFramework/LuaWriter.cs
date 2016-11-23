@@ -143,7 +143,7 @@ namespace LuaFramework
 		{
 			// Write built-in types
 
-			string[] array = {" sdf", "sdf"};
+			//string[] array = {" sdf", "sdf"};
 
 			if (type == typeof (bool)) Write(((bool) obj).ToString().ToLower());
 			else if (type == typeof(int)) Write(((int)obj).ToString(CultureInfo.InvariantCulture).ToLower());

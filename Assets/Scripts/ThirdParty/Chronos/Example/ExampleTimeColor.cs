@@ -71,7 +71,8 @@ namespace Chronos.Example
 			// Apply the color to the particle system (if any)
 			if (particleSystem != null)
 			{
-				particleSystem.startColor = color;
+                var ps = particleSystem.main;
+                    ps.startColor = color;
 				var colorModule = particleSystem.colorOverLifetime;
 				colorModule.color = new ParticleSystem.MinMaxGradient(color);
 			}

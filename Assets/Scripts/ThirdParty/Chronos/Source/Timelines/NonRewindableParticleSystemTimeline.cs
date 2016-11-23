@@ -78,7 +78,7 @@ namespace Chronos
 
 		public override void CopyProperties(ParticleSystem source)
 		{
-			_playbackSpeed = source.playbackSpeed;
+			_playbackSpeed = source.main.simulationSpeed;
 		}
 
 		public override void AdjustProperties(float timeScale)
@@ -89,7 +89,8 @@ namespace Chronos
 				warnedRewind = true;
 			}
 
-			component.playbackSpeed = playbackSpeed * timeScale;
+            var ps = component.main;
+                ps.simulationSpeed = playbackSpeed * timeScale;
 		}
 	}
 }

@@ -221,8 +221,6 @@ namespace Pathfinding {
 				mw = System.Math.Max(mw, System.Math.Abs(size.y));
 				mw = System.Math.Max(mw, System.Math.Abs(size.z));
 
-				PointNode node;
-
 				var searcher = new GetNearestHelper(position, maxDistSqr, constraint, nodeLookup);
 				searcher.Search(lookupStart);
 

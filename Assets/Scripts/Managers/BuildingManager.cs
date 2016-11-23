@@ -23,9 +23,9 @@ namespace Assets.Scripts.Managers
 
     // Lists
     // Collection of building templates
-    private BuildingTemplateCollection _buildingTemplates;
-    private static List<GameObject> _buildings;    // List of current active buildings
-    private static List<BuildingBase> _buildingBases;
+    private BuildingTemplateCollection _buildingTemplates = null;
+    private static List<GameObject> _buildings = null;    // List of current active buildings
+    private static List<BuildingBase> _buildingBases = null;
 
     // Objects
     public Transform _currentBuild;        // Current building to be placed

@@ -19,7 +19,7 @@ namespace Chronos
 
 		public float time
 		{
-			get { return (loopedSimulationTime - relativeStartTime) % component.duration; }
+			get { return (loopedSimulationTime - relativeStartTime) % component.main.duration; }
 			set { loopedSimulationTime = relativeStartTime + value; }
 		}
 
@@ -159,9 +159,9 @@ namespace Chronos
 
 		public override void CopyProperties(ParticleSystem source)
 		{
-			playbackSpeed = source.playbackSpeed;
+			playbackSpeed = source.main.simulationSpeed;
 
-			stateOnStart = state = source.playOnAwake ? State.Playing : State.Stopped;
+			stateOnStart = state = source.main.playOnAwake ? State.Playing : State.Stopped;
 
 			enableEmissionOnStart = _enableEmission = source.emission.enabled;
 
@@ -245,7 +245,7 @@ namespace Chronos
 			{
 				absoluteSimulationTime += timeline.deltaTime * playbackSpeed;
 
-				if (state == State.Playing && !component.loop && absoluteSimulationTime >= component.duration)
+				if (state == State.Playing && !component.main.loop && absoluteSimulationTime >= component.main.duration)
 				{
 					// A bit hacky to stop it here, as the real system just goes on playing,
 					// just without emitting, but it shouldn't cause any problem. Unfortunately,
@@ -260,7 +260,7 @@ namespace Chronos
 				
 				if (maxLoops > 0 && state != State.Stopping)
 				{
-					loopedSimulationTime = absoluteSimulationTime % (component.duration * maxLoops);
+					loopedSimulationTime = absoluteSimulationTime % (component.main.duration * maxLoops);
 				}
 				else
 				{

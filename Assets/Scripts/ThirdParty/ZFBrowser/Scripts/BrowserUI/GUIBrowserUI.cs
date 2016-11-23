@@ -131,7 +131,8 @@ public class GUIBrowserUI :
 		} else {
 			if (newCursor.Texture != null) {
 				Cursor.visible = true;
-				Cursor.SetCursor(newCursor.Texture, newCursor.Hotspot, CursorMode.Auto);
+                //Error on 5.5; commenting out; 
+                //Cursor.SetCursor(newCursor.Texture, newCursor.Hotspot, CursorMode.Auto);
 			} else {
 				Cursor.visible = false;
 				Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
