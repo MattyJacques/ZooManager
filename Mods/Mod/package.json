@@ -1,0 +1,14 @@
+{
+  "version": "1.0.0",
+  "author": "Paulius Uza",
+  "name": "Custom Mod",
+  "id": "mods.example.mod",
+  "description": "This is a custom Mod",
+  "tags": [
+    "mod",
+    "test"
+  ],
+  "scripts": [
+    "mod.lua"
+  ]
+}

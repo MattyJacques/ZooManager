@@ -1,0 +1,14 @@
+{
+  "version": "1.0.0",
+  "author": "ZooManager",
+  "name": "Base Game Mod",
+  "id": "zoomanager.mods.base",
+  "description": "This is a base game Mod",
+  "tags": [
+    "mod",
+    "test"
+  ],
+  "scripts": [
+    "base.lua"
+  ]
+}
