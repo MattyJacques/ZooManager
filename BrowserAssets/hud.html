@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>HUD</title>
+  <meta name="description" content="Game HUD">
+  <meta name="author" content="White Lemur Games">
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/hud.css">
+</head>
+<body>
+    <div class="flex-container">
+        <section class="flex-item">Zoo Manager</section>
+        <section class="flex-item flex-fill">This is a header element</section>
+        <section class="flex-item">
+            <div class="g-button-bar">
+                <nav class="left">
+                	<a href="#"><i class="material-icons">&#xE8A3;</i> Staff</a>
+                	<a href="#"><i class="material-icons">&#xE263;</i> Finances</a>
+                </nav>
+                <nav class="middle">
+                    <a href="#">Blueprints</a>
+                    <a href="#">Buildings</a>
+                    <a href="#" class="selected">Animals</a>
+                    <a href="#">Plants</a>
+                    <a href="#">Shops</a>
+                </nav>
+                <nav class="right">
+                    <a href="#"><i class="material-icons">&#xE53B;</i> Paths</a>
+                    <a href="#"><i class="material-icons">&#xE564;</i> Terrain</a>
+                    <a href="#"><i class="material-icons">&#xE92B;</i> Buldoze</a>
+                </nav>
+            </div>
+            <div class="g-status-bar">
+                <nav class="left">
+                    <div class="g-label-white">Cash: $100,000,000.00</div>
+                    <div class="g-label-white">Visitors: 530</div>
+                </nav>
+                <nav class="middle">
+                    <div class="title">Zoo Manager</div>
+                </nav>
+                <nav class="right">
+                    <div class="g-label-white">11:30am July 1st, 2015</div>
+                </nav>
+            </div>
+        </section>
+    </div>
+    <script src="js/hud.js"></script>
+</body>
+</html>

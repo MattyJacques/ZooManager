@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class TestMenu : MonoBehaviour {
@@ -49,11 +50,11 @@ public class TestMenu : MonoBehaviour {
 			if(GUILayout.Button("Save")) {
 				//Save the current Game as a new saved Game
 				SaveSystem.Save();
-				//Move on to game...
-			//	Application.LoadLevel(1);
-			}
+                //Move on to game...
+                //SceneManager.LoadScene(1);
+            }
 
-			GUILayout.Space(10);
+            GUILayout.Space(10);
 			if(GUILayout.Button("Cancel")) {
 				currentMenu = Menu.MainMenu;
 			}
@@ -69,7 +70,7 @@ public class TestMenu : MonoBehaviour {
 				if(GUILayout.Button(g.lastLaunchDateTime.time)) {
 					GameData.current = g;
 					//Move on to game...
-					Application.LoadLevel(2);
+                    SceneManager.LoadScene(2);
 				}
 
 			}

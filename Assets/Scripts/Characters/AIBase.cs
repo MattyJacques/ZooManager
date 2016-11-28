@@ -9,18 +9,21 @@ namespace Assets.Scripts.Characters
   {
     public enum FeedType { Food, Water }          // Enum for feed() to tell which stat to increase
 
-    // This reference can be used to move the character around without needing to make AIBase a MonoBehaviour
-    public Transform UnityTransform { get; set; }
-
     // The animal's temporary properties change over the life of the animal
-    public float Health { get; set; }
-    public float Hunger { get; set; }
-    public float Thirst { get; set; }
-    public float Age { get; set; }
-    public float Boredom { get; set; }
-    public BuildingManager.TargetType NextTarget { get; set; }
-    public GameObject Target { get; set; }
-    public GameObject Path { get; set; }      // Change to path object
+    public float Health { get; set; }    // How healthy the animal is, low is dying
+    public float Hunger { get; set; }    // How hungry the animal is, low is hungry
+    public float Thirst { get; set; }    // How thirsty the animal is, low is thirsty
+    public float Boredom { get; set; }   // How bored the animal is, low is bored
+    public float Age { get; set; }       // Animal Age, increases with time
+
+    public GameObject Model { get; set; } // Model of the object, used to render the object
+
+    // Target / Path members
+    public BuildingManager.TargetType NextTarget { get; set; }  // Type of target, example: food or water
+    public GameObject Target { get; set; }                      // Target of current behaviour
+    public GameObject Path { get; set; }                        // Path to current behaviour
+
+    // Behaviour object for AI
     public BehaviourTree.Base.Behaviour Behave { get; set; }
 
     public virtual void Feed(FeedType type, int amount)

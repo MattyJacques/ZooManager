@@ -16,10 +16,10 @@ namespace Assets.Scripts.ThirdParty.Twitter
     private const string TwitterScreenName = "SuperIsHere";
     private const string TwitterUserToken = "3056989378-cMFqalsKk8ZKEbiQopsrNNf9pPwmXxwYW4gbDeg";
     private const string TwitterSecret = "2NjQhXXeLoNybd8HiQN5lsZReJ2sCyIluMlNvbDuW7vTo";
-		public Text tweet1;
-		public Text tweet2;
-		public Text tweet3;
-		public Text tweet4;
+		public Text tweet1 = null;
+		public Text tweet2 = null;
+		public Text tweet3 = null;
+		public Text tweet4 = null;
 
     
     // Use this for initialization
