@@ -80,9 +80,9 @@ namespace Assets.Scripts.Managers
 
       if (index >= 0)
       { // Make sure template was found before creating the animal
-        CreateAnimal(index, 1, new Vector3(template.posX,
-                                           template.posY,
-                                           template.posZ));
+        CreateAnimal(index, 1, new Vector3(template.coords.x,
+                                           template.coords.y,
+                                           template.coords.z));
       }
 
     } // Create(LevelAnimalTemplate)

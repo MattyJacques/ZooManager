@@ -19,9 +19,10 @@ namespace Assets.Scripts.Characters.Visitors
     [SerializeField]
     GameClock gameClock;
 
-    public VisitorBase(VisitorTemplate template)
+	public VisitorBase(VisitorTemplate template,  GameObject model)
     { // Constructor to set up the template and behaviour tree
       Template = template;
+	  Model = model;
     } // VisitorBase()
 
     protected void Update()
