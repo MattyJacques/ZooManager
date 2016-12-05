@@ -31,7 +31,7 @@ namespace Pathfinding.RVO {
 
 		/** Height of the agent. In world units */
 		[Tooltip("Height of the agent. In world units")]
-		public float height = 1;
+		public float height = 2;
 
 		/** A locked unit cannot move. Other units will still avoid it. But avoidance quailty is not the best. */
 		[Tooltip("A locked unit cannot move. Other units will still avoid it. But avoidance quailty is not the best")]

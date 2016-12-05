@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Pathfinding.RVO;
 using Pathfinding;
 
 public class Mover : MonoBehaviour {
@@ -12,13 +13,13 @@ public class Mover : MonoBehaviour {
     Seeker seeker;
     Path path;
     int currentWaypoint;
-    CharacterController characterController;
+    RVOController characterController;
 
     void Start () {
         seeker = GetComponent<Seeker>();
         // Tell Seeker to generate path
         seeker.StartPath(transform.position, target.position, OnPathComplete);
-        characterController = GetComponent<CharacterController>();
+        characterController = GetComponent<RVOController>();
 
     }
 
@@ -44,7 +45,7 @@ public class Mover : MonoBehaviour {
             return;
         }
         Vector3 dir = (path.vectorPath[currentWaypoint] - transform.position).normalized * moveSpeed;
-        characterController.SimpleMove(dir);
+        characterController.Move(dir);
         if (Vector3.Distance(transform.position, path.vectorPath[currentWaypoint]) < maxWaypointDistance)
         {
             currentWaypoint++;
