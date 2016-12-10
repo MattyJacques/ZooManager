@@ -13,7 +13,7 @@ public class ObjectPlacer : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown("p")) {
+		if (Input.GetMouseButtonDown (0)) {
 			PlaceObject();
 		}
 		if (Input.GetKeyDown("r")) {
