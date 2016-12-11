@@ -1,29 +1,29 @@
-﻿// Title        : AnimalBase.cs
-// Purpose      : Base class which all animals which instantiate from
-// Author       : Dan Budworth-Mead
-// Date         : 22/08/2016
+﻿// Title        : VisitorBase.cs
+// Purpose      : Base class which all visitors which instantiate from
+// Author       : Christos Alatzidis
+// Date         : 11/11/2016
 
 using UnityEngine;
 using System.Collections;
 using Assets.Scripts.UI;
 using Assets.Scripts.Characters;
 
-namespace Assets.Scripts.Characters.Animals
+namespace Assets.Scripts.Characters.Visitors
 {
 
-  public class AnimalBase : AIBase
+  public class VisitorBase : AIBase
   { 
-    // Template values never get set, they represent the animal's permanent properties (max age, speed, etc)
-    public AnimalTemplate Template { get; set; }
+    // Template values never get set, they represent the visitor's permanent properties (name, type, etc)
+    public VisitorTemplate Template { get; set; }
 
     [SerializeField]
     GameClock gameClock;
 
-    public AnimalBase(AnimalTemplate template, GameObject model)
+	public VisitorBase(VisitorTemplate template,  GameObject model)
     { // Constructor to set up the template and behaviour tree
       Template = template;
-      Model = model;
-    } // AnimalBase()
+	  Model = model;
+    } // VisitorBase()
 
     protected void Update()
     { // Process the needs of the base then process the behaviour for AI
