@@ -1,5 +1,5 @@
 ﻿// Title        : EnclosureSystem.cs
-// Purpose      : Draws a line of fences based on user input
+// Purpose      : THIS CLASS IS DEPRECATED! //Draws a line of fences based on user input
 // Author       : Eivind Andreassen
 // Date         : 18/12/2016
 using System.Collections.Generic;
