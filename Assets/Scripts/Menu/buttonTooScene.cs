@@ -13,11 +13,11 @@ public class buttonTooScene : MonoBehaviour {
 
 	// ~~~~~~~~~~~~~~~~~~~~~~ Variable Declaration START ~~~~~~~~~~~~~~~~~~~~~~
 
-	public string targetScene; //Type the Scene you want too load in the Unity Editor
-	private bool buttonPressedRef;
-	public Sprite buttonPressed;
-	public Sprite buttonHover;
-	public Sprite buttonOut;
+	public string _targetScene; //Type the Scene you want too load in the Unity Editor
+	private bool _buttonPressedRef;
+	public Sprite _buttonPressed;
+	public Sprite _buttonHover;
+	public Sprite _buttonOut;
 
 	// ~~~~~~~~~~~~~~~~~~~~~~ Variable Declaration END ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -26,32 +26,32 @@ public class buttonTooScene : MonoBehaviour {
 	void Update () 
 	{
 	
-		buttonPressedRef = this.GetComponentInParent<buttonPrefabMaster>().buttonPressed; // Makes sure that the button alkways knows if any button has been pressed already
+		__buttonPressedRef = this.GetComponentInParent<buttonPrefabMaster>()._buttonPressed; // Makes sure that the button alkways knows if any button has been pressed already
 	}
 
 	void OnMouseDown() // If the user clicks on it, requires a collider on the gameObject
 	{
-		if (buttonPressedRef == false)
+		if (__buttonPressedRef == false)
 		{
-			this.GetComponentInParent<buttonPrefabMaster>().buttonPressed = true; // report too its Master that a button has been pressed
-			this.GetComponent<Image>().sprite = buttonPressed;
-			SceneManager.LoadScene (targetScene); // load the targetScene
+			this.GetComponentInParent<buttonPrefabMaster>()._buttonPressed = true; // report too its Master that a button has been pressed
+			this.GetComponent<Image>().sprite = _buttonPressed;
+			SceneManager.LoadScene (_targetScene); // load the targetScene
 		}
 	}
 
 	void OnMouseEnter() // If the user mouses into it, requires a collider on the gameObject
 	{
-		if (buttonPressedRef == false)
+		if (_buttonPressedRef == false)
 		{
-			this.GetComponent<Image>().sprite = buttonHover; 
+			this.GetComponent<Image>().sprite = _buttonHover; 
 		}
 	}
 
 	void OnMouseExit() // If the user mouses out of it, requires a collider on the gameObject
 	{
-		if (buttonPressedRef == false)
+		if (_buttonPressedRef == false)
 		{
-			this.GetComponent<Image>().sprite = buttonOut; 
+			this.GetComponent<Image>().sprite = _buttonOut; 
 		}
 	}
 
