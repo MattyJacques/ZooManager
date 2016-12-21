@@ -8,18 +8,54 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EnclosureBuilder : MonoBehaviour {
-    public enum State { Idle, DrawingEnclosureSquare };
+    public enum State { Idle, WaitingForFirstCornerInput, DrawingEnclosureSquare };
     public State _state;
+    public LayerMask _layerMask;
+    public float _enclosureColliderHeight = 2f;
+    public int _minimumEnclosureWidth = 2;
+    public int _minimumEnclosureHeight = 2;
+    public int _maximumEnclosureWidth = 20;
+    public int _maximumEnclosureHeight = 20;
 
     private Vector3 _bottomLeftCorner;
+    private Vector3 _topRightCorner;
+    private GameObject _visualizationRectangle;
 
     private void Update()
-    {
+    {   //Processes player input based on EnclosureBuilder state
+
+        Vector3 mousePosition;
         switch (_state) {
-            case State.DrawingEnclosureSquare:
+            case State.WaitingForFirstCornerInput:
                 if (Input.GetMouseButtonDown (0))
                 {
-                    FinalizeBuilding ();
+                    if (GetWorldPositionOfMouseClamped(_layerMask, out mousePosition))
+                    {
+                        AssignFirstCorner (mousePosition);
+                    }
+                }
+
+                if (Input.GetMouseButtonDown (1))
+                {
+                    CancelBuilding ();
+                }
+                break;
+
+            case State.DrawingEnclosureSquare:
+                if (GetWorldPositionOfMouseClamped(_layerMask, out mousePosition))
+                {
+                    _topRightCorner = mousePosition;
+                }
+                else
+                {
+                    break;
+                }
+
+                DrawEnclosure (_bottomLeftCorner, _topRightCorner);
+
+                if (Input.GetMouseButtonDown (0))
+                {
+                    FinalizeBuilding (_bottomLeftCorner, _topRightCorner);
                 }
 
                 if (Input.GetMouseButtonDown (1))
@@ -28,21 +64,93 @@ public class EnclosureBuilder : MonoBehaviour {
                 }
                 break;
         }
+    }   //Update()
+
+    public bool GetWorldPositionOfMouseClamped(LayerMask layerMask, out Vector3 position)
+    {   //Returns the player's mouse position in world space
+        
+        Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+        RaycastHit rayHit = new RaycastHit ();
+        if (Physics.Raycast (ray, out rayHit, Mathf.Infinity, _layerMask, QueryTriggerInteraction.Ignore))
+        {
+            position = rayHit.point;
+            position.x -= position.x % 2;
+            position.y -= position.y % 2;
+            position.z -= position.z % 2;
+            return true;
+        }
+        else
+        {
+            position = Vector3.zero;
+            return false;
+        }
+        
+    }   //GetMousePosition
+
+    public void BeginBuildingEnclosure()
+    {
+        _state = State.WaitingForFirstCornerInput;
     }
 
-    public void BeginBuildingEnclosure(Vector3 bottomLeftCorner)
+    private void AssignFirstCorner(Vector3 bottomLeftCorner)
     {
         _bottomLeftCorner = bottomLeftCorner;
         _state = State.DrawingEnclosureSquare;
+        CreateNewVisualizationRectangle ();
     }
+
+    private void CreateNewVisualizationRectangle()
+    {
+        _visualizationRectangle = GameObject.CreatePrimitive (PrimitiveType.Quad);
+        _visualizationRectangle.transform.eulerAngles = new Vector3 (90f, 0f, 0f);
+    }
+
+    private void DrawEnclosure(Vector3 cornerBL, Vector3 cornerTR)
+    {   //Visualizes the enclosure for the player
+        Vector3 newPos = Vector3.Lerp (cornerBL, cornerTR, 0.5f);
+        newPos.y = 0.1f;
+        _visualizationRectangle.transform.position = newPos;
+
+        Vector3 newScale = new Vector3(1f, 1f, 1f);
+        newScale.x = Mathf.Abs(cornerBL.x - cornerTR.x);
+        newScale.y = Mathf.Abs(cornerBL.z - cornerTR.z);
+        _visualizationRectangle.transform.localScale = newScale;
+    }   //DrawEnclosure()
 
     private void CancelBuilding()
     {
         _state = State.Idle;
+        Destroy (_visualizationRectangle);
     }
 
-    private void FinalizeBuilding()
-    {
+    private void FinalizeBuilding(Vector3 cornerBL, Vector3 cornerTR)
+    {   //Checks if the shape of the enclosure is OK, if it is then it cleans up and creates the enclosure
+
+        float rectangleWidth = Mathf.Abs (cornerBL.x - cornerTR.x);
+        float rectangleHeight = Mathf.Abs (cornerBL.z - cornerTR.z);
+
+        //Sanity check
+        if (rectangleWidth < _minimumEnclosureWidth
+            || rectangleHeight < _minimumEnclosureHeight
+            || rectangleWidth > _maximumEnclosureWidth
+            || rectangleHeight > _maximumEnclosureHeight)
+        {
+            return;
+        }
+
+        //Clean up
         _state = State.Idle;
-    }
-}
+        Destroy (_visualizationRectangle);
+
+        //Create enclosure
+        GameObject enclosure = new GameObject ("Enclosure");
+        enclosure.transform.position = Vector3.Lerp (cornerBL, cornerTR, 0.5f);
+        enclosure.AddComponent<Enclosure> ();
+        enclosure.GetComponent<Enclosure> ().Rename ("New Enclosure");
+
+        BoxCollider col = enclosure.AddComponent<BoxCollider> ();
+        col.size = new Vector3 (rectangleWidth, _enclosureColliderHeight, rectangleHeight);
+        col.center = new Vector3 (0f, _enclosureColliderHeight / 2, 0f);
+    }   //FinalizeBuilding()
+
+}   //EnclosureBuilder
