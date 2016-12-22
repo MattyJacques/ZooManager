@@ -146,4 +146,21 @@ public class Enclosure : MonoBehaviour
         }
     }   //Rename()
 
+    public void DeleteThisEnclosure()
+    {   //Deletes this enclosure and all attached objects
+
+        if (_canvas != null)
+        {
+            Destroy (_canvas);
+        }
+
+        foreach (InteriorItem interiorItem in _interiorItems)
+        {
+            Destroy (interiorItem.transform.gameObject);
+        }
+
+        Destroy (gameObject);
+
+    }   //DeleteThisEnclosure
+
 }

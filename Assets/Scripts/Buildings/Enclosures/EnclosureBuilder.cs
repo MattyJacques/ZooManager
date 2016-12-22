@@ -3,8 +3,6 @@
 // Author       : Eivind Andreassen
 // Date         : 20/12/2016
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnclosureBuilder : MonoBehaviour {
@@ -16,6 +14,12 @@ public class EnclosureBuilder : MonoBehaviour {
     public int _minimumEnclosureHeight = 2;
     public int _maximumEnclosureWidth = 20;
     public int _maximumEnclosureHeight = 20;
+
+    //The different GameObjects that are used when editing the enclosure
+    public GameObject _selectedWall;
+    public GameObject _selectedWallCorner;
+    public GameObject _selectedWallDoor;
+    public GameObject _selectedWallWindow;  //TODO: implement this
 
     private Vector3 _bottomLeftCorner;
     private Vector3 _topRightCorner;
@@ -51,7 +55,7 @@ public class EnclosureBuilder : MonoBehaviour {
                     break;
                 }
 
-                DrawEnclosure (_bottomLeftCorner, _topRightCorner);
+                DrawEnclosureArea (_bottomLeftCorner, _topRightCorner);
 
                 if (Input.GetMouseButtonDown (0))
                 {
@@ -105,8 +109,8 @@ public class EnclosureBuilder : MonoBehaviour {
         _visualizationRectangle.transform.eulerAngles = new Vector3 (90f, 0f, 0f);
     }
 
-    private void DrawEnclosure(Vector3 cornerBL, Vector3 cornerTR)
-    {   //Visualizes the enclosure for the player
+    private void DrawEnclosureArea(Vector3 cornerBL, Vector3 cornerTR)
+    {   //Visualizes the enclosure area for the player
         Vector3 newPos = Vector3.Lerp (cornerBL, cornerTR, 0.5f);
         newPos.y = 0.1f;
         _visualizationRectangle.transform.position = newPos;
@@ -129,12 +133,27 @@ public class EnclosureBuilder : MonoBehaviour {
         float rectangleWidth = Mathf.Abs (cornerBL.x - cornerTR.x);
         float rectangleHeight = Mathf.Abs (cornerBL.z - cornerTR.z);
 
-        //Sanity check
+        //Check if the size is within bounds
         if (rectangleWidth < _minimumEnclosureWidth
             || rectangleHeight < _minimumEnclosureHeight
             || rectangleWidth > _maximumEnclosureWidth
             || rectangleHeight > _maximumEnclosureHeight)
         {
+            Debug.Log ("Can't build enclosure! Enclosure does not fit within size limits! "
+                + "\nHeight min: " + _minimumEnclosureHeight.ToString () + ", height max: "
+                + _maximumEnclosureHeight.ToString () + ", current height: " + rectangleHeight.ToString ()
+                + ".\nWidth min: " + _minimumEnclosureWidth.ToString () + ", width max: "
+                + _maximumEnclosureWidth.ToString () + ", current width: " + rectangleWidth.ToString ());
+            return;
+        }
+
+        //Check if the size is a power of two
+        //Round to int to account for any floating point tomfoolery
+        if ((int) (rectangleWidth + 0.5f) % 2 != 0
+            || (int) (rectangleHeight + 0.5f) % 2 != 0)
+        {
+            Debug.Log ("Can't build enclosure! Enclosure size is not a power of two! Width: " 
+                + rectangleWidth.ToString () + ", height: " + rectangleHeight.ToString () + ".");
             return;
         }
 

@@ -1,5 +1,5 @@
 ﻿// Title        : EnclosureInteraction.cs
-// Purpose      : This is a temporary class that allows the player to interact with enclosures
+// Purpose      : This is a demonstration of a class that allows the player to interact with existing enclosures
 // Author       : Eivind Andreassen
 // Date         : 20/12/2016
 using UnityEngine;
