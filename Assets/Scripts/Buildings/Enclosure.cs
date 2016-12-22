@@ -39,12 +39,10 @@ public class Enclosure : MonoBehaviour
         {
             return;
         }
-
-
     }
 
     public void Interact()
-    {   //Opens and initializes the GUI that allows for player interaction
+    {   //Instantiates and initializes the GUI that allows for player interaction with the enclosure
 
         //Don't create a new canvas if we already have one
         if (_canvas != null)
@@ -52,10 +50,12 @@ public class Enclosure : MonoBehaviour
             return;
         }
 
-        _canvas = Instantiate (Resources.Load ("GUI/Prefabs/Canvas_Enclosure") as GameObject);
+        //Create the new canvas
+        _canvas = Instantiate (Resources.Load ("Menus/Prefabs/Canvas_Enclosure") as GameObject);
         _canvas.transform.FindChild ("Text_EnclosureName").GetComponent<Text> ().text = _name;
         _canvas.transform.position = transform.position + new Vector3 (0f, 2f, 0f); //TODO: place canvas so that the camera sees it
 
+        //Hook up functionality to the different GUI events
         InputField input = _canvas.transform.FindChild ("InputField").GetComponent<InputField> ();
         input.onEndEdit.AddListener (delegate
         {
@@ -87,9 +87,9 @@ public class Enclosure : MonoBehaviour
 
     }   //Interact()
 
-    //make ui stuff private if possible
     public void UIChangeState(int state)
-    {
+    {   //Changes the state of the canvas that is attached to the enclosure
+
         if (_canvas == null)
         {
             Debug.LogWarning ("UIChangeState was called, but there is no canvas attached to enclosure.");
@@ -123,7 +123,7 @@ public class Enclosure : MonoBehaviour
                 _canvas.transform.FindChild ("InputField").gameObject.SetActive (false);
                 break;
         }
-    }
+    }   //UIChangeState()
 
     public Vector3 GetClosest(InteriorItem.Type itemType)
     {   //Returns the closest object of itemType
@@ -131,7 +131,7 @@ public class Enclosure : MonoBehaviour
     }   //GetClosest()
 
     public bool Rename(string name)
-    {
+    {   //Renames the enclosure
         if (name.Length > minNameLength || name.Length < maxNameLength)
         {
             _name = name;
@@ -145,6 +145,6 @@ public class Enclosure : MonoBehaviour
         {
             return false;
         }
-    }
+    }   //Rename()
 
 }
