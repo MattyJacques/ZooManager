@@ -3,6 +3,7 @@
 // Author       : Eivind Andreassen
 // Date         : 20/12/2016
 
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EnclosureBuilder : MonoBehaviour {
@@ -170,6 +171,62 @@ public class EnclosureBuilder : MonoBehaviour {
         BoxCollider col = enclosure.AddComponent<BoxCollider> ();
         col.size = new Vector3 (rectangleWidth, _enclosureColliderHeight, rectangleHeight);
         col.center = new Vector3 (0f, _enclosureColliderHeight / 2, 0f);
+
+        Vector3[] enclosureCorners = new Vector3[4];
+        enclosureCorners[0] = cornerBL;    //Bottom left
+        enclosureCorners[1] = cornerBL - new Vector3 (0f, 0f, rectangleHeight);    //Top left  FUCKED
+        enclosureCorners[2] = cornerTR;  //Top right
+        enclosureCorners[3] = cornerTR + new Vector3 (0f, 0f, rectangleHeight); //Bottom right
+        BuildEnclosureWalls (_selectedWall, 0, _selectedWallCorner, 270f, enclosureCorners);
+
     }   //FinalizeBuilding()
+
+    private GameObject[] BuildEnclosureWalls(
+        GameObject wallPrefab, float wallRotationOffset,
+        GameObject cornerPrefab, float cornerRotationOffset,
+        Vector3[] cornerPositions)
+    {   //Instantiates the walls of the enclosure and returns them
+        //TODO: Wall and corner positions and rotations need to be standardized or otherwise accounted for
+
+        if (cornerPositions.Length != 4)
+        {
+            Debug.LogError ("Tried building enclosure with only " + cornerPositions.Length + " corners!");
+            return null;
+        }
+
+        List<GameObject> wallObjects = new List<GameObject> ();
+
+        for (int i = 0; i < cornerPositions.Length; i++)    //-1?
+        {
+            Vector3 cornerA = cornerPositions[i];
+            Vector3 cornerB = Vector3.zero;
+            if (i == cornerPositions.Length - 1)    //Loop around if this is the last corner
+            {
+                cornerB = cornerPositions[0];
+            }
+            else
+            {
+                cornerB = cornerPositions[i + 1];
+            }
+
+            GameObject corner = Instantiate (cornerPrefab);
+            corner.transform.position = cornerA;
+            corner.transform.Rotate (Vector3.up, (90f * i) + cornerRotationOffset, Space.World);
+            corner.transform.position -= corner.transform.up;   //Model specific..
+            wallObjects.Add (corner);
+
+            int wallLength = (int)((Vector3.Distance (cornerA, cornerB) + 0.5f) / 2);
+            for (int a = 1; a < wallLength - 1; a++)
+            {
+                GameObject wall = Instantiate (wallPrefab);
+                //a * 2 = distance away from corner, + 1 = account pivot being in the middle of the model
+                wall.transform.position = cornerA - ((cornerA - cornerB).normalized * ((a * 2) + 1));
+                wall.transform.Rotate (Vector3.up, (90f * i) + wallRotationOffset, Space.World);
+                wallObjects.Add (wall);
+            }
+        }
+
+        return wallObjects.ToArray ();
+    }   //BuildEnclosureWalls
 
 }   //EnclosureBuilder
