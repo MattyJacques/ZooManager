@@ -53,7 +53,7 @@ public class Enclosure : MonoBehaviour
         //Create the new canvas
         _canvas = Instantiate (Resources.Load ("Menus/Prefabs/Canvas_Enclosure") as GameObject);
         _canvas.transform.FindChild ("Text_EnclosureName").GetComponent<Text> ().text = _name;
-        _canvas.transform.position = transform.position + new Vector3 (0f, 2f, 0f); //TODO: place canvas so that the camera sees it
+        _canvas.transform.position = transform.position + new Vector3 (0f, 6f, 0f); //TODO: place canvas so that the camera sees it
 
         //Hook up functionality to the different GUI events
         InputField input = _canvas.transform.FindChild ("InputField").GetComponent<InputField> ();
