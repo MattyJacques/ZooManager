@@ -81,7 +81,6 @@ public class Enclosure : MonoBehaviour
             UIChangeState (-1);
         });
         //Delete
-        //Resize
         //Edit interior items
             //Lights up somehow, makes interior objects moveable within the enclosure, debug buttons for adding items
 
