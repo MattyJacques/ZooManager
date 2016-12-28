@@ -26,12 +26,12 @@ public class buttonTooScene : MonoBehaviour {
 	void Update () 
 	{
 	
-		__buttonPressedRef = this.GetComponentInParent<buttonPrefabMaster>()._buttonPressed; // Makes sure that the button alkways knows if any button has been pressed already
+		_buttonPressedRef = this.GetComponentInParent<buttonPrefabMaster>()._buttonPressed; // Makes sure that the button alkways knows if any button has been pressed already
 	}
 
 	void OnMouseDown() // If the user clicks on it, requires a collider on the gameObject
 	{
-		if (__buttonPressedRef == false)
+		if (_buttonPressedRef == false)
 		{
 			this.GetComponentInParent<buttonPrefabMaster>()._buttonPressed = true; // report too its Master that a button has been pressed
 			this.GetComponent<Image>().sprite = _buttonPressed;

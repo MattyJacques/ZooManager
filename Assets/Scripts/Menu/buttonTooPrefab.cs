@@ -30,10 +30,10 @@ public class buttonTooPrefab : MonoBehaviour {
 
 	void OnMouseDown() // If the user clicks on it, requires a collider on the gameObject
 	{
-		if (__buttonPressedRef == false)
+		if (_buttonPressedRef == false)
 		{
 
-			this.GetComponentInParent<buttonPrefabMaster>().pushedPrefab = _targetPrefab; // Sends the defined prefab to its master for Instantiation
+			this.GetComponentInParent<buttonPrefabMaster>()._pushedPrefab = _targetPrefab; // Sends the defined prefab to its master for Instantiation
 			this.GetComponentInParent<buttonPrefabMaster>()._buttonPressed = true; // report too its Master that a button has been pressed
 			this.GetComponent<Image>().sprite = _buttonPressed;
 			this.GetComponentInParent<buttonPrefabMaster>().SpawnAndDestroySelf(); // Instantiate the new prefab and destroy this one
