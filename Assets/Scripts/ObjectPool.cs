@@ -1,173 +1,192 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class ObjectPool : MonoBehaviour {
-    private Dictionary<string, List<ObjectPoolObject>> _pool = new Dictionary<string, List<ObjectPoolObject>> ();
-    public Vector3 _hiddenObjectsPosition = new Vector3 (-5000, -5000, -5000);
-    private string _hiddenObjectsTag = "Hidden";
+    private Dictionary<string, ObjectPoolStack> _pool = new Dictionary<string, ObjectPoolStack> ();
+    public Vector3 _hidePosition = new Vector3 (-5000, -5000, -5000);
 
-    public class ObjectPoolObject   //TODO: rename
-    {
-        public Transform _transform;
-        public string _oldTag;  
-        public bool _oldActiveState;    //If the object was active or not before storing
-        public string _oldName; //The old name of the gameObject
-        public Vector3 _oldPosition;    //The position of the object prior to being added to the pool
+    public class ObjectPoolStack
+    {   //Custom stack class for storing the gameObjects, that keeps a reference to the original object and object tag
+        private Stack<GameObject> _stack;
+        private GameObject _originalObject;
+        private string _tag = "pooledObject";
+        private string _origTag;
+        private Transform _parent;
 
-        public ObjectPoolObject(Transform transform)
+        public ObjectPoolStack(GameObject gameObjectToStore, Transform parent)
         {   //Constructor
-            _transform = transform;
-            _oldTag = _transform.tag;
-            _oldActiveState = transform.gameObject.activeSelf;
-            _oldName = _transform.name;
-            _oldPosition = _transform.position;
-        }
+            _stack = new Stack<GameObject> ();
+            _origTag = gameObjectToStore.tag;
+            _parent = parent;
+            if (UnityEditor.PrefabUtility.GetPrefabType (gameObjectToStore) != UnityEditor.PrefabType.None)
+            {   //If gameObjectToStore is a prefab, instantiate it first
+                _originalObject = Instantiate (gameObjectToStore);
+                _stack.Push (_originalObject);
+            }
+            else
+            {
+                _originalObject = gameObjectToStore;
+                _stack.Push (_originalObject);
+            }
+        }   //ObjectPoolStack()
 
-        public ObjectPoolObject(GameObject gameObject)
-        {   //Constructor
-            _transform = gameObject.transform;
-            _oldTag = _transform.tag;
-            _oldActiveState = gameObject.activeSelf;
-            _oldName = _transform.name;
-            _oldPosition = _transform.position;
-        }
-    }   //ObjectPoolObject
+        public GameObject Pop()
+        {   //Pops from the stack, and if stack is empty instantiates and returns new object
+            if (_stack.Count > 0)
+            {
+                GameObject g = _stack.Pop ();
+                g.transform.parent = null;
+                g.tag = _origTag;
+                return g;
+            }
+            else
+            {
+                Debug.Log ("Creating new obj");
+                GameObject g = Instantiate (_originalObject);
+                return g;
+            }
+        }   //Pop()
 
-    public enum PoolDestructionMethod
-    {
-        Destroy_All_GameObjects,
-        Return_All_GameObjects,
-        Destroy_Stored_And_Return_Unstored_GameObjects
-    }
+        public void Push(GameObject g)
+        {   //Adds object to the stack
+            g.tag = _tag;
+            if (_parent != null)
+            {
+                g.transform.parent = _parent;
+            }
+            _stack.Push (g);
+        }   //Push()
 
-    /// <summary>
-    /// THIS WILL NOT WORK! Use ObjectPool.NewObjectPool() instead
-    /// </summary>
-    public ObjectPool()
-    {   //Empty constructor just to edit the summary
+        public GameObject[] ToArray()
+        {   //Exposes ToArray method
+            return _stack.ToArray ();
+        }   //ToArray()
 
-    }   //ObjectPool()
+        public void DestroyObjectsInStack()
+        {   //Destroys all the objects in the stack
+            foreach (GameObject g in _stack)
+            {
+                Destroy (g);
+            }
+        }   //DestroyObjectsInStack()
 
-    public GameObject GetObject(string GameObjectName)
-    {   //Retrieve a object of GameObjectName name from the pool
+        public int Count()
+        {   //Exposes Count method
+            return _stack.Count;
+        }   //Count()
 
-        if (!_pool.ContainsKey (SanitizeName (GameObjectName)))
+    }   //ObjectPoolStack
+
+    public static ObjectPool NewObjectPool()
+    {   //Constructor for this class
+        GameObject g = new GameObject ("ObjectPool - " + Time.realtimeSinceStartup);
+        ObjectPool o = g.AddComponent<ObjectPool> ();
+        return o;
+    }   //NewObjectPool
+
+    public GameObject GetObject(string ObjectName)
+    {   //Returns GameObject from pool by name
+        string sanitizedName = SanitizeName (ObjectName);
+
+        if (_pool.ContainsKey (sanitizedName))
         {
-            Debug.LogWarning ("Tried getting object using the name " + GameObjectName + " from object pool "
-                + name + ", but the object pool contains no entry for that name.");
-            return null;
-        }
-        else if (_pool[SanitizeName (GameObjectName)].Count > 0)
-        {
-            GameObject g = _pool[SanitizeName (GameObjectName)][0]._transform.gameObject;
-            _pool[SanitizeName (GameObjectName)].RemoveAt (0);
-            return g;
+           return _pool[sanitizedName].Pop ();
         }
         else
         {
-            GameObject g = Instantiate (_pool[SanitizeName (GameObjectName)][0]._transform.gameObject);
-            _pool[SanitizeName (GameObjectName)].Add (new ObjectPoolObject (g));
-            return g;
+            Debug.LogError (name + " does not contain GameObject " + ObjectName + ", store it first before getting it!");
+            return null;
         }
+
     }   //GetObject()
 
-    public void StoreObject(GameObject objectToStore)
-    {   //'stores' the object in the pool, effectively removing it from the scene
-        string name = objectToStore.name;
-        if (!_pool.ContainsKey (SanitizeName(name)))
+    public void StoreObject(GameObject g)
+    {   //Hides the GameObject (instead of destroying it)
+        string sanitizedName = SanitizeName (g.name);
+        if (_pool.ContainsKey (sanitizedName))
         {
-            _pool.Add (name, new List<ObjectPoolObject> ());
+            g.transform.position = _hidePosition;
+            _pool[sanitizedName].Push (g);
+            Debug.Log ("Stored new object " + sanitizedName + ", ObjectPoolStack now contains " + _pool[sanitizedName].Count ().ToString () + " objects");
         }
-        _pool[name].Add (new ObjectPoolObject (objectToStore));
-    }   //StoreObject()
-    
-    public static ObjectPool NewObjectPool()
-    {   //Instantiates and returns a new ObjectPool
-        GameObject g = new GameObject ("ObjectPool" + Time.realtimeSinceStartup.ToString());
-        g.AddComponent<ObjectPool> ();
-        return g.GetComponent<ObjectPool>();
-    }   //NewObjectPool()
-
-    public static ObjectPool NewObjectPool(Vector3 hiddenObjectsPosition)
-    {   //Instantiates and returns a new ObjectPool with a custom position for where to store hidden objects
-        GameObject g = new GameObject ("ObjectPool" + Time.realtimeSinceStartup.ToString());
-        ObjectPool o = g.AddComponent<ObjectPool> ();
-        o._hiddenObjectsPosition = hiddenObjectsPosition;
-        return o;
-    }   //NewObjectPool()
-
-    public List<GameObject> DestroyPool(PoolDestructionMethod method)
-    {   //Destroys the pool based on the method given
-
-        //This is instantiated in the case unless the method is Destroy_All_GameObjects, in which case it returns null
-        List<GameObject> objectsToReturn = null;
-
-        switch (method) {
-            case PoolDestructionMethod.Destroy_All_GameObjects:
-                foreach (var v in _pool)
-                {
-                    for (int i = 0; i < v.Value.Count; i++)
-                    {
-                        Destroy (v.Value[i]._transform.gameObject);
-                    }
-                }
-                break;
-
-            case PoolDestructionMethod.Return_All_GameObjects:
-                objectsToReturn = new List<GameObject> ();
-                foreach (KeyValuePair<string, List<ObjectPoolObject>> objList in _pool)
-                {
-                    objectsToReturn.AddRange (objList.Value.Select (x => x._transform.gameObject));
-                }
-                break;
-
-            case PoolDestructionMethod.Destroy_Stored_And_Return_Unstored_GameObjects:
-                objectsToReturn = new List<GameObject> ();
-                foreach (KeyValuePair<string, List<ObjectPoolObject>> objList in _pool)
-                {
-                    for (int i = objList.Value.Count - 1; i >= 0; i--)
-                    {
-                        /*
-                        if (objList.Value[i]._isStored)
-                        {
-                            Destroy (objList.Value[i]._transform);
-                            //Do we need to remove it as well? I don't think so
-                        }
-                        else
-                        {
-                            objectsToReturn.Add (objList.Value[i]._transform.gameObject);
-                        }
-                        */
-                    }
-                }
-                break;
+        else
+        {
+            Debug.LogWarning (name + " does not contain a ObjectPoolStack that for \"" + sanitizedName
+                + "\", use InitializeNewObjectPoolStack to initialize a new ObjectPoolStack before storing an object.");
         }
+    }   //StoreObject
 
-        //Destroy should be delayed until the end of the frame, so calling destroy and then returning should be safe
+    public void InitializeNewObjectPoolStack(string name, GameObject g)
+    {   //Initializes a new ObjectPoolStack
+        string sanitizedName = SanitizeName(name);
+        _pool.Add (sanitizedName, new ObjectPoolStack (g, transform));
+    }   //InitializeNewObjectPoolStack()
+
+    public GameObject[] GetAllObjectsOfName(string name)
+    {   //Returns all the objects in a ObjectPoolStack
+        string sanitizeName = SanitizeName (name);
+        if (_pool.ContainsKey (sanitizeName))
+        {
+            GameObject[] gameObjects = _pool[sanitizeName].ToArray ();
+            _pool.Remove (sanitizeName);
+            return gameObjects;
+        }
+        else
+        {
+            Debug.LogError (name + " tried getting all objects of name " + sanitizeName + ", but pool has no ObjectPoolStack with that name.");
+            return null;
+        }
+    }   //GetAllObjectsOfName()
+
+    public GameObject[] GetAllObjects()
+    {   //Returns ALL the objects from ALL the managed ObjectPoolStacks with no special sorting
+        if (_pool.Count > 0)
+        {
+            List<GameObject> allStoredObjects = new List<GameObject> ();
+            foreach (KeyValuePair<string, ObjectPoolStack> stack in _pool)
+            {
+                allStoredObjects.AddRange (stack.Value.ToArray());
+            }
+            _pool.Clear ();
+            return allStoredObjects.ToArray();
+        }
+        else
+        {
+            Debug.LogError (name + " contains no ObjectPoolStacks, and can't return any objects.");
+            return null;
+        }
+    }   //GetAllObjects
+
+    public void DestroyObjectPoolStack(string name)
+    {   //Destroys all the gameObjects in a stack and removes the stack
+        Debug.Log ("dest stack " + name);
+        string sanitizedName = name;
+        if (_pool.ContainsKey (sanitizedName))
+        {
+            _pool[sanitizedName].DestroyObjectsInStack ();
+            _pool.Remove (sanitizedName);
+        }
+        else
+        {
+            Debug.LogWarning (name + " tried destroying ObjectPoolStack by name " + sanitizedName + ", which does not exist");
+        }
+    }   //DestroyObjectPoolStack
+
+    public void DestroyObjectPool()
+    {   //Destroys the object pool and any objects still managed by the pool
+        Debug.Log ("dest pool");
+        foreach (KeyValuePair<string, ObjectPoolStack> stack in _pool)
+        {
+            stack.Value.DestroyObjectsInStack ();
+        }
         Destroy (this);
-        return objectsToReturn;
-    }   //DestroyPool()
-
-    private void HideObject(ObjectPoolObject g)
-    {
-        g._transform.position = _hiddenObjectsPosition;
-        g._transform.tag = _hiddenObjectsTag;
-    }   //HideObject()
-
-    private void UnhideObject(ObjectPoolObject g)
-    {
-        g._transform.position = g._oldPosition;
-        g._transform.tag = g._oldTag;
-        //TODO: name and active state
-    }   //UnhideObject
+    }   //DestroyObjectPool()
 
     private string SanitizeName(string name)
-    {   //Removes (Clone) from the name if it exists and return it
+    {   //Removes (Clone) from name
         if (name.Contains ("(Clone)"))
         {
-            return name.Substring (0, name.Length - 7);
+            return name.Replace ("(Clone)", string.Empty);
         }
         else
         {
