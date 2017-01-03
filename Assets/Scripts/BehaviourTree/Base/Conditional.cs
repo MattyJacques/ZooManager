@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿// Title        : Conditional.cs
+// Purpose      : Template for a conditional node for behaviours
+// Author       : Matthew Jacques
+
+using UnityEngine;
 using System.Collections;
 using System;
 using Assets.Scripts.Characters;

@@ -1,4 +1,9 @@
-﻿using UnityEngine;
+﻿// Title        : Behaviour.cs
+// Purpose      : Root for a behaviour tree, _root needs to be assigned to a
+//                selector for the behaviours to be processed
+// Author       : Matthew Jacques
+
+using UnityEngine;
 using System.Collections;
 using System;
 using Assets.Scripts.Characters;

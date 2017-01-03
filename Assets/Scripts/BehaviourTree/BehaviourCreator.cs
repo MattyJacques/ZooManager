@@ -1,4 +1,10 @@
-﻿using UnityEngine;
+﻿// Title        : BehaviourCreator.cs
+// Purpose      : Collection of delegates used for the behaviour tree.
+//                CreateBehaviours() creates the assortment of behaviours
+//                needed for characters and buildings
+// Author       : Matthew Jacques
+
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.BehaviourTree.Base;

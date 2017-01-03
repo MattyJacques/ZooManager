@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿// Title        : Selector.cs
+// Purpose      : Template for a selector node for behaviours
+// Author       : Matthew Jacques
+
+using UnityEngine;
 using System.Collections;
 using System;
 using Assets.Scripts.Characters;

@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿// Title        : Sequence.cs
+// Purpose      : Template for a sequence node for behaviours
+// Author       : Matthew Jacques
+
+using UnityEngine;
 using System.Collections;
 using System;
 using Assets.Scripts.Characters;
