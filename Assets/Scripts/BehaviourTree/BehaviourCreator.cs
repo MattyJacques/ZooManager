@@ -92,12 +92,23 @@ namespace Assets.Scripts.BehaviourTree
     private ReturnCode GetPath(AIBase theBase)
     { // Call to get the path to the current target
       Debug.Log("GetPath(), returning success");
+
+      // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ AMBERITE
+      // Insert call to get the path here
+      // theBase.Target is a gameobject you can get the position of
+
       return ReturnCode.Success;
     } // GetPath()
 
     private ReturnCode FollowPath(AIBase theBase)
     { // Handle the following of the current path to the target
       Debug.Log("FollowPath(), returning success");
+
+      // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ AMBERITE
+      // Here we need something to check if we are still following that path
+      // Not entirely sure how but if there is a method in the Seeker I think it was that we can check
+      // of maybe have bool in AIBase that is like _FollowingPath that we can check for false 
+
       return ReturnCode.Success;
     } // FollowPath()
 
@@ -132,6 +143,10 @@ namespace Assets.Scripts.BehaviourTree
     private bool HasArrived(AIBase theBase)
     { // Return true if we have arrived at target
       Debug.Log("HasArrived(), returning " + (theBase.Model.transform.position == theBase.Target.transform.position));
+
+      // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ AMBERITE
+      // Here check if we are near wherever we need to be, pick whatever radius seems best
+
       return theBase.Model.transform.position == theBase.Target.transform.position;
     } // HasArrived()
 
