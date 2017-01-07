@@ -1,232 +1,235 @@
-﻿// Title        : EnclosureBuilder.cs
-// Purpose      : This class allows for the building of enclosures
-// Author       : Eivind Andreassen
-// Date         : 20/12/2016
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class EnclosureBuilder : MonoBehaviour {
-    public enum State { Idle, WaitingForFirstCornerInput, DrawingEnclosureSquare };
-    public State _state;
+public class EnclosureBuilder : MonoBehaviour
+{
     public LayerMask _layerMask;
-    public float _enclosureColliderHeight = 2f;
-    public int _minimumEnclosureWidth = 2;
-    public int _minimumEnclosureHeight = 2;
-    public int _maximumEnclosureWidth = 20;
-    public int _maximumEnclosureHeight = 20;
-
-    //The different GameObjects that are used when editing the enclosure
-    public GameObject _selectedWall;
-    public GameObject _selectedWallCorner;
-    public GameObject _selectedWallDoor;
-    public GameObject _selectedWallWindow;  //TODO: implement this
-
-    private Vector3 _bottomLeftCorner;
-    private Vector3 _topRightCorner;
-    private GameObject _visualizationRectangle;
+    public GameObject _wallPrefab;
+    public GameObject _cornerPrefab;
+    public enum State { Idle, GettingFirstCornerPosition, GettingSecondCornerPosition };
+    public State _state = State.Idle;
+    private EnclosureBuilderTemplate _template;
+    private List<GameObject> _tempWalls = new List<GameObject> ();
+    private List<GameObject> _tempCorners = new List<GameObject> ();
+    private Vector3 _cornerA;
+    private Vector3 _cornerB;
 
     private void Update()
-    {   //Processes player input based on EnclosureBuilder state
+    {
+        bool validMousePos = false;
+        Vector3 mousePos = Vector3.zero;
+        validMousePos = GetMousePosition (out mousePos);
 
-        Vector3 mousePosition;
         switch (_state) {
-            case State.WaitingForFirstCornerInput:
+            case State.GettingFirstCornerPosition:
                 if (Input.GetMouseButtonDown (0))
                 {
-                    if (GetWorldPositionOfMouseClamped(_layerMask, out mousePosition))
+                    if (validMousePos)
                     {
-                        AssignFirstCorner (mousePosition);
+                        AssignFirstCorner (mousePos);
                     }
                 }
-
-                if (Input.GetMouseButtonDown (1))
+                else if (Input.GetMouseButtonDown (1))
                 {
-                    CancelBuilding ();
+                    CancelEnclosureBuild ();
                 }
                 break;
 
-            case State.DrawingEnclosureSquare:
-                if (GetWorldPositionOfMouseClamped(_layerMask, out mousePosition))
+            case State.GettingSecondCornerPosition:
+                if (validMousePos)
                 {
-                    _topRightCorner = mousePosition;
+                    _cornerB = mousePos;
+                    DrawVisualizedEnclosure (_cornerA, _cornerB);
                 }
-                else
-                {
-                    break;
-                }
-
-                DrawEnclosureArea (_bottomLeftCorner, _topRightCorner);
 
                 if (Input.GetMouseButtonDown (0))
                 {
-                    FinalizeBuilding (_bottomLeftCorner, _topRightCorner);
+                    if (validMousePos)
+                    {
+                        FinalizeEnclosureBuild (_cornerA, _cornerB);
+                    }
                 }
-
-                if (Input.GetMouseButtonDown (1))
+                else if (Input.GetMouseButtonDown (1))
                 {
-                    CancelBuilding ();
+                    CancelEnclosureBuild ();
                 }
                 break;
         }
-    }   //Update()
+    }
 
-    public bool GetWorldPositionOfMouseClamped(LayerMask layerMask, out Vector3 position)
-    {   //Returns the player's mouse position in world space
-        
+    private bool GetMousePosition(out Vector3 mousePosition)
+    {
         Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
         RaycastHit rayHit = new RaycastHit ();
         if (Physics.Raycast (ray, out rayHit, Mathf.Infinity, _layerMask, QueryTriggerInteraction.Ignore))
         {
-            position = rayHit.point;
-            position.x -= position.x % 2;
-            position.y -= position.y % 2;
-            position.z -= position.z % 2;
+            mousePosition = rayHit.point;
             return true;
+        }
+
+        mousePosition = Vector3.zero;
+        return false;
+    }
+
+    public void BeginBuildingNewEnclosure()
+    {
+        _template = new EnclosureBuilderTemplate ();
+        _template.Initialize (_wallPrefab, _cornerPrefab);
+        _state = State.GettingFirstCornerPosition;
+    }
+
+    private void AssignFirstCorner(Vector3 pos)
+    {
+        if (true) //Sanity check
+        {
+            _cornerA = pos;
+            _state = State.GettingSecondCornerPosition;
+        }
+    }
+
+    private void DrawVisualizedEnclosure(Vector3 firstCorner, Vector3 secondCorner)
+    {
+        //clean up old pieces
+        //TODO: only clean up superfluous pieces
+        if (_tempWalls.Count > 0)
+        {
+            foreach (GameObject g in _tempWalls)
+            {
+                _template.Destroy (EnclosureBuilderTemplate.ObjectType.Wall, g);
+            }
+        }
+
+        if (_tempCorners.Count > 0)
+        {
+            foreach (GameObject g in _tempCorners)
+            {
+                _template.Destroy (EnclosureBuilderTemplate.ObjectType.Corner, g);
+            }
+        }
+
+        //Visualize the enclosure
+        List<GameObject>[] tempObjects = BuildSquareEnclosure (firstCorner, secondCorner);
+        _tempWalls = tempObjects[0];
+        _tempCorners = tempObjects[1];
+    }
+
+    private Vector3 ClampToTileSize(Vector3 v)
+    {
+        float tileSize = 2;
+        v.x = v.x - (v.x % tileSize);
+        v.y = v.y - (v.y % tileSize);
+        v.z = v.z - (v.z % tileSize);
+        return v;
+    }
+
+    private List<GameObject>[] BuildSquareEnclosure(Vector3 firstCornerPos, Vector3 secondCornerPos)
+    {
+        firstCornerPos = ClampToTileSize (firstCornerPos);
+        secondCornerPos = ClampToTileSize (secondCornerPos);
+        int height = (int) Mathf.Abs (secondCornerPos.z - firstCornerPos.z);//This needs to be relative to the camera angle right?
+        int width = (int) Mathf.Abs (firstCornerPos.x - secondCornerPos.x);
+        Vector3[] corners;
+        if (firstCornerPos.z < secondCornerPos.z)
+        {
+            corners = new Vector3[]
+            {
+            firstCornerPos,
+            firstCornerPos + new Vector3(0, 0, height),
+            secondCornerPos,
+            secondCornerPos + new Vector3(0, 0, -height)
+            };
         }
         else
         {
-            position = Vector3.zero;
-            return false;
-        }
-        
-    }   //GetMousePosition
-
-    public void BeginBuildingEnclosure()
-    {
-        _state = State.WaitingForFirstCornerInput;
-    }
-
-    private void AssignFirstCorner(Vector3 bottomLeftCorner)
-    {
-        _bottomLeftCorner = bottomLeftCorner;
-        _state = State.DrawingEnclosureSquare;
-        CreateNewVisualizationRectangle ();
-    }
-
-    private void CreateNewVisualizationRectangle()
-    {
-        _visualizationRectangle = GameObject.CreatePrimitive (PrimitiveType.Quad);
-        _visualizationRectangle.transform.eulerAngles = new Vector3 (90f, 0f, 0f);
-    }
-
-    private void DrawEnclosureArea(Vector3 cornerBL, Vector3 cornerTR)
-    {   //Visualizes the enclosure area for the player
-        Vector3 newPos = Vector3.Lerp (cornerBL, cornerTR, 0.5f);
-        newPos.y = 0.1f;
-        _visualizationRectangle.transform.position = newPos;
-
-        Vector3 newScale = new Vector3(1f, 1f, 1f);
-        newScale.x = Mathf.Abs(cornerBL.x - cornerTR.x);
-        newScale.y = Mathf.Abs(cornerBL.z - cornerTR.z);
-        _visualizationRectangle.transform.localScale = newScale;
-    }   //DrawEnclosure()
-
-    private void CancelBuilding()
-    {
-        _state = State.Idle;
-        Destroy (_visualizationRectangle);
-    }
-
-    private void FinalizeBuilding(Vector3 cornerBL, Vector3 cornerTR)
-    {   //Checks if the shape of the enclosure is OK, if it is then it cleans up and creates the enclosure
-
-        float rectangleWidth = Mathf.Abs (cornerBL.x - cornerTR.x);
-        float rectangleHeight = Mathf.Abs (cornerBL.z - cornerTR.z);
-
-        //Check if the size is within bounds
-        if (rectangleWidth < _minimumEnclosureWidth
-            || rectangleHeight < _minimumEnclosureHeight
-            || rectangleWidth > _maximumEnclosureWidth
-            || rectangleHeight > _maximumEnclosureHeight)
-        {
-            Debug.Log ("Can't build enclosure! Enclosure does not fit within size limits! "
-                + "\nHeight min: " + _minimumEnclosureHeight.ToString () + ", height max: "
-                + _maximumEnclosureHeight.ToString () + ", current height: " + rectangleHeight.ToString ()
-                + ".\nWidth min: " + _minimumEnclosureWidth.ToString () + ", width max: "
-                + _maximumEnclosureWidth.ToString () + ", current width: " + rectangleWidth.ToString ());
-            return;
-        }
-
-        //Check if the size is a power of two
-        //Round to int to account for any floating point tomfoolery
-        if ((int) (rectangleWidth + 0.5f) % 2 != 0
-            || (int) (rectangleHeight + 0.5f) % 2 != 0)
-        {
-            Debug.Log ("Can't build enclosure! Enclosure size is not a power of two! Width: " 
-                + rectangleWidth.ToString () + ", height: " + rectangleHeight.ToString () + ".");
-            return;
-        }
-
-        //Clean up
-        _state = State.Idle;
-        Destroy (_visualizationRectangle);
-
-        //Create enclosure
-        GameObject enclosure = new GameObject ("Enclosure");
-        enclosure.transform.position = Vector3.Lerp (cornerBL, cornerTR, 0.5f);
-        enclosure.AddComponent<Enclosure> ();
-        enclosure.GetComponent<Enclosure> ().Rename ("New Enclosure");
-
-        BoxCollider col = enclosure.AddComponent<BoxCollider> ();
-        col.size = new Vector3 (rectangleWidth, _enclosureColliderHeight, rectangleHeight);
-        col.center = new Vector3 (0f, _enclosureColliderHeight / 2, 0f);
-
-        Vector3[] enclosureCorners = new Vector3[4];
-        enclosureCorners[0] = cornerBL;    //Bottom left
-        enclosureCorners[1] = cornerBL - new Vector3 (0f, 0f, rectangleHeight);    //Top left  FUCKED
-        enclosureCorners[2] = cornerTR;  //Top right
-        enclosureCorners[3] = cornerTR + new Vector3 (0f, 0f, rectangleHeight); //Bottom right
-        BuildEnclosureWalls (_selectedWall, 0, _selectedWallCorner, 270f, enclosureCorners);
-
-    }   //FinalizeBuilding()
-
-    private GameObject[] BuildEnclosureWalls(
-        GameObject wallPrefab, float wallRotationOffset,
-        GameObject cornerPrefab, float cornerRotationOffset,
-        Vector3[] cornerPositions)
-    {   //Instantiates the walls of the enclosure and returns them
-        //TODO: Wall and corner positions and rotations need to be standardized or otherwise accounted for
-
-        if (cornerPositions.Length != 4)
-        {
-            Debug.LogError ("Tried building enclosure with only " + cornerPositions.Length + " corners!");
-            return null;
-        }
-
-        List<GameObject> wallObjects = new List<GameObject> ();
-
-        for (int i = 0; i < cornerPositions.Length; i++)    //-1?
-        {
-            Vector3 cornerA = cornerPositions[i];
-            Vector3 cornerB = Vector3.zero;
-            if (i == cornerPositions.Length - 1)    //Loop around if this is the last corner
+            corners = new Vector3[]
             {
-                cornerB = cornerPositions[0];
+            firstCornerPos,
+            firstCornerPos + new Vector3(0, 0, -height),
+            secondCornerPos,
+            secondCornerPos + new Vector3(0, 0, height)
+            };
+        }
+        List<GameObject> wallObjects = new List<GameObject> ();
+        wallObjects.AddRange (_template.InstantiateMultiple (EnclosureBuilderTemplate.ObjectType.Wall, (height * 2) + (width * 2)));
+        int currentWallNum = 0;
+        List<GameObject> cornerObjects = new List<GameObject> ();
+        cornerObjects.AddRange (_template.InstantiateMultiple (EnclosureBuilderTemplate.ObjectType.Corner, 4));
+
+        for (int i = 0; i < 4; i++)
+        {
+            //We move around from corner to corner in a clockwise fashion 
+            Vector3 cornerA = corners[i];
+            Vector3 cornerB;
+            if (i == 3)
+            {
+                cornerB = corners[0];
             }
             else
             {
-                cornerB = cornerPositions[i + 1];
+                cornerB = corners[i + 1];
             }
 
-            GameObject corner = Instantiate (cornerPrefab);
-            corner.transform.position = cornerA;
-            corner.transform.Rotate (Vector3.up, (90f * i) + cornerRotationOffset, Space.World);
-            corner.transform.position -= corner.transform.up;   //Model specific..
-            wallObjects.Add (corner);
+            cornerObjects[i].transform.position = corners[i];
+            //TODO: rot
 
-            int wallLength = (int)((Vector3.Distance (cornerA, cornerB) + 0.5f) / 2);
-            for (int a = 1; a < wallLength - 1; a++)
+            int length = (int) ((Vector3.Distance(cornerA, cornerB) + 0.5f) / 2);   //length of a wall is 2
+            for (int x = 0; x < length; x++)
             {
-                GameObject wall = Instantiate (wallPrefab);
-                //a * 2 = distance away from corner, + 1 = account pivot being in the middle of the model
-                wall.transform.position = cornerA - ((cornerA - cornerB).normalized * ((a * 2) + 1));
-                wall.transform.Rotate (Vector3.up, (90f * i) + wallRotationOffset, Space.World);
-                wallObjects.Add (wall);
+                GameObject g = wallObjects[currentWallNum];
+                currentWallNum++;
+
+                Vector3 position = cornerA + ((cornerB - cornerA).normalized * x * 2);
+                Quaternion rotation = Quaternion.identity;
+
+                g.transform.position = position;
+                g.transform.rotation = rotation;
             }
         }
 
-        return wallObjects.ToArray ();
-    }   //BuildEnclosureWalls
+        return new [] { wallObjects, cornerObjects };
+    }
+
+    private void FinalizeEnclosureBuild(Vector3 firstCorner, Vector3 secondCorner)
+    {
+        //Create enclosure gameobject and add script etc to it
+        //For obj returned from buildEnclosure set parent to enclosure
+        GameObject enclosure = new GameObject ("Enclosure " + Time.realtimeSinceStartup);
+
+        foreach (GameObject g in _tempCorners)
+        {
+            g.transform.parent = enclosure.transform;
+        }
+        _tempCorners.Clear ();
+
+        foreach (GameObject g in _tempWalls)
+        {
+            g.transform.parent = enclosure.transform;
+        }
+        _tempWalls.Clear ();
+
+        _template.DestroyAllHiddenObjects ();
+        _template = null;
+
+        _state = State.Idle;
+    }
+
+    private void CancelEnclosureBuild()
+    {
+        foreach (GameObject g in _tempCorners)
+        {
+            _template.Destroy (EnclosureBuilderTemplate.ObjectType.Corner, g);
+        }
+        _tempCorners.Clear ();
+
+        foreach (GameObject g in _tempWalls)
+        {
+            _template.Destroy (EnclosureBuilderTemplate.ObjectType.Wall, g);
+        }
+        _tempWalls.Clear ();
+
+        _template.DestroyAllHiddenObjects ();
+        _template = null;
+        _state = State.Idle;
+    }
 
 }   //EnclosureBuilder

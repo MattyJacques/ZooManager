@@ -12,7 +12,7 @@ public class EnclosureBuilderGUI : MonoBehaviour
     private void OnGUI()
     {
         if (GUI.Button(new Rect(0, 0, 150, 25), "Build new enclosure")) {
-            _targetEnclosureBuilder.BeginBuildingEnclosure ();
+            _targetEnclosureBuilder.BeginBuildingNewEnclosure ();
         }
     } 
 }   //EnclosureBuilderGUI
