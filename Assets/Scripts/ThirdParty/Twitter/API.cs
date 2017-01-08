@@ -260,7 +260,7 @@ namespace Assets.Scripts.ThirdParty.Twitter
       var timeline =  JsonUtility.FromJson<UserTimeline>(responseJson);
       foreach (var tweet in timeline.Tweets)
       {
-        Debug.Log(tweet.text);
+        Debug.Log("Tweet " + tweetnum +" - " + tweet.text);
 				tweetnum++;
 				if (tweetnum == 1) {
 				tweet1.text = tweet.text;
@@ -274,7 +274,6 @@ namespace Assets.Scripts.ThirdParty.Twitter
 				if (tweetnum == 4) {
 					tweet4.text = tweet.text;
 				}
-				Debug.Log (tweetnum);
 			}
 		}
 

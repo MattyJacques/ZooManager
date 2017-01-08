@@ -18,6 +18,7 @@ public class buttonTooScene : MonoBehaviour {
 	public Sprite _buttonPressed;
 	public Sprite _buttonHover;
 	public Sprite _buttonOut;
+	public bool _willThisButtonQuitTheGame;
 
 	// ~~~~~~~~~~~~~~~~~~~~~~ Variable Declaration END ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -33,9 +34,17 @@ public class buttonTooScene : MonoBehaviour {
 	{
 		if (_buttonPressedRef == false)
 		{
+			if(_willThisButtonQuitTheGame == false)
+			{
 			this.GetComponentInParent<buttonPrefabMaster>()._buttonPressed = true; // report too its Master that a button has been pressed
 			this.GetComponent<Image>().sprite = _buttonPressed;
 			SceneManager.LoadScene (_targetScene); // load the targetScene
+			}
+
+			else if (_willThisButtonQuitTheGame == true)
+			{
+				Application.Quit();
+			}
 		}
 	}
 

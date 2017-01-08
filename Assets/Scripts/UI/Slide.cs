@@ -40,7 +40,7 @@ namespace Assets.Scripts.UI
 
     private void MyFunction() // your listener calls this function
     {
-      Debug.Log("pressed");
+      //Debug.Log("pressed");
       if (ispressed)
       {
         ispressed2 = true;
@@ -141,13 +141,13 @@ namespace Assets.Scripts.UI
     private void SetStartRot1()
     {
       startingRotation = 180;
-      Debug.Log(startingRotation);
+      //Debug.Log(startingRotation);
     }
 
     private void SetStartRot2()
     {
       startingRotation = 0;
-      Debug.Log(startingRotation);
+      //Debug.Log(startingRotation);
     }
 
   }
