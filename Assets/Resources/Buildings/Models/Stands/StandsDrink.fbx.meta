@@ -1,0 +1,596 @@
+fileFormatVersion: 2
+guid: d35d8f3031e011045a581428465ca185
+timeCreated: 1483451969
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Decoration1
+    100002: Drink_Stand
+    100004: Drink_Stand_Door
+    100006: Fridge_Door
+    100008: Fridge_Door2
+    100010: Pizza_Stand_Sign
+    100012: //RootNode
+    100014: Stools
+    100016: Fridge_Door2_Glass
+    100018: Fridge_Door_Glass
+    400000: Decoration1
+    400002: Drink_Stand
+    400004: Drink_Stand_Door
+    400006: Fridge_Door
+    400008: Fridge_Door2
+    400010: Pizza_Stand_Sign
+    400012: //RootNode
+    400014: Stools
+    400016: Fridge_Door2_Glass
+    400018: Fridge_Door_Glass
+    2300000: Decoration1
+    2300002: Drink_Stand
+    2300004: Drink_Stand_Door
+    2300006: Fridge_Door
+    2300008: Fridge_Door2
+    2300010: Pizza_Stand_Sign
+    2300012: Stools
+    2300014: Fridge_Door2_Glass
+    2300016: Fridge_Door_Glass
+    3300000: Decoration1
+    3300002: Drink_Stand
+    3300004: Drink_Stand_Door
+    3300006: Fridge_Door
+    3300008: Fridge_Door2
+    3300010: Pizza_Stand_Sign
+    3300012: Stools
+    3300014: Fridge_Door2_Glass
+    3300016: Fridge_Door_Glass
+    4300000: Decoration1
+    4300002: Stools
+    4300004: Fridge_Door2
+    4300006: Fridge_Door
+    4300008: Drink_Stand_Door
+    4300010: Drink_Stand
+    4300012: Pizza_Stand_Sign
+    4300014: Fridge_Door2_Glass
+    4300016: Fridge_Door_Glass
+    7400000: Fridge_Door2|Drink_Stand_DoorAction
+    7400002: Fridge Door 2 Open
+    7400004: Fridge Door 2 Close
+    7400006: Fridge_Door|Drink_Stand_DoorAction
+    7400008: Fridge Door 1 Open
+    7400010: Fridge Door 1 Close
+    7400012: Stand Door Open
+    7400014: Drink_Stand_Door|Fridge_Door2Action
+    7400016: Drink_Stand_Door|Fridge_DoorAction
+    7400018: Stand Door Close
+    7400020: Fridge Door Glass 2 Open
+    7400022: Fridge Door Glass 2 Close
+    7400024: Fridge Door Glass 1 Open
+    7400026: Fridge Door Glass 1 Close
+    9500000: //RootNode
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 1
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths:
+    - Drink_Stand_Door
+    - Fridge_Door
+    - Fridge_Door2
+    clipAnimations:
+    - serializedVersion: 16
+      name: Fridge Door 2 Open
+      takeName: Fridge_Door2|Fridge_Door2Action
+      firstFrame: 0
+      lastFrame: 7
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Decoration1
+        weight: 1
+      - path: Stools
+        weight: 1
+      - path: Fridge_Door2
+        weight: 1
+      - path: Fridge_Door
+        weight: 1
+      - path: Drink_Stand_Door
+        weight: 1
+      - path: Drink_Stand
+        weight: 1
+      - path: Pizza_Stand_Sign
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Fridge Door 2 Close
+      takeName: Fridge_Door2|Fridge_DoorAction
+      firstFrame: 7
+      lastFrame: 15
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Decoration1
+        weight: 1
+      - path: Stools
+        weight: 1
+      - path: Fridge_Door2
+        weight: 1
+      - path: Fridge_Door
+        weight: 1
+      - path: Drink_Stand_Door
+        weight: 1
+      - path: Drink_Stand
+        weight: 1
+      - path: Pizza_Stand_Sign
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Fridge Door 1 Open
+      takeName: Fridge_Door|Fridge_Door2Action
+      firstFrame: 0
+      lastFrame: 7
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Decoration1
+        weight: 1
+      - path: Stools
+        weight: 1
+      - path: Fridge_Door2
+        weight: 1
+      - path: Fridge_Door
+        weight: 1
+      - path: Drink_Stand_Door
+        weight: 1
+      - path: Drink_Stand
+        weight: 1
+      - path: Pizza_Stand_Sign
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Fridge Door 1 Close
+      takeName: Fridge_Door|Fridge_DoorAction
+      firstFrame: 7
+      lastFrame: 15
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Decoration1
+        weight: 1
+      - path: Stools
+        weight: 1
+      - path: Fridge_Door2
+        weight: 1
+      - path: Fridge_Door
+        weight: 1
+      - path: Drink_Stand_Door
+        weight: 1
+      - path: Drink_Stand
+        weight: 1
+      - path: Pizza_Stand_Sign
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Stand Door Open
+      takeName: Drink_Stand_Door|Drink_Stand_DoorAction
+      firstFrame: 0
+      lastFrame: 15
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Decoration1
+        weight: 1
+      - path: Stools
+        weight: 1
+      - path: Fridge_Door2
+        weight: 1
+      - path: Fridge_Door
+        weight: 1
+      - path: Drink_Stand_Door
+        weight: 1
+      - path: Drink_Stand
+        weight: 1
+      - path: Pizza_Stand_Sign
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Stand Door Close
+      takeName: Drink_Stand_Door|Drink_Stand_DoorAction
+      firstFrame: 15
+      lastFrame: 31
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Decoration1
+        weight: 1
+      - path: Stools
+        weight: 1
+      - path: Fridge_Door2
+        weight: 1
+      - path: Fridge_Door
+        weight: 1
+      - path: Drink_Stand_Door
+        weight: 1
+      - path: Drink_Stand
+        weight: 1
+      - path: Pizza_Stand_Sign
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Fridge Door Glass 2 Open
+      takeName: Fridge_Door2_Glass|Fridge_Door2Action
+      firstFrame: 0
+      lastFrame: 7
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Fridge_Door
+        weight: 1
+      - path: Fridge_Door2
+        weight: 1
+      - path: Decoration1
+        weight: 1
+      - path: Stools
+        weight: 1
+      - path: Fridge_Door2_Glass
+        weight: 1
+      - path: Fridge_Door_Glass
+        weight: 1
+      - path: Drink_Stand_Door
+        weight: 1
+      - path: Drink_Stand
+        weight: 1
+      - path: Pizza_Stand_Sign
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Fridge Door Glass 2 Close
+      takeName: Fridge_Door2_Glass|Fridge_Door2Action
+      firstFrame: 7
+      lastFrame: 15
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Fridge_Door
+        weight: 1
+      - path: Fridge_Door2
+        weight: 1
+      - path: Decoration1
+        weight: 1
+      - path: Stools
+        weight: 1
+      - path: Fridge_Door2_Glass
+        weight: 1
+      - path: Fridge_Door_Glass
+        weight: 1
+      - path: Drink_Stand_Door
+        weight: 1
+      - path: Drink_Stand
+        weight: 1
+      - path: Pizza_Stand_Sign
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Fridge Door Glass 1 Open
+      takeName: Fridge_Door_Glass|Fridge_DoorAction
+      firstFrame: 0
+      lastFrame: 7
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Fridge_Door
+        weight: 1
+      - path: Fridge_Door2
+        weight: 1
+      - path: Decoration1
+        weight: 1
+      - path: Stools
+        weight: 1
+      - path: Fridge_Door2_Glass
+        weight: 1
+      - path: Fridge_Door_Glass
+        weight: 1
+      - path: Drink_Stand_Door
+        weight: 1
+      - path: Drink_Stand
+        weight: 1
+      - path: Pizza_Stand_Sign
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Fridge Door Glass 1 Close
+      takeName: Fridge_Door_Glass|Fridge_DoorAction
+      firstFrame: 7
+      lastFrame: 15
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Fridge_Door
+        weight: 1
+      - path: Fridge_Door2
+        weight: 1
+      - path: Decoration1
+        weight: 1
+      - path: Stools
+        weight: 1
+      - path: Fridge_Door2_Glass
+        weight: 1
+      - path: Fridge_Door_Glass
+        weight: 1
+      - path: Drink_Stand_Door
+        weight: 1
+      - path: Drink_Stand
+        weight: 1
+      - path: Pizza_Stand_Sign
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 1
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
