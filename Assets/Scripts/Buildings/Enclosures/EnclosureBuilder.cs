@@ -4,19 +4,21 @@ using UnityEngine;
 
 public class EnclosureBuilder : MonoBehaviour
 {
+    public enum State { Idle, GettingFirstCornerPosition, GettingSecondCornerPosition };
+    public State _state = State.Idle;
     public LayerMask _layerMask; //The layers we want to be able to place an enclosure on
     public GameObject _wallPrefab; //The prefab we want to build this enclosure out of
     public GameObject _cornerPrefab;
     public Material _wallCantBuildMaterial;
     public Material _cornerCantBuildMaterial;
-    public enum State { Idle, GettingFirstCornerPosition, GettingSecondCornerPosition };
-    public State _state = State.Idle;
-    private EnclosureBuilderTemplate _template; //The pool we get out gameObjects from
-    public List<GameObject> _tempWalls = new List<GameObject> (); //The objects we are currently using(not pooled/deleted) to create the enclosure
-    public List<GameObject> _tempCorners = new List<GameObject> ();
+    public GameObject _finalizeBuildDustEffect;
+    public AudioClip _finalizeBuildAudioClip;
+
+    private EnclosureBuilderPool _template; //The pool we get out gameObjects from
+    private List<GameObject> _tempWalls = new List<GameObject> (); //The objects we are currently using(not pooled/deleted) to create the enclosure
+    private List<GameObject> _tempCorners = new List<GameObject> ();
     private Vector3 _cornerA;   //The first corner of the enclosure
     private Vector3 _cornerB;   //The second corner of the enclosure
-    public GameObject _dustEffect;
 
     //The offsets account for the models rotation not being imported at zero..
     //If the pipeline ever changes and the models are imported with a different rotation this needs to be changed
@@ -87,7 +89,7 @@ public class EnclosureBuilder : MonoBehaviour
 
     public void BeginBuildingNewEnclosure()
     {
-        _template = new EnclosureBuilderTemplate ();
+        _template = new EnclosureBuilderPool ();
         _template.Initialize (_wallPrefab, _cornerPrefab, _wallCantBuildMaterial, _cornerCantBuildMaterial);
         _state = State.GettingFirstCornerPosition;
     }
@@ -121,7 +123,7 @@ public class EnclosureBuilder : MonoBehaviour
         {
             foreach (GameObject g in _tempWalls)
             {
-                _template.Destroy (EnclosureBuilderTemplate.ObjectType.Wall, g);
+                _template.Destroy (EnclosureBuilderPool.ObjectType.Wall, g);
             }
         }
 
@@ -129,20 +131,13 @@ public class EnclosureBuilder : MonoBehaviour
         {
             foreach (GameObject g in _tempCorners)
             {
-                _template.Destroy (EnclosureBuilderTemplate.ObjectType.Corner, g);
+                _template.Destroy (EnclosureBuilderPool.ObjectType.Corner, g);
             }
         }
 
         //Visualize the enclosure
         List<GameObject>[] tempObjects;
-        if (EnclosureParametersAreSane (firstCorner, secondCorner))
-        {
-           tempObjects = BuildSquareEnclosure (firstCorner, secondCorner);
-        }
-        else
-        {
-           tempObjects = BuildSquareEnclosure (firstCorner, secondCorner, _wallCantBuildMaterial, _cornerCantBuildMaterial);
-        }
+        tempObjects = BuildSquareEnclosure (firstCorner, secondCorner);
         _tempWalls = tempObjects[0];
         _tempCorners = tempObjects[1];
     }
@@ -158,7 +153,7 @@ public class EnclosureBuilder : MonoBehaviour
 
     private int AngleBetweenVector2(Vector2 vectorA, Vector2 vectorB)
     {
-        Vector2 difference = vectorB - vectorA; ;
+        Vector2 difference = vectorB - vectorA;
         float sign = (vectorB.y < vectorA.y) ? -1.0f : 1.0f;
         float angle = Vector2.Angle(Vector2.right, difference) * sign;
 
@@ -175,7 +170,7 @@ public class EnclosureBuilder : MonoBehaviour
         return (int)angle;
     }
 
-    private List<GameObject>[] BuildSquareEnclosure(Vector3 firstCornerPos, Vector3 secondCornerPos, Material customWallMaterial = null, Material customCornerMaterial = null)
+    private List<GameObject>[] BuildSquareEnclosure(Vector3 firstCornerPos, Vector3 secondCornerPos)
     {
         int angle = AngleBetweenVector2 (new Vector2 (firstCornerPos.x, firstCornerPos.z), new Vector2 (secondCornerPos.x, secondCornerPos.z));
 
@@ -210,11 +205,11 @@ public class EnclosureBuilder : MonoBehaviour
         //-4 to account for the corners at the start and end of the sides
         int amountOfWallsNeeded = Mathf.Clamp (height - 4, 0, 10000);  
         amountOfWallsNeeded += Mathf.Clamp (width - 4, 0, 10000);
-        wallObjects.AddRange (_template.InstantiateMultiple (EnclosureBuilderTemplate.ObjectType.Wall, amountOfWallsNeeded));
+        wallObjects.AddRange (_template.InstantiateMultiple (EnclosureBuilderPool.ObjectType.Wall, amountOfWallsNeeded));
         int currentWallNum = 0;
 
         List<GameObject> cornerObjects = new List<GameObject> ();
-        cornerObjects.AddRange (_template.InstantiateMultiple (EnclosureBuilderTemplate.ObjectType.Corner, 4));
+        cornerObjects.AddRange (_template.InstantiateMultiple (EnclosureBuilderPool.ObjectType.Corner, 4));
 
         //Place corners
         for (int i = 0; i < 4; i++)
@@ -299,32 +294,37 @@ public class EnclosureBuilder : MonoBehaviour
 
     private void FinalizeEnclosureBuild(Vector3 firstCorner, Vector3 secondCorner)
     {
-        //Create enclosure gameobject and add script etc to it
-        //For obj returned from buildEnclosure set parent to enclosure
+        //Create the enclosure object
+        Vector3 centreOfEnclosure = Vector3.Lerp (firstCorner, secondCorner, 0.5f);
         GameObject enclosure = new GameObject ("Enclosure " + Time.realtimeSinceStartup);
-        List<Vector3> particlePositions = new List<Vector3> ();
+        enclosure.transform.position = centreOfEnclosure;
+        enclosure.AddComponent<Enclosure> ();
+
+        //Clean up the temporary objects, and play the particle effects
         foreach (GameObject g in _tempCorners)
         {
             g.transform.parent = enclosure.transform;
-            particlePositions.Add (g.transform.position);
+
+            GameObject particleSystem = Instantiate (_finalizeBuildDustEffect, g.transform.position, g.transform.rotation);
+            Destroy (particleSystem, 1f);
         }
         _tempCorners.Clear ();
 
         foreach (GameObject g in _tempWalls)
         {
             g.transform.parent = enclosure.transform;
-            particlePositions.Add (g.transform.position);
+
+            GameObject particleSystem = Instantiate (_finalizeBuildDustEffect, g.transform.position, g.transform.rotation * Quaternion.Euler(new Vector3(0f, 0f, 90f)));
+            Destroy (particleSystem, 1f);
         }
         _tempWalls.Clear ();
 
         _template.DestroyPool ();
         _template = null;
-        
-        foreach (Vector3 pos in particlePositions)
-        {
-            GameObject g = Instantiate (_dustEffect, pos, Quaternion.identity);
-            Destroy (g, 1f);
-        }
+
+        //Play sound
+        AudioSource.PlayClipAtPoint (_finalizeBuildAudioClip, centreOfEnclosure); 
+        //TODO: move sound closer to camera so it essentially is clamped to a higher min value? Or adjust volume bast on distance from camera
 
         _state = State.Idle;
     }
@@ -333,13 +333,13 @@ public class EnclosureBuilder : MonoBehaviour
     {
         foreach (GameObject g in _tempCorners)
         {
-            _template.Destroy (EnclosureBuilderTemplate.ObjectType.Corner, g);
+            _template.Destroy (EnclosureBuilderPool.ObjectType.Corner, g);
         }
         _tempCorners.Clear ();
 
         foreach (GameObject g in _tempWalls)
         {
-            _template.Destroy (EnclosureBuilderTemplate.ObjectType.Wall, g);
+            _template.Destroy (EnclosureBuilderPool.ObjectType.Wall, g);
         }
         _tempWalls.Clear ();
 

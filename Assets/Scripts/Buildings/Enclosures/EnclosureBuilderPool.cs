@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class EnclosureBuilderTemplate
+public class EnclosureBuilderPool
 {
     public GameObject _wallReference;
-    public GameObject _cornerReference; //The rotation changes every time it's instantiated? WTf?
+    public GameObject _cornerReference; //NOTE: The rotation changes every time it's instantiated? WTf?
     public enum ObjectType { Wall, Corner };
     
     private Stack<GameObject> _pooledWalls = new Stack<GameObject> ();
