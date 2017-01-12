@@ -4,7 +4,7 @@ using UnityEngine;
 public class EnclosureBuilderTemplate
 {
     public GameObject _wallReference;
-    public GameObject _cornerReference;
+    public GameObject _cornerReference; //The rotation changes every time it's instantiated? WTf?
     public enum ObjectType { Wall, Corner };
     
     private Stack<GameObject> _pooledWalls = new Stack<GameObject> ();
@@ -13,12 +13,40 @@ public class EnclosureBuilderTemplate
     private List<GameObject> _instantiatedCorners = new List<GameObject> ();
     private Vector3 _hiddenPos = new Vector3 (-5000, -5000, -5000);
 
-    public void Initialize(GameObject wall, GameObject corner)
+    public Material _wallMatOrig;
+    public Material _wallMatTranslucent;
+    public Material _cornerMatOrig;
+    public Material _cornerMatTranslucent;
+
+    public void Initialize(GameObject wall, GameObject corner, Material wallTranslucent, Material cornerTranslucent)
     {
-        InitializeNewGameObject (ObjectType.Wall, wall);
-        InitializeNewGameObject (ObjectType.Corner, corner);
+        //Get the materials
+        _wallMatOrig = wall.GetComponent<Renderer> ().sharedMaterial;
+        _cornerMatOrig = corner.GetComponent<Renderer> ().sharedMaterial;
+        _wallMatTranslucent = wallTranslucent;
+        _cornerMatTranslucent = cornerTranslucent;
+        
+        //Init objects and set materials
+        if (UnityEditor.PrefabUtility.GetPrefabType (wall) != UnityEditor.PrefabType.None)
+        {
+            wall = Object.Instantiate (wall);
+        }
+        wall.GetComponent<Renderer> ().material = _wallMatTranslucent;
+        wall.transform.position = _hiddenPos;
+        _wallReference = wall;
+        _pooledWalls.Push (Object.Instantiate (_wallReference));
+
+        if (UnityEditor.PrefabUtility.GetPrefabType (corner) != UnityEditor.PrefabType.None)
+        {
+            corner = Object.Instantiate (corner);
+        }
+        corner.GetComponent<Renderer> ().material = _cornerMatTranslucent;
+        corner.transform.position = _hiddenPos;
+        _cornerReference = corner;
+        _pooledCorners.Push (Object.Instantiate (_cornerReference));
     }
 
+    /*
     public void ChangeObject(ObjectType type, GameObject newGameObject)
     {
         switch (type) {
@@ -41,32 +69,8 @@ public class EnclosureBuilderTemplate
                 break;
         }
     }
-
-    private void InitializeNewGameObject(ObjectType type, GameObject newGameObject)
-    {
-        Debug.Log ("Initializing new gameobject of prefabType " + UnityEditor.PrefabUtility.GetPrefabType (newGameObject).ToString ()
-            + ", and object type of " + type.ToString ());
-
-        if (UnityEditor.PrefabUtility.GetPrefabType (newGameObject) != UnityEditor.PrefabType.None) //Does this work?
-        {
-            newGameObject = Object.Instantiate (newGameObject);
-        }
-
-        newGameObject.transform.position = _hiddenPos;
-
-        switch (type) {
-            case ObjectType.Wall:
-                _wallReference = newGameObject;
-                _pooledWalls.Push (Object.Instantiate (_wallReference));
-                break;
-
-            case ObjectType.Corner:
-                _cornerReference = newGameObject;
-                _pooledCorners.Push (Object.Instantiate (_cornerReference));
-                break;
-        }
-    }
-
+    */
+    
     public GameObject Instantiate(ObjectType type)
     {
         GameObject g = null;
@@ -97,7 +101,6 @@ public class EnclosureBuilderTemplate
                 _instantiatedCorners.Add (g);
                 break;
         }
-
         return g;
     }
 
@@ -136,8 +139,9 @@ public class EnclosureBuilderTemplate
         }
     }
 
-    public void DestroyAllHiddenObjects()
+    public void DestroyPool()
     {
+        //Destroy pooled objects
         foreach (GameObject g in _pooledCorners)
         {
             Object.Destroy (g);
@@ -150,7 +154,22 @@ public class EnclosureBuilderTemplate
         }
         _pooledWalls.Clear ();
 
+        //Reset materials
+        foreach (GameObject g in _instantiatedWalls)
+        {
+            g.GetComponent<Renderer> ().material = _wallMatOrig;
+        }
+        _instantiatedWalls.Clear ();
+
+        foreach (GameObject g in _instantiatedCorners)
+        {
+            g.GetComponent<Renderer> ().material = _cornerMatOrig;
+        }
+        _instantiatedCorners.Clear ();
+
         Object.Destroy (_cornerReference);
+        _cornerReference = null;
         Object.Destroy (_wallReference);
+        _wallReference = null;
     }
 }
