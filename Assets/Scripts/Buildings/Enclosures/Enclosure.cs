@@ -33,14 +33,6 @@ public class Enclosure : MonoBehaviour
         }
     }   //Start()
 
-    private void OnGUI()
-    {
-        if (_state != State.DisplayingMenu)
-        {
-            return;
-        }
-    }
-
     public void Interact()
     {   //Instantiates and initializes the GUI that allows for player interaction with the enclosure
 

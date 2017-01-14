@@ -14,7 +14,7 @@ public class EnclosureBuilder : MonoBehaviour
     public GameObject _finalizeBuildDustEffect;
     public AudioClip _finalizeBuildAudioClip;
 
-    private EnclosureBuilderPool _template; //The pool we get out gameObjects from
+    private EnclosureBuilderPool _pool; //The pool we get out gameObjects from
     private List<GameObject> _tempWalls = new List<GameObject> (); //The objects we are currently using(not pooled/deleted) to create the enclosure
     private List<GameObject> _tempCorners = new List<GameObject> ();
     private Vector3 _cornerA;   //The first corner of the enclosure
@@ -89,8 +89,8 @@ public class EnclosureBuilder : MonoBehaviour
 
     public void BeginBuildingNewEnclosure()
     {
-        _template = new EnclosureBuilderPool ();
-        _template.Initialize (_wallPrefab, _cornerPrefab, _wallCantBuildMaterial, _cornerCantBuildMaterial);
+        _pool = new EnclosureBuilderPool ();
+        _pool.Initialize (_wallPrefab, _cornerPrefab, _wallCantBuildMaterial, _cornerCantBuildMaterial);
         _state = State.GettingFirstCornerPosition;
     }
 
@@ -123,7 +123,7 @@ public class EnclosureBuilder : MonoBehaviour
         {
             foreach (GameObject g in _tempWalls)
             {
-                _template.Destroy (EnclosureBuilderPool.ObjectType.Wall, g);
+                _pool.Destroy (EnclosureBuilderPool.ObjectType.Wall, g);
             }
         }
 
@@ -131,7 +131,7 @@ public class EnclosureBuilder : MonoBehaviour
         {
             foreach (GameObject g in _tempCorners)
             {
-                _template.Destroy (EnclosureBuilderPool.ObjectType.Corner, g);
+                _pool.Destroy (EnclosureBuilderPool.ObjectType.Corner, g);
             }
         }
 
@@ -205,11 +205,11 @@ public class EnclosureBuilder : MonoBehaviour
         //-4 to account for the corners at the start and end of the sides
         int amountOfWallsNeeded = Mathf.Clamp (height - 4, 0, 10000);  
         amountOfWallsNeeded += Mathf.Clamp (width - 4, 0, 10000);
-        wallObjects.AddRange (_template.InstantiateMultiple (EnclosureBuilderPool.ObjectType.Wall, amountOfWallsNeeded));
+        wallObjects.AddRange (_pool.InstantiateMultiple (EnclosureBuilderPool.ObjectType.Wall, amountOfWallsNeeded));
         int currentWallNum = 0;
 
         List<GameObject> cornerObjects = new List<GameObject> ();
-        cornerObjects.AddRange (_template.InstantiateMultiple (EnclosureBuilderPool.ObjectType.Corner, 4));
+        cornerObjects.AddRange (_pool.InstantiateMultiple (EnclosureBuilderPool.ObjectType.Corner, 4));
 
         //Place corners
         for (int i = 0; i < 4; i++)
@@ -294,11 +294,21 @@ public class EnclosureBuilder : MonoBehaviour
 
     private void FinalizeEnclosureBuild(Vector3 firstCorner, Vector3 secondCorner)
     {
+        firstCorner = ClampToTileSize (firstCorner);
+        secondCorner = ClampToTileSize (secondCorner);
+
         //Create the enclosure object
         Vector3 centreOfEnclosure = Vector3.Lerp (firstCorner, secondCorner, 0.5f);
         GameObject enclosure = new GameObject ("Enclosure " + Time.realtimeSinceStartup);
         enclosure.transform.position = centreOfEnclosure;
         enclosure.AddComponent<Enclosure> ();
+        BoxCollider enclosureCollider = enclosure.AddComponent<BoxCollider> ();
+        enclosureCollider.size = new Vector3 (
+            Mathf.Abs (firstCorner.x - secondCorner.x),
+            3f,
+            Mathf.Abs (secondCorner.z - firstCorner.z));
+        enclosureCollider.center = new Vector3 (0f, 1.5f, 0f);
+        
 
         //Clean up the temporary objects, and play the particle effects
         foreach (GameObject g in _tempCorners)
@@ -319,8 +329,8 @@ public class EnclosureBuilder : MonoBehaviour
         }
         _tempWalls.Clear ();
 
-        _template.DestroyPool ();
-        _template = null;
+        _pool.DestroyPool ();
+        _pool = null;
 
         //Play sound
         AudioSource.PlayClipAtPoint (_finalizeBuildAudioClip, centreOfEnclosure); 
@@ -333,18 +343,18 @@ public class EnclosureBuilder : MonoBehaviour
     {
         foreach (GameObject g in _tempCorners)
         {
-            _template.Destroy (EnclosureBuilderPool.ObjectType.Corner, g);
+            _pool.Destroy (EnclosureBuilderPool.ObjectType.Corner, g);
         }
         _tempCorners.Clear ();
 
         foreach (GameObject g in _tempWalls)
         {
-            _template.Destroy (EnclosureBuilderPool.ObjectType.Wall, g);
+            _pool.Destroy (EnclosureBuilderPool.ObjectType.Wall, g);
         }
         _tempWalls.Clear ();
 
-        _template.DestroyPool ();
-        _template = null;
+        _pool.DestroyPool ();
+        _pool = null;
         _state = State.Idle;
     }
 
