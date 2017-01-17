@@ -7,9 +7,7 @@ public class TestEmperorPenguin : MonoBehaviour{
   private Animator anim;
   private Vector2 wayPoint;
   private Rigidbody rbody;
-
   float x;
-
   // Use this for initialization
 	void Start () 
   {
@@ -22,20 +20,20 @@ public class TestEmperorPenguin : MonoBehaviour{
 
   void Wander() 
   { 
-    //random point to wander to, 47 is the radius
+    //random point to wander to
     wayPoint = Random.insideUnitCircle *47;
 
     //TODO: blend animations, add rotation
     //anim.SetFloat("PosX", wayPoint.x);
     //anim.SetFloat("PosY", wayPoint.y);
 
-    //testing rotation
-    x += Time.deltaTime * 10;
-    transform.rotation = Quaternion.Euler(x, 0, 0);
-
     //sets movement point
     float moveX = wayPoint.x*Time.deltaTime;
     float moveZ = wayPoint.y*Time.deltaTime;
+
+    //testing rotation
+    x += Time.deltaTime * 10;
+    transform.rotation = Quaternion.Euler(x, 0, 0);
 
     //TODO: replace with pathfinding
     rbody.velocity = new Vector3(moveX, 0, moveZ);
