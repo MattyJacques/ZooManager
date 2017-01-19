@@ -25,13 +25,9 @@ public class TestEmperorPenguin : MonoBehaviour{
     //random point to wander to, 47 is the radius
     wayPoint = Random.insideUnitCircle *47;
 
-    //TODO: blend animations, add rotation
+    //TODO: blend animations
     //anim.SetFloat("PosX", wayPoint.x);
     //anim.SetFloat("PosY", wayPoint.y);
-
-    //testing rotation
-    x += Time.deltaTime * 10;
-    transform.rotation = Quaternion.Euler(x, 0, 0);
 
     //sets movement point
     float moveX = wayPoint.x*Time.deltaTime;
@@ -39,9 +35,14 @@ public class TestEmperorPenguin : MonoBehaviour{
 
     //TODO: replace with pathfinding
     rbody.velocity = new Vector3(moveX, 0, moveZ);
+
+    //changed rotation to -velocity because GameObject was moonwalking
+    Quaternion DesiredRotation = Quaternion.LookRotation(-rbody.velocity);
+    transform.rotation = DesiredRotation;
+
     anim.Play("Walk", -1);
 
-    Debug.Log(wayPoint); 
+    Debug.Log("Waypoint=" + wayPoint + "Velocity=" + rbody.velocity + "Rotation=" + rbody.rotation); 
   }
 	
   // Update is called once per frame
