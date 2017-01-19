@@ -34,7 +34,7 @@ public class TestEmperorPenguin : MonoBehaviour{
     float moveZ = wayPoint.y*Time.deltaTime;
 
     //TODO: replace with pathfinding
-    rbody.velocity = new Vector3(moveX, 0, moveZ);
+    rbody.velocity = new Vector3(moveX, 0, moveZ).normalized;
 
     //changed rotation to -velocity because GameObject was moonwalking
     Quaternion DesiredRotation = Quaternion.LookRotation(-rbody.velocity);
@@ -42,7 +42,7 @@ public class TestEmperorPenguin : MonoBehaviour{
 
     anim.Play("Walk", -1);
 
-    Debug.Log("Waypoint=" + wayPoint + "Velocity=" + rbody.velocity + "Rotation=" + rbody.rotation); 
+    Debug.Log("Waypoint=" + wayPoint + "Velocity=" + rbody.velocity.magnitude + "Rotation=" + rbody.rotation); 
   }
 	
   // Update is called once per frame
