@@ -4,32 +4,43 @@
 // Date         : 20/12/2016
 
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using SimpleJSON;
 
 public class Enclosure : MonoBehaviour
 {
     public int maxNameLength = 20;
     public int minNameLength = 3;
 
-    private List<InteriorItem> _interiorItems = new List<InteriorItem> ();
+    //Contains all the available interior items for read-only purposes
+    private static EnclosureInteriorItem[] _interiorItemsList = null;
+    private List<EnclosureInteriorItem> _interiorItems = new List<EnclosureInteriorItem> ();
     public enum State { Idle, DisplayingMenu, EditingInteriorItems };
     public State _state = State.Idle;
 
     private string _name;
     private GameObject _canvas;
 
-    public class InteriorItem {
-        public Transform transform;
-        public Type type;
-        public enum Type { Water, Food };
-    }
-
     private void Start()
     {   //Initialization
         if (!GetComponent<BoxCollider>() && !GetComponent<MeshCollider>())
         {
             Debug.LogError ("Enclosure " + name + " at " + transform.position.ToString () + " has no collider!");
+        }
+        
+        //Populates the _interiorItemsList from the BuildingData file if it does not exist
+        if (_interiorItemsList == null)
+        {
+            JSONNode jsonData = JSON.Parse (Resources.Load<TextAsset>("BuildingData").text);
+            jsonData = jsonData["interiorEnclosureItems"];
+            _interiorItemsList = new EnclosureInteriorItem[jsonData.Count];
+            for (int i = 0; i < jsonData.Count; i++)
+            {
+                EnclosureInteriorItem newInteriorItem = new EnclosureInteriorItem (jsonData[i]);
+                _interiorItemsList[i] = newInteriorItem;
+            }
         }
     }   //Start()
 
@@ -116,7 +127,7 @@ public class Enclosure : MonoBehaviour
         }
     }   //UIChangeState()
 
-    public Vector3 GetClosest(InteriorItem.Type itemType)
+    public Vector3 GetClosest()
     {   //Returns the closest object of itemType
         return Vector3.zero;
     }   //GetClosest()
@@ -146,13 +157,38 @@ public class Enclosure : MonoBehaviour
             Destroy (_canvas);
         }
 
-        foreach (InteriorItem interiorItem in _interiorItems)
+        foreach (EnclosureInteriorItem interiorItem in _interiorItems)
         {
-            Destroy (interiorItem.transform.gameObject);
+            //Destroy (interiorItem.transform.gameObject);
         }
 
         Destroy (gameObject);
 
     }   //DeleteThisEnclosure
+
+    public EnclosureInteriorItem AddInteriorItem(string itemName)
+    {
+        //TODO: look for interior items in json/xml and load them in here
+        /*
+        EnclosureInteriorItem interiorItem = new EnclosureInteriorItem ();
+        interiorItem._name = itemName;
+        return interiorItem;
+        */
+        
+        return null;
+    }
+
+    public void RemoveInteriorItem (EnclosureInteriorItem item)
+    {
+        if (_interiorItems.Contains (item))
+        {
+            _interiorItems.Remove (item);
+        }
+        else
+        {
+            Debug.LogWarning ("Tried removing InteriorItem of type " + item.name + " from " + name + " " + _name + ", but no such item exists in this enclosure."
+                +"\nEnclosure contains " + _interiorItems.Where(x => x.name == item.name).Count() + " other objects of same type.");
+        }
+    }
 
 }

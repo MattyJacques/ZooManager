@@ -1,4 +1,9 @@
-﻿using System.Collections.Generic;
+﻿// Title        : EnclosureBuilder.cs
+// Purpose      : Visualizes and builds enclosures based on player input
+// Author       : Eivind Andreassen
+// Date         : 18.01.2017
+
+using System.Collections.Generic;
 using UnityEngine;
 //TODO: Col test from corner to corner with box cast(?)
 
@@ -96,7 +101,7 @@ public class EnclosureBuilder : MonoBehaviour
 
     private void AssignFirstCorner(Vector3 pos)
     {
-        if (true) //Sanity check
+        if (true) //TODO: Sanity check
         {
             _cornerA = pos;
             _state = State.GettingSecondCornerPosition;

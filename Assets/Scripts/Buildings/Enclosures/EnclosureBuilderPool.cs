@@ -1,4 +1,9 @@
-﻿using System.Collections.Generic;
+﻿// Title        : EnclosureBuilderPool.cs
+// Purpose      : This class is a specifically tailored object pool used by the EnclosureBuilder class
+// Author       : Eivind Andreassen
+// Date         : 18.01.2017
+
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EnclosureBuilderPool
