@@ -168,14 +168,13 @@ public class Enclosure : MonoBehaviour
 
     public EnclosureInteriorItem AddInteriorItem(string itemName)
     {
-        //TODO: look for interior items in json/xml and load them in here
-        /*
-        EnclosureInteriorItem interiorItem = new EnclosureInteriorItem ();
-        interiorItem._name = itemName;
-        return interiorItem;
-        */
-        
-        return null;
+        var item = _interiorItemsList.Where (x => x.name == itemName).FirstOrDefault();
+        if (item == null)
+        {
+            Debug.LogError ("Could not find InteriorItem " + itemName 
+                + " in list of available interior items.");
+        }
+        return item;
     }
 
     public void RemoveInteriorItem (EnclosureInteriorItem item)
