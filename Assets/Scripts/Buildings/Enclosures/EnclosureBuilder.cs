@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Scripts.Helpers;
 //TODO: Col test from corner to corner with box cast(?)
 
 public class EnclosureBuilder : MonoBehaviour
@@ -36,7 +37,7 @@ public class EnclosureBuilder : MonoBehaviour
     {
         bool validMousePos = false;
         Vector3 mousePos = Vector3.zero;
-        validMousePos = GetMousePosition (out mousePos);
+        validMousePos = InputHelper.GetMousePositionInWorldSpace(out mousePos, _layerMask.value);
 
         switch (_state) {
             case State.GettingFirstCornerPosition:
@@ -76,20 +77,6 @@ public class EnclosureBuilder : MonoBehaviour
                 }
                 break;
         }
-    }
-
-    private bool GetMousePosition(out Vector3 mousePosition)
-    {
-        Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-        RaycastHit rayHit = new RaycastHit ();
-        if (Physics.Raycast (ray, out rayHit, Mathf.Infinity, _layerMask, QueryTriggerInteraction.Ignore))
-        {
-            mousePosition = rayHit.point;
-            return true;
-        }
-
-        mousePosition = Vector3.zero;
-        return false;
     }
 
     public void BeginBuildingNewEnclosure()
