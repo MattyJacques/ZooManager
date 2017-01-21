@@ -1,5 +1,5 @@
 ﻿// Title        : Enclosure.cs
-// Purpose      : This class controls the enclosure
+// Purpose      : This class controls both the GUI and functionality for the enclosure
 // Author       : Eivind Andreassen
 // Date         : 20/12/2016
 
@@ -8,7 +8,8 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using SimpleJSON;
-
+//TODO: Edit interioritem method takes generic interior item, can be passed either from list or existing item
+//TODO: separate the GUI into it's own class
 public class Enclosure : MonoBehaviour
 {
     public int maxNameLength = 20;
@@ -22,6 +23,7 @@ public class Enclosure : MonoBehaviour
 
     private string _name;
     private GameObject _canvas;
+    private EnclosureInteriorItemEditor _interiorItemEditor;
 
     private void Start()
     {   //Initialization
@@ -29,6 +31,9 @@ public class Enclosure : MonoBehaviour
         {
             Debug.LogError ("Enclosure " + name + " at " + transform.position.ToString () + " has no collider!");
         }
+
+        //Add support for managing the interior items
+        gameObject.AddComponent<EnclosureInteriorItemEditor> ();
         
         //Populates the _interiorItemsList from the BuildingData file if it does not exist
         if (_interiorItemsList == null)
@@ -187,6 +192,39 @@ public class Enclosure : MonoBehaviour
         {
             Debug.LogWarning ("Tried removing InteriorItem of type " + item.name + " from " + name + " " + _name + ", but no such item exists in this enclosure."
                 +"\nEnclosure contains " + _interiorItems.Where(x => x.name == item.name).Count() + " other objects of same type.");
+        }
+    }
+
+    //InteriorItemGUI List
+    private void PopulateInteriorItemGUIList(EnclosureInteriorItem[] items)
+    {
+        if (items.Length <= 0)
+        {
+            Debug.LogWarning ("PopulateInteriorItemGUIList got an empty array as parameter.");
+            return;
+        }
+
+        //Make sure we get the "Content" of interiorItemList and not any other object
+        Transform contentDiv = _canvas.transform.FindChild ("InteriorItemList").FindChild ("Content");
+        Transform itemGUIPrefab = Resources.Load<Transform> ("Menus/Prefabs/EnclosureInteriorItemGUISelection");
+        for (int i = 0; i < items.Length; i++)
+        {
+            Transform itemGUIObject = Instantiate (itemGUIPrefab);
+            itemGUIObject.parent = contentDiv;
+
+            //Move the position downward by it's height
+            itemGUIObject.localPosition = new Vector3 (0f,
+                -itemGUIObject.GetComponent<RectTransform> ().sizeDelta.y * i,
+                0f);
+
+            //Set the name
+            itemGUIObject.GetComponentInChildren<Text> ().text = items[i].name;
+
+            //Set the onClick event
+            itemGUIObject.GetComponentInChildren<Button> ().onClick.AddListener (delegate 
+            {
+                Debug.Log ("Ayy");
+            });
         }
     }
 
