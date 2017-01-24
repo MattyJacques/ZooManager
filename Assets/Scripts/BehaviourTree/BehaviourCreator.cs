@@ -75,8 +75,8 @@ namespace Assets.Scripts.BehaviourTree
     private ReturnCode SetTarget(AIBase theBase)
     { // Calculate the cloest source matching next target type
 
-      theBase.Target = BuildingManager.GetClosestOfType(theBase.Model.transform.position
-                                                        , theBase.NextTarget);
+      theBase.pathfinder.target = BuildingManager.GetClosestOfType(theBase.Model.transform.position
+                                                        , theBase.NextTarget).transform;
 
       Debug.Log("SetTarget(), returning success");
       return ReturnCode.Success;
@@ -130,8 +130,8 @@ namespace Assets.Scripts.BehaviourTree
 
     private bool HasPath(AIBase theBase)
     { // Check if the base has a set path already
-      Debug.Log("HasPath(), returning " + (theBase.Path != null));
-      return theBase.Path != null;
+      //Debug.Log("HasPath(), returning " + (theBase.Path != null));
+      return true;
     } // HasPath()
 
     private bool HasTarget(AIBase theBase)
@@ -142,12 +142,9 @@ namespace Assets.Scripts.BehaviourTree
 
     private bool HasArrived(AIBase theBase)
     { // Return true if we have arrived at target
-      Debug.Log("HasArrived(), returning " + (theBase.Model.transform.position == theBase.Target.transform.position));
+      Debug.Log("HasArrived(), returning " + theBase.HasArrived);
 
-      // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ AMBERITE
-      // Here check if we are near wherever we need to be, pick whatever radius seems best
-
-      return theBase.Model.transform.position == theBase.Target.transform.position;
+      return theBase.HasArrived;
     } // HasArrived()
 
   } // BehaviourCreator

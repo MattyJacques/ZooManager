@@ -122,6 +122,8 @@ namespace Assets.Scripts.Managers
 
         // Update location of object
         newBase.Model.transform.position = location;
+        newBase.Model.AddComponent<Pathfinding.Mover>();
+        newBase.Model.AddComponent<Pathfinding.RVO.RVOController>();
 
         // Add animal to instances list
         _animals.Add(newBase);

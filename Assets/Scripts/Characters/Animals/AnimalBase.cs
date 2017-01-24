@@ -23,6 +23,7 @@ namespace Assets.Scripts.Characters.Animals
     { // Constructor to set up the template and behaviour tree
       Template = template;
       Model = model;
+      HasArrived = false;
     } // AnimalBase()
 
     protected void Update()

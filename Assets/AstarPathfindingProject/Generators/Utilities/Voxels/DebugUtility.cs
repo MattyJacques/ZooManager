@@ -155,7 +155,7 @@ namespace Pathfinding {
 			mesh.RecalculateBounds();
 
 			if (active.optimizeMeshes) {
-				mesh.Optimize();
+				;
 			}
 
 			GameObject go = new GameObject("DebugMesh");

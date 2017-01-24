@@ -85,6 +85,7 @@ namespace Pathfinding
 
         /** Minimum velocity for moving */
         public float sleepVelocity = 0.4F;
+    public Assets.Scripts.Characters.AIBase aiBase;
 
         /** Speed relative to velocity with which to play animations */
         //public float animationSpeed = 0.2F;
@@ -93,22 +94,31 @@ namespace Pathfinding
 		 * \see OnTargetReached */
         public GameObject endOfPathEffect;
 
+    public Mover (ref Assets.Scripts.Characters.AIBase theBase)
+    {
+      aiBase = theBase;
+    }
+
         public new void Start()
         {
-            //Prioritize the walking animation
-            //anim["forward"].layer = 10;
 
-            //Play all animations
-            //anim.Play("awake");
-            //anim.Play("forward");
+      //animalBase = GetComponent<Assets.Scripts.Characters.Animals.AnimalBase>();
+      endOfPathEffect = new GameObject();
+      //Prioritize the walking animation
+      //anim["forward"].layer = 10;
 
-            //Setup awake animations properties
-            //anim["awake"].wrapMode = WrapMode.Clamp;
-            //anim["awake"].speed = 0;
-            //anim["awake"].normalizedTime = 1F;
+      //Play all animations
+      //anim.Play("awake");
+      //anim.Play("forward");
 
-            //Call Start in base script (AIPath)
-            base.Start();
+      //Setup awake animations properties
+      //anim["awake"].wrapMode = WrapMode.Clamp;
+      //anim["awake"].speed = 0;
+      //anim["awake"].normalizedTime = 1F;
+
+      //Call Start in base script (AIPath)
+      base.Start();
+      
         }
 
         /** Point for the last spawn of #endOfPathEffect */
@@ -122,11 +132,13 @@ namespace Pathfinding
 		 */
         public override void OnTargetReached()
         {
-            if (endOfPathEffect != null && Vector3.Distance(tr.position, lastTarget) > 1)
+            if (Vector3.Distance(tr.position, lastTarget) > 1)
             {
-                //We've reached our target, so do something!
-                //GameObject.Instantiate(endOfPathEffect, tr.position, tr.rotation);
+        //We've reached our target, so do something!
+        //GameObject.Instantiate(endOfPathEffect, tr.position, tr.rotation);
+        aiBase.HasArrived = true;
                 lastTarget = tr.position;
+        target = null;
             }
         }
 
