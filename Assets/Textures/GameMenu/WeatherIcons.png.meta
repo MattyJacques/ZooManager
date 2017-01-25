@@ -1,9 +1,14 @@
 fileFormatVersion: 2
-guid: a7b16cb4f44fd34458cb6dff3e6a831b
-timeCreated: 1485305002
+guid: 3e2491bf85497ca4db0cb56296e1dc1f
+timeCreated: 1485370357
 licenseType: Free
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: Night
+    21300002: Night_Cloudy
+    21300004: Night_Rainy
+    21300006: Night_ThunderStorm
+    21300008: Night_Snowy
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -34,7 +39,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -92,7 +97,72 @@ TextureImporter:
     overridden: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: Night
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 250
+        width: 65
+        height: 38
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Night_Cloudy
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 201
+        width: 65
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Night_Rainy
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 147
+        width: 65
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Night_ThunderStorm
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 89
+        width: 65
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Night_Snowy
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 24
+        width: 65
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
     outline: []
   spritePackingTag: 
   userData: 
