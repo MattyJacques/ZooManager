@@ -20,8 +20,6 @@ public class Enclosure : MonoBehaviour
 
     private string _name;
     private GameObject _canvas;
-    //The "ghost" representation of the selected interiorItem when moving it
-    private Transform _selectedInteriorItemGhost;
     public enum UIState
     {
         Exit,
@@ -91,10 +89,6 @@ public class Enclosure : MonoBehaviour
         //Reset everything
         _canvas.transform.FindChild ("InitialButtons").gameObject.SetActive (false);
         _canvas.transform.FindChild ("InputField").gameObject.SetActive (false);
-        var addNewInteriorItemDiv = _canvas.transform.FindChild ("AddNewInteriorItemList");
-        addNewInteriorItemDiv.gameObject.SetActive (false);
-        var interiorItemListDiv = _canvas.transform.FindChild ("InteriorItemList");
-        interiorItemListDiv.gameObject.SetActive (false);
 
         //Activate whatever UI object we need for this state
         switch (state) {

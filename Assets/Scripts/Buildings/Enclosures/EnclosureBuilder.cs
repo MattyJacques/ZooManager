@@ -292,7 +292,6 @@ public class EnclosureBuilder : MonoBehaviour
         //Create the enclosure object
         Vector3 centreOfEnclosure = Vector3.Lerp (firstCorner, secondCorner, 0.5f);
         GameObject enclosure = new GameObject ("Enclosure " + Time.realtimeSinceStartup);
-        enclosure.layer = 8;
         enclosure.transform.position = centreOfEnclosure;
         enclosure.AddComponent<Enclosure> ();
 
@@ -308,7 +307,6 @@ public class EnclosureBuilder : MonoBehaviour
         foreach (GameObject g in _tempCorners)
         {
             g.transform.parent = enclosure.transform;
-            g.layer = 8;
 
             GameObject particleSystem = Instantiate (_finalizeBuildDustEffect, g.transform.position, g.transform.rotation);
             Destroy (particleSystem, 1f);
@@ -318,7 +316,6 @@ public class EnclosureBuilder : MonoBehaviour
         foreach (GameObject g in _tempWalls)
         {
             g.transform.parent = enclosure.transform;
-            g.layer = 8;
 
             GameObject particleSystem = Instantiate (_finalizeBuildDustEffect, g.transform.position, g.transform.rotation * Quaternion.Euler(new Vector3(0f, 0f, 90f)));
             Destroy (particleSystem, 1f);
