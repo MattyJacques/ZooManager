@@ -14,7 +14,37 @@ public class EnclosureInteriorItem
     public int cost { get; set; }
     public Vector3 positionOffset { get; set; }
     public Vector3 rotationOffset { get; set; }
-    public string prefabLocation { get; set; }
+    private string prefabLocation { get; set; }
+    private Transform _transform = null;
+
+    public Transform transform
+    { //Extra checks to make sure the transform isn't being used wrong
+        get {
+            if (_transform == null)
+            {
+                Debug.LogError ("EnclosureInteriorItem " + name + " does not have a transform registered!"
+                    + " Have you called Init() before trying to access the transform?");
+                return null;
+            }
+            else
+            {
+                return _transform;
+            }
+        }
+        set {
+            if (_transform != null)
+            {
+                Debug.LogWarning ("EnclosureInteriorItem already has a transform registered!\n"
+                    + name.ToString () + " has transform " + transform.name + " that exists at "
+                    + transform.position.ToString ());
+            }
+            else
+            {
+                _transform = value;
+            }
+        }
+    }
+
 
     public enum ItemType
     {
@@ -43,6 +73,15 @@ public class EnclosureInteriorItem
         positionOffset = OffsetToVector3 (jsonData["positionOffset"]);
         rotationOffset = OffsetToVector3 (jsonData["rotationOffset"]);
     } //EnclosureInteriorItem
+
+    public void Instantiate(Vector3 position)
+    { //Instantiates the transform based on the prefabLocation
+        //TODO: optimize by only loading the object once into the static list and instantiating from there
+        transform = UnityEngine.Object.Instantiate (Resources.Load(prefabLocation) as GameObject).transform;
+        transform.position = position + positionOffset;
+        transform.Rotate (rotationOffset);  //NOTE: This might not work
+        transform.name = "InteriorItem_" + name;
+    } //Instantiate
 
     private Vector3 OffsetToVector3(JSONNode offset)
     { //Convert the JSONNode array [0, 0, 0] to a vector3

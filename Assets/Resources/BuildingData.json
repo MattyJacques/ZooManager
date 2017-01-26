@@ -118,7 +118,7 @@
       "cost":  0,
       "positionOffset": [ 0, 0, 0 ],
       "rotationOffset": [ 0, 0, 0 ],
-      "prefabLocation": "/Buildings/Prefabs/TicketBooth"
+      "prefabLocation": "Buildings/Prefabs/TicketBooth"
     },
 
     {
@@ -127,7 +127,7 @@
       "cost":  0,
       "positionOffset": [ 0, 0, 0 ],
       "rotationOffset": [ 0, 0, 0 ],
-      "prefabLocation": "/Buildings/Prefabs/WaterTrough"
+      "prefabLocation": "Buildings/Prefabs/WaterTrough"
     },
 
     {
@@ -136,7 +136,7 @@
       "cost":  0,
       "positionOffset": [ 0, 0, 0 ],
       "rotationOffset": [ 0, 0, 0 ],
-      "prefabLocation": "/Buildings/Prefabs/SnowMan"
+      "prefabLocation": "Buildings/Prefabs/SnowMan"
     }
   ]
   
