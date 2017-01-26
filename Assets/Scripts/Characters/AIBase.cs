@@ -5,6 +5,9 @@ using Assets.Scripts.Managers;
 
 namespace Assets.Scripts.Characters
 {
+
+  //[RequireComponent(typeof(Seeker))]
+  //[RequireComponent(typeof(Pathfinding.Mover))]
   public class AIBase
   {
     public enum FeedType { Food, Water }          // Enum for feed() to tell which stat to increase
@@ -20,8 +23,10 @@ namespace Assets.Scripts.Characters
 
     // Target / Path members
     public BuildingManager.TargetType NextTarget { get; set; }  // Type of target, example: food or water
-    public GameObject Target { get; set; }                      // Target of current behaviour
-    public GameObject Path { get; set; }                        // Path to current behaviour
+    public Transform Target { get; set; }                      // Target of current behaviour
+    //public GameObject Path { get; set; }                        // Path to current behaviour
+    public bool HasArrived { get; set; }
+    public Pathfinding.Mover pathfinder { get; set; }
 
     // Behaviour object for AI
     public BehaviourTree.Base.Behaviour Behave { get; set; }
@@ -36,7 +41,14 @@ namespace Assets.Scripts.Characters
       {
         Thirst += amount;
       }
+     // Pathfinding.Mover mover = new Pathfinding.Mover(ref this);
+     Model.AddComponent<Pathfinding.Mover>();
     } // Feed()
+
+    public virtual void AddFun(int amount)
+    { // Increase the fun meter
+      Boredom += amount;
+    } // AddFun()
 
     public virtual void CheckNeeds()
     { // Perform the behaviour for this base
