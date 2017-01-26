@@ -109,35 +109,5 @@
       "tags": "",
       "types": [ "Orchid", "Poppy", "Rose", "Dandelion", "Tulips" ]
     }
-  ],
-  
-  "interiorEnclosureItems": [
-    {
-      "name": "TemplateItem",
-      "type": " ",
-      "cost":  0,
-      "positionOffset": [ 0, 0, 0 ],
-      "rotationOffset": [ 0, 0, 0 ],
-      "prefabLocation": "Buildings/Prefabs/TicketBooth"
-    },
-
-    {
-      "name": "WaterTrough",
-      "type": "water",
-      "cost":  0,
-      "positionOffset": [ 0, 0, 0 ],
-      "rotationOffset": [ 0, 0, 0 ],
-      "prefabLocation": "Buildings/Prefabs/WaterTrough"
-    },
-
-    {
-      "name": "SnowMan",
-      "type": "decoration",
-      "cost":  0,
-      "positionOffset": [ 0, 0, 0 ],
-      "rotationOffset": [ 0, 0, 0 ],
-      "prefabLocation": "Buildings/Prefabs/SnowMan"
-    }
   ]
-  
 }
