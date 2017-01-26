@@ -5,6 +5,8 @@
 
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using System.Linq;
 
 //TODO: separate the GUI into it's own class
 public class Enclosure : MonoBehaviour
@@ -25,7 +27,8 @@ public class Enclosure : MonoBehaviour
         Exit,
         Main,
         EditName
-    } 
+    }
+    private List<EnclosureInteriorItem> _interiorItems = new List<EnclosureInteriorItem> ();
 
     private void Start()
     {   //Initialization
@@ -47,7 +50,6 @@ public class Enclosure : MonoBehaviour
 
         //Create the new canvas
         _canvas = Instantiate (Resources.Load ("Menus/Prefabs/Canvas_Enclosure") as GameObject);
-        Debug.Log (_canvas.name + ": " + _canvas.transform.position.ToString());
         _canvas.transform.FindChild ("Text_EnclosureName").GetComponent<Text> ().text = _name;
         _canvas.transform.position = transform.position + new Vector3 (0f, 6f, 0f); //TODO: place canvas so that the camera sees it
 
@@ -109,10 +111,32 @@ public class Enclosure : MonoBehaviour
         }
     }   //UIChangeState()
 
-    public Vector3 GetClosest()
-    {   //Returns the closest object of itemType
-        return Vector3.zero;
+    public Transform GetClosestInteriorItem(Vector3 fromPosition, EnclosureInteriorItem.InteriorItemType itemType)
+    {   //Returns the closest Transform of itemType
+        EnclosureInteriorItem interiorItem = _interiorItems.Where (x => x.type == itemType)
+            .OrderBy (x => Vector3.Distance (fromPosition, x.transform.position))
+            .FirstOrDefault ();
+
+        if (interiorItem == null)
+        {
+            Debug.LogWarning ("Tried getting the closest interiorItem transform of type " + itemType.ToString () 
+                + ", from the position " + fromPosition.ToString() 
+                + ", but enclosure \"" + _name + "\" contains no such type of interiorItem.");
+        }
+        return interiorItem.transform;
     }   //GetClosest()
+
+    public void RegisterNewInteriorItem(GameObject gameObject, EnclosureInteriorItem.InteriorItemType itemType)
+    {
+        EnclosureInteriorItem newItem = new EnclosureInteriorItem (gameObject, itemType);
+        _interiorItems.Add (newItem);
+
+        Debug.Log ("Added new interiorItem " + gameObject.name 
+            + ", of type " + itemType.ToString () 
+            + ", to enclosure " + _name 
+            + ", at position " + gameObject.transform.position.ToString ()
+            + ".");
+    }
 
     public bool Rename(string name)
     {   //Renames the enclosure

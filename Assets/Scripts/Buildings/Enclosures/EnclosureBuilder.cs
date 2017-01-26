@@ -294,6 +294,7 @@ public class EnclosureBuilder : MonoBehaviour
         GameObject enclosure = new GameObject ("Enclosure " + Time.realtimeSinceStartup);
         enclosure.transform.position = centreOfEnclosure;
         enclosure.AddComponent<Enclosure> ();
+        enclosure.tag = "Enclosure";
 
         BoxCollider enclosureCollider = enclosure.AddComponent<BoxCollider> ();
         enclosureCollider.size = new Vector3 (

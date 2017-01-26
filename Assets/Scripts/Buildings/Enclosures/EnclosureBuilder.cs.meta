@@ -1,10 +1,20 @@
 fileFormatVersion: 2
 guid: a180af2e841f97a4b8c53418c43c09d4
-timeCreated: 1482268625
+timeCreated: 1485467962
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - _wallPrefab: {fileID: 100000, guid: 903adf265de0aa645935fb802c777e6c, type: 3}
+  - _cornerPrefab: {fileID: 100000, guid: d302289c6db9d9e4fb4b26cd433b54a0, type: 3}
+  - _wallCantBuildMaterial: {fileID: 2100000, guid: 3864c331d47633942855b0b69347a23b,
+      type: 2}
+  - _cornerCantBuildMaterial: {fileID: 2100000, guid: 3864c331d47633942855b0b69347a23b,
+      type: 2}
+  - _finalizeBuildDustEffect: {fileID: 1413996962638150, guid: cbbde139f9c05a04780eba63087ab238,
+      type: 2}
+  - _finalizeBuildAudioClip: {fileID: 8300000, guid: e6681b76852c6f0498c2f448a5b3e591,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

@@ -205,7 +205,25 @@ namespace Assets.Scripts.Managers
       // stop mouse position updating building position
 
       _buildings.Add(_currentBuild.gameObject);
-      _aStar._map = _aStar.PlaceWall((int)_currentBuild.position.x/_aStar._scale,(int)_currentBuild.position.z/_aStar._scale, _aStar._map);
+            //Eivind: I don't even know what this does but I'm assuming I can get the objects position after this?
+      _aStar._map = _aStar.PlaceWall ((int) _currentBuild.position.x / _aStar._scale, (int) _currentBuild.position.z / _aStar._scale, _aStar._map);
+
+            //Check to see if we're adding something to an enclosure
+            Vector3 aboveObjectPos = _currentBuild.position;
+            aboveObjectPos.y = 100f;
+            Ray ray = new Ray (aboveObjectPos, Vector3.down);
+            RaycastHit[] rayHit = Physics.RaycastAll (ray);
+
+
+            foreach (RaycastHit hit in rayHit)
+            {
+                if (hit.collider.tag == "Enclosure")
+                {
+                    //TODO: Get the type of the item from the JSON files, for now it defaults to food
+                    EnclosureInteriorItem.InteriorItemType itemType = EnclosureInteriorItem.InteriorItemType.Food;
+                    hit.collider.GetComponent<Enclosure> ().RegisterNewInteriorItem (_currentBuild.gameObject, itemType);
+                }
+            }
       _currentBuild = null;
      
     } // PlaceBuilding()
