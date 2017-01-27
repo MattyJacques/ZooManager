@@ -14,7 +14,7 @@
   },
   {
     "id":"IndianPeafowl",
-    "name":"Indian Peafowl",
+    "animalname":"Indian Peafowl",
     "price":2,
     "habitat":"Forest",
     "food":["Fruit","Insects"],
