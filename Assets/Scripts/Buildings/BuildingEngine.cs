@@ -4,7 +4,7 @@ using System.Collections.Generic;
 //Title: BuildingEngine.cs
 //Author: Aimmmmmmmmm
 //Date: 1/28/2017
-//Purpose: To build an Object
+//Purpose: To build an Object, render building object UI, and destroy an object.
 //TODO: Formatting. I know theres wrong formatting, but I gotta go to bed.
 public class BuildingEngine : MonoBehaviour {
 	private bool building = false;
@@ -14,16 +14,34 @@ public class BuildingEngine : MonoBehaviour {
 	private RaycastHit rayHit;
 	public LayerMask buildingLayers;
 	private GameObject ghostGameObject;
+	public GameObject ghostVisPrefab;
+	public Material ghostVisSquare;
+	public Material ghostVisTriangle;
+	private GameObject ghostVis;
 	private int buildingMode = 0; 
 	private float gridSize = 1;
 	private Vector3 positionToBuild = new Vector3 (0, 0, 0);
 	List<BoxCollider> previousBuildingColliders = new List<BoxCollider> ();
+	List<GameObject> previousBuildings = new List<GameObject>();
+	public GameObject buildingUI;
+	public GameObject gridPrefab;
+	public Material gridMaterial;
+	public Material triangleMaterial;
+	public GameObject smokePrefab;
+	private GameObject grid;
 	public void StartBuild(GameObject gameObjectBuild, Vector3 buildingSize){
 		building = true;
 		gameObjectToBuild = gameObjectBuild;
 		buildingMode = 0;
 		gridSize = 1;
 		gameObjectToBuildSize = buildingSize;
+		buildingUI.SetActive (true);
+		grid = (GameObject)Instantiate (gridPrefab, new Vector3(gridPrefab.transform.localScale.x/2, 0.01f, gridPrefab.transform.localScale.y/2), Quaternion.identity);
+		grid.GetComponent<Renderer> ().material.mainTextureOffset = new Vector2 (0.5f * gridSize, 0.5f * gridSize);
+		grid.transform.Rotate (new Vector3(90, 0, 0));
+		grid.SetActive (false);
+		ghostVis = (GameObject)Instantiate (ghostVisPrefab, new Vector3(0, 0.02f, 0), Quaternion.identity);
+		ghostVis.transform.Rotate(new Vector3(90, 0, 0));
 	}
 
 	public void StopBuild(){
@@ -32,6 +50,9 @@ public class BuildingEngine : MonoBehaviour {
 		buildingMode = 0;
 		gridSize = 1;
 		Destroy (ghostGameObject);
+		Destroy (grid);
+		buildingUI.SetActive (false);
+		Destroy (ghostVis);
 	}
 
 	void Update(){
@@ -42,9 +63,11 @@ public class BuildingEngine : MonoBehaviour {
 				//GridBased
 				if (buildingMode == 1 && !Input.GetKey ("z")) {
 					positionToBuild = new Vector3 (Mathf.RoundToInt (rayHit.point.x * 1 / gridSize) * gridSize, rayHit.point.y, Mathf.RoundToInt (rayHit.point.z * 1 / gridSize) * gridSize);
+					ghostVis.transform.position = positionToBuild + new Vector3 (0, 0.02f, 0);
 					//TriangleBased
 				} else if (buildingMode == 2 && !Input.GetKey ("z")) {
 					positionToBuild = new Vector3 (Mathf.RoundToInt (rayHit.point.x * 1 / gridSize) * gridSize, rayHit.point.y, Mathf.RoundToInt (rayHit.point.z * 1 / gridSize) * gridSize);
+					ghostVis.transform.position = positionToBuild + new Vector3 (0, 0.02f, 0);
 					Vector3 trianglePos1 = positionToBuild + new Vector3 (0.25f * gridSize, 0, 0);
 					Vector3 trianglePos2 = positionToBuild - new Vector3 (0.25f * gridSize, 0, 0);
 					Vector3 trianglePos3 = positionToBuild + new Vector3 (0, 0, 0.25f * gridSize);
@@ -56,21 +79,26 @@ public class BuildingEngine : MonoBehaviour {
 					float closestDistance = Mathf.Min (new float[]{ triangle1Dist, triangle2Dist, triangle3Dist, triangle4Dist });
 					if (closestDistance == triangle1Dist) {
 						positionToBuild = trianglePos1;
+						ghostVis.transform.eulerAngles = new Vector3(90, 90, 0);
 					} else if (closestDistance == triangle2Dist) {
 						positionToBuild = trianglePos2;
+						ghostVis.transform.eulerAngles = new Vector3(90, 270, 0);
 					} else if (closestDistance == triangle3Dist) {
-						positionToBuild = trianglePos2;
+						positionToBuild = trianglePos3;
+						ghostVis.transform.eulerAngles = new Vector3(90, 0, 0);
 					} else if (closestDistance == triangle4Dist) {
-						positionToBuild = trianglePos2;
+						positionToBuild = trianglePos4;
+						ghostVis.transform.eulerAngles = new Vector3(90, 180, 0);
 					}
 				} else if (!Input.GetKey ("z")) {
 					positionToBuild = new Vector3 (rayHit.point.x, rayHit.point.y, rayHit.point.z);
+					ghostVis.transform.position = positionToBuild + new Vector3 (0, 0.02f, 0);
 				}
 
 				if(ghostGameObject == null){
 					ghostGameObject = (GameObject)Instantiate (gameObjectToBuild, positionToBuild + new Vector3(0, 5, 0), Quaternion.identity);
 				}else{
-					ghostGameObject.transform.position = Vector3.MoveTowards(ghostGameObject.transform.position, positionToBuild, 1);
+					ghostGameObject.transform.position = Vector3.MoveTowards(ghostGameObject.transform.position, positionToBuild + new Vector3(0, 5, 0), 5);
 				}
 
 				if(Input.GetKey("z")){
@@ -78,15 +106,16 @@ public class BuildingEngine : MonoBehaviour {
 					ghostGameObject.transform.LookAt (new Vector3(rayHit.point.x, positionToBuild.y + 5, rayHit.point.z));
 				}
 
-				if(Input.GetMouseButtonDown(0)){
+				if(Input.GetMouseButtonDown(0) && !GameObject.Find("EventSystem").GetComponent<UnityEngine.EventSystems.EventSystem>().IsPointerOverGameObject()){
 					if (!CheckIfOccupied (positionToBuild, gameObjectToBuildSize)) {
-						Instantiate (gameObjectToBuild, positionToBuild, ghostGameObject.transform.rotation);
+						previousBuildings.Add((GameObject)Instantiate (gameObjectToBuild, positionToBuild, ghostGameObject.transform.rotation));
 						GameObject tmpBoundingBox = new GameObject ();
 						tmpBoundingBox.AddComponent<BoxCollider> ().size = gameObjectToBuildSize;
 						tmpBoundingBox.transform.position = positionToBuild;
 						tmpBoundingBox.name = "Building Collider";
 						previousBuildingColliders.Add (tmpBoundingBox.GetComponent<BoxCollider>());
-						if(!Input.GetKeyDown(KeyCode.LeftShift)){
+						((GameObject)Instantiate (smokePrefab, positionToBuild, Quaternion.identity)).transform.Rotate(new Vector3(90, 0, 0));
+						if(!Input.GetKey(KeyCode.LeftShift)){
 							StopBuild();
 						}
 					} else {
@@ -118,30 +147,59 @@ public class BuildingEngine : MonoBehaviour {
 	public void IncreaseGrid(){
 		if (building) {
 			gridSize = gridSize * 2;
+			grid.GetComponent<Renderer> ().material.mainTextureScale = new Vector2 (grid.gameObject.transform.localScale.x * (1/gridSize), grid.gameObject.transform.localScale.y * (1/gridSize));
+			ghostVis.transform.localScale = new Vector3 (gridSize, gridSize, 1);
+			grid.transform.position = new Vector3 (grid.transform.localScale.x/2 + gridSize / 2 - gridSize, 0.01f, grid.transform.localScale.y/2 + gridSize / 2 - gridSize);
 		}
 	}
 
 	public void DecreaseGrid(){
 		if (building) {
 			gridSize = gridSize / 2;
+			grid.GetComponent<Renderer> ().material.mainTextureScale = new Vector2 (grid.gameObject.transform.localScale.x * (1/gridSize), grid.gameObject.transform.localScale.y * (1/gridSize));
+			ghostVis.transform.localScale = new Vector3 (gridSize, gridSize, 1);
+			grid.transform.position = new Vector3 (grid.transform.localScale.x/2 + gridSize / 2 - gridSize, 0.01f, grid.transform.localScale.y/2 + gridSize / 2 - gridSize);
 		}
 	}
 
 	public void NormalMode(){
 		if (building) {
 			buildingMode = 0;
+			grid.SetActive (false);
+			ghostVis.GetComponent<Renderer> ().material = ghostVisSquare;
+			grid.transform.position = new Vector3 (grid.transform.localScale.x/2 + gridSize / 2 - gridSize, 0.01f, grid.transform.localScale.y/2 + gridSize / 2 - gridSize);
 		}
 	}
 
 	public void GridMode(){
 		if (building) {
 			buildingMode = 1;
+			ghostVis.GetComponent<Renderer> ().material = ghostVisSquare;
+			grid.SetActive (true);
+			grid.GetComponent<Renderer> ().material = gridMaterial;
+			grid.transform.position = new Vector3 (grid.transform.localScale.x/2 + gridSize / 2 - gridSize, 0.01f, grid.transform.localScale.y/2 + gridSize / 2 - gridSize);
 		}
 	}
 
 	public void TriangleMode(){
 		if (building) {
 			buildingMode = 2;
+			grid.SetActive (true);
+			grid.GetComponent<Renderer> ().material = triangleMaterial;
+			grid.GetComponent<Renderer> ().material.mainTextureScale = new Vector2 (grid.gameObject.transform.localScale.x * (1/gridSize), grid.gameObject.transform.localScale.y * (1/gridSize));
+			ghostVis.GetComponent<Renderer> ().material = ghostVisTriangle;
+			grid.transform.position = new Vector3 (grid.transform.localScale.x/2 + gridSize / 2 - gridSize, 0.01f, grid.transform.localScale.y/2 + gridSize / 2 - gridSize);
 		}
+	}
+
+	public bool DestroyBuilding(GameObject buildingToDestroy){
+		for (int i = 0; i < previousBuildings.Count; i++) {
+			if(buildingToDestroy == previousBuildings[i]){
+				Destroy (previousBuildings[i]);
+				Destroy (previousBuildingColliders[i]);
+				return true;
+			}
+		}
+		return false;
 	}
 }
