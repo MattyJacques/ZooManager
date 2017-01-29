@@ -178,6 +178,7 @@ public class BuildingEngine : MonoBehaviour {
 			grid.SetActive (true);
 			grid.GetComponent<Renderer> ().material = gridMaterial;
 			grid.transform.position = new Vector3 (grid.transform.localScale.x/2 + gridSize / 2 - gridSize, 0.01f, grid.transform.localScale.y/2 + gridSize / 2 - gridSize);
+			grid.GetComponent<Renderer> ().material.mainTextureScale = new Vector2 (grid.gameObject.transform.localScale.x * (1/gridSize), grid.gameObject.transform.localScale.y * (1/gridSize));
 		}
 	}
 
