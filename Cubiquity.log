@@ -1,0 +1,10 @@
+********************************************************************************
+*                             Initializing Cubiquity                           *
+********************************************************************************
+[16:19:50, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/2115D908.vdb'
+[16:19:50, Error  ]: Encountered 'unable to open database file' (error code 14) when executing 'sqlite3_open_v2(pathToExistingVoxelDatabase.c_str(), &(voxelDatabase->mDatabase), flags, NULL)'
+[16:19:50, Error  ]: Caught 'DatabaseError' at C interface. Message reads: "Encountered 'unable to open database file' (error code 14) when executing 'sqlite3_open_v2(pathToExistingVoxelDatabase.c_str(), &(voxelDatabase->mDatabase), flags, NULL)'"
+********************************************************************************
+*                             Shutting down Cubiquity                          *
+********************************************************************************
+

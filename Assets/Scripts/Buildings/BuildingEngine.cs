@@ -5,7 +5,6 @@ using System.Collections.Generic;
 //Author: Aimmmmmmmmm
 //Date: 1/28/2017
 //Purpose: To build an Object, render building object UI, and destroy an object.
-//TODO: Formatting. I know theres wrong formatting, but I gotta go to bed.
 public class BuildingEngine : MonoBehaviour {
 	private bool building = false;
 	private GameObject gameObjectToBuild;
@@ -42,6 +41,7 @@ public class BuildingEngine : MonoBehaviour {
 		grid.SetActive (false);
 		ghostVis = (GameObject)Instantiate (ghostVisPrefab, new Vector3(0, 0.02f, 0), Quaternion.identity);
 		ghostVis.transform.Rotate(new Vector3(90, 0, 0));
+		ghostVis.transform.localScale = new Vector3 (gameObjectToBuildSize.x, gameObjectToBuildSize.z, 1);
 	}
 
 	public void StopBuild(){
@@ -102,7 +102,6 @@ public class BuildingEngine : MonoBehaviour {
 				}
 
 				if(Input.GetKey("z")){
-					//TODO: I know theres gonna be a rotation error here where it rotates wrong, will fix in morning. 
 					ghostGameObject.transform.LookAt (new Vector3(rayHit.point.x, positionToBuild.y + 5, rayHit.point.z));
 				}
 
@@ -145,7 +144,7 @@ public class BuildingEngine : MonoBehaviour {
 	}
 
 	public void IncreaseGrid(){
-		if (building) {
+		if (building && buildingMode != 0) {
 			gridSize = gridSize * 2;
 			grid.GetComponent<Renderer> ().material.mainTextureScale = new Vector2 (grid.gameObject.transform.localScale.x * (1/gridSize), grid.gameObject.transform.localScale.y * (1/gridSize));
 			ghostVis.transform.localScale = new Vector3 (gridSize, gridSize, 1);
@@ -154,7 +153,7 @@ public class BuildingEngine : MonoBehaviour {
 	}
 
 	public void DecreaseGrid(){
-		if (building) {
+		if (building && buildingMode != 0) {
 			gridSize = gridSize / 2;
 			grid.GetComponent<Renderer> ().material.mainTextureScale = new Vector2 (grid.gameObject.transform.localScale.x * (1/gridSize), grid.gameObject.transform.localScale.y * (1/gridSize));
 			ghostVis.transform.localScale = new Vector3 (gridSize, gridSize, 1);
@@ -168,6 +167,7 @@ public class BuildingEngine : MonoBehaviour {
 			grid.SetActive (false);
 			ghostVis.GetComponent<Renderer> ().material = ghostVisSquare;
 			grid.transform.position = new Vector3 (grid.transform.localScale.x/2 + gridSize / 2 - gridSize, 0.01f, grid.transform.localScale.y/2 + gridSize / 2 - gridSize);
+			ghostVis.transform.localScale = new Vector3 (gameObjectToBuildSize.x, gameObjectToBuildSize.z, 1);
 		}
 	}
 
