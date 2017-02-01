@@ -1,10 +1,37 @@
 ********************************************************************************
 *                             Initializing Cubiquity                           *
 ********************************************************************************
-[16:19:50, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/2115D908.vdb'
-[16:19:50, Error  ]: Encountered 'unable to open database file' (error code 14) when executing 'sqlite3_open_v2(pathToExistingVoxelDatabase.c_str(), &(voxelDatabase->mDatabase), flags, NULL)'
-[16:19:50, Error  ]: Caught 'DatabaseError' at C interface. Message reads: "Encountered 'unable to open database file' (error code 14) when executing 'sqlite3_open_v2(pathToExistingVoxelDatabase.c_str(), &(voxelDatabase->mDatabase), flags, NULL)'"
-********************************************************************************
-*                             Shutting down Cubiquity                          *
-********************************************************************************
-
+[02:33:18, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[02:36:59, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[02:37:27, Info   ]: Resizing compressed data buffer to 288486bytes. This should only happen once
+[02:37:27, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[02:37:51, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[02:38:28, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[02:43:33, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[02:43:38, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[02:43:51, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[02:43:55, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[02:44:07, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[02:45:24, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[02:59:20, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[02:59:38, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[03:06:15, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[03:06:53, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[03:06:58, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[03:07:31, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[03:14:57, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[03:15:23, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[03:16:10, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[03:16:16, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[03:18:00, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[03:18:16, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[03:19:27, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[03:19:27, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[03:19:29, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[03:19:48, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[03:20:18, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[03:20:22, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[03:27:20, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[03:27:30, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[03:27:32, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'
+[03:28:17, Info   ]: Creating voxel database from 'C:/Users/aimmmmmmmmm/Documents/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/467C5343.vdb'

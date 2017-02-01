@@ -13,7 +13,8 @@ public class BuildingEngine : MonoBehaviour {
 	private RaycastHit rayHit;
 	public LayerMask buildingLayers;
 	private GameObject ghostGameObject;
-	public GameObject ghostVisPrefab;
+	public GameObject gridLight;
+  public GameObject ghostVisPrefab;
 	public Material ghostVisSquare;
 	public Material ghostVisTriangle;
 	private GameObject ghostVis;
@@ -23,11 +24,9 @@ public class BuildingEngine : MonoBehaviour {
 	List<BoxCollider> previousBuildingColliders = new List<BoxCollider> ();
 	List<GameObject> previousBuildings = new List<GameObject>();
 	public GameObject buildingUI;
-	public GameObject gridPrefab;
-	public Material gridMaterial;
-	public Material triangleMaterial;
+	public Texture gridMaterial;
+	public Texture triangleMaterial;
 	public GameObject smokePrefab;
-	private GameObject grid;
 	public void StartBuild(GameObject gameObjectBuild, Vector3 buildingSize){
 		building = true;
 		gameObjectToBuild = gameObjectBuild;
@@ -35,11 +34,8 @@ public class BuildingEngine : MonoBehaviour {
 		gridSize = 1;
 		gameObjectToBuildSize = buildingSize;
 		buildingUI.SetActive (true);
-		grid = (GameObject)Instantiate (gridPrefab, new Vector3(gridPrefab.transform.localScale.x/2, 0.01f, gridPrefab.transform.localScale.y/2), Quaternion.identity);
-		grid.GetComponent<Renderer> ().material.mainTextureOffset = new Vector2 (0.5f * gridSize, 0.5f * gridSize);
-		grid.transform.Rotate (new Vector3(90, 0, 0));
-		grid.SetActive (false);
-		ghostVis = (GameObject)Instantiate (ghostVisPrefab, new Vector3(0, 0.02f, 0), Quaternion.identity);
+    gridLight.GetComponent<Light> ().cookieSize = 1;
+    ghostVis = (GameObject)Instantiate (ghostVisPrefab, new Vector3(0, 0, 0), Quaternion.identity);
 		ghostVis.transform.Rotate(new Vector3(90, 0, 0));
 		ghostVis.transform.localScale = new Vector3 (gameObjectToBuildSize.x, gameObjectToBuildSize.z, 1);
 	}
@@ -50,9 +46,9 @@ public class BuildingEngine : MonoBehaviour {
 		buildingMode = 0;
 		gridSize = 1;
 		Destroy (ghostGameObject);
-		Destroy (grid);
 		buildingUI.SetActive (false);
 		Destroy (ghostVis);
+    gridLight.SetActive (false);
 	}
 
 	void Update(){
@@ -146,27 +142,24 @@ public class BuildingEngine : MonoBehaviour {
 	public void IncreaseGrid(){
 		if (building && buildingMode != 0) {
 			gridSize = gridSize * 2;
-			grid.GetComponent<Renderer> ().material.mainTextureScale = new Vector2 (grid.gameObject.transform.localScale.x * (1/gridSize), grid.gameObject.transform.localScale.y * (1/gridSize));
+      gridLight.GetComponent<Light> ().cookieSize = gridSize;
 			ghostVis.transform.localScale = new Vector3 (gridSize, gridSize, 1);
-			grid.transform.position = new Vector3 (grid.transform.localScale.x/2 + gridSize / 2 - gridSize, 0.01f, grid.transform.localScale.y/2 + gridSize / 2 - gridSize);
 		}
 	}
 
 	public void DecreaseGrid(){
 		if (building && buildingMode != 0) {
 			gridSize = gridSize / 2;
-			grid.GetComponent<Renderer> ().material.mainTextureScale = new Vector2 (grid.gameObject.transform.localScale.x * (1/gridSize), grid.gameObject.transform.localScale.y * (1/gridSize));
 			ghostVis.transform.localScale = new Vector3 (gridSize, gridSize, 1);
-			grid.transform.position = new Vector3 (grid.transform.localScale.x/2 + gridSize / 2 - gridSize, 0.01f, grid.transform.localScale.y/2 + gridSize / 2 - gridSize);
+      gridLight.GetComponent<Light> ().cookieSize = gridSize;
 		}
 	}
 
 	public void NormalMode(){
 		if (building) {
 			buildingMode = 0;
-			grid.SetActive (false);
+      gridLight.SetActive (false);
 			ghostVis.GetComponent<Renderer> ().material = ghostVisSquare;
-			grid.transform.position = new Vector3 (grid.transform.localScale.x/2 + gridSize / 2 - gridSize, 0.01f, grid.transform.localScale.y/2 + gridSize / 2 - gridSize);
 			ghostVis.transform.localScale = new Vector3 (gameObjectToBuildSize.x, gameObjectToBuildSize.z, 1);
 		}
 	}
@@ -175,21 +168,19 @@ public class BuildingEngine : MonoBehaviour {
 		if (building) {
 			buildingMode = 1;
 			ghostVis.GetComponent<Renderer> ().material = ghostVisSquare;
-			grid.SetActive (true);
-			grid.GetComponent<Renderer> ().material = gridMaterial;
-			grid.transform.position = new Vector3 (grid.transform.localScale.x/2 + gridSize / 2 - gridSize, 0.01f, grid.transform.localScale.y/2 + gridSize / 2 - gridSize);
-			grid.GetComponent<Renderer> ().material.mainTextureScale = new Vector2 (grid.gameObject.transform.localScale.x * (1/gridSize), grid.gameObject.transform.localScale.y * (1/gridSize));
+      gridLight.GetComponent<Light>().cookie = gridMaterial;
+      gridLight.SetActive (true);
+      ghostVis.transform.localScale = new Vector3 (gridSize, gridSize, 1);
 		}
 	}
 
 	public void TriangleMode(){
 		if (building) {
 			buildingMode = 2;
-			grid.SetActive (true);
-			grid.GetComponent<Renderer> ().material = triangleMaterial;
-			grid.GetComponent<Renderer> ().material.mainTextureScale = new Vector2 (grid.gameObject.transform.localScale.x * (1/gridSize), grid.gameObject.transform.localScale.y * (1/gridSize));
-			ghostVis.GetComponent<Renderer> ().material = ghostVisTriangle;
-			grid.transform.position = new Vector3 (grid.transform.localScale.x/2 + gridSize / 2 - gridSize, 0.01f, grid.transform.localScale.y/2 + gridSize / 2 - gridSize);
+			gridLight.SetActive (true);
+      gridLight.GetComponent<Light>().cookie = triangleMaterial;
+      ghostVis.GetComponent<Renderer> ().material = ghostVisTriangle;
+      ghostVis.transform.localScale = new Vector3 (gridSize, gridSize, 1);
 		}
 	}
 
