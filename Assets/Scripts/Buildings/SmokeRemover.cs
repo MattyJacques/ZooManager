@@ -1,18 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-//Title: SmokeRemover.cs
+﻿//Title: SmokeRemover.cs
 //Author: Aimmmmmmmmm
 //Date: 1/28/2017
 //Purpose: To remove smoke after it's done.
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
 public class SmokeRemover : MonoBehaviour
 {
-  private float time = 0;
-  // Use this for initialization
+  private float _time = 0;
+
   void Update ()
   {
-    time = time + Time.deltaTime;
-    if (time > 5) { Destroy (this.gameObject); }
+    _time = _time + Time.deltaTime;
+    if (_time > 5) { Destroy (this.gameObject); }
   }
 }
