@@ -42,6 +42,13 @@ ModelImporter:
     4300008: Pizza_Stand_Door
     4300010: Pizza_Stand
     4300012: Decoration
+    6400000: Decoration
+    6400002: Grate
+    6400004: Oven_Window
+    6400006: Pizza_Stand
+    6400008: Pizza_Stand_Door
+    6400010: Pizza_Stand_Sign
+    6400012: Windows
     7400000: StandDoor-Open
     7400002: Oven_Window|Pizza_Stand_DoorAction
     7400004: Pizza_Stand_Door|Oven_WindowAction
@@ -262,16 +269,16 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
-    addColliders: 0
+    addColliders: 1
     importBlendShapes: 1
-    swapUVChannels: 0
+    swapUVChannels: 1
     generateSecondaryUV: 0
     useFileUnits: 1
     optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
-    secondaryUVAngleDistortion: 8
-    secondaryUVAreaDistortion: 15.000001
+    secondaryUVAngleDistortion: 1
+    secondaryUVAreaDistortion: 15
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
