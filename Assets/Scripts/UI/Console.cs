@@ -193,55 +193,14 @@ namespace Assets.Scripts.UI
           {
 
             string type = inputParams[1];
-            inputParams.GetValue(1);
-            int amount = 1;
-            Vector3 location = Vector3.zero;
 
-            foreach (string s in inputParams)
-            {
-              if (s.StartsWith("(") && s.EndsWith(")"))
-              {
-                location = s.Substring(s.IndexOf('(') + 1, s.Length - 2)
-                           .Split(',')
-                           .ParseVec3();
-                break;
-              }
-            }
-
-            if (inputParamsLength > 2)
-            {
-              if (inputParams[2].IsNumeric())
-              {
-                amount = int.Parse(inputParams[2]);
-              }
-              else
-              {
-                amount = 1;
-              }
-            }
-
-            _animalMgr.GetComponent<Assets.Scripts.Managers.AnimalManager>().
-                       Create(type, amount, location);
-
-            /*#region Begin dealing with additional parameters
-
-            for (int j = 0; j < inputParamsLength; j++)
-            {
-              string currentParam = inputParams[j];
-              if (currentParam.Contains(":"))
-              {
-                int indexOfColon = currentParam.IndexOf(':');
-                string param = currentParam.Substring(0, indexOfColon - 1);
-                float value = float.Parse(currentParam.Substring(indexOfColon + 1));
-              }
-            }
-
-            #endregion End dealing with additional parameters*/
+            _animalMgr.GetComponent<Assets.Scripts.Managers.AnimalManager>()
+              .CreateFollowMouse(type);
 
           }
           else
           {
-            _commands.Add("FORMAT: spawn <type> <amount> <location> <additional params>");
+            _commands.Add("FORMAT: spawn <AnimalID>");
           }
           break;
 
