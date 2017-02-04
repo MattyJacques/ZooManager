@@ -40,3 +40,4 @@ sysinfo.txt
 *.apk
 *.unitypackage
 Cubiquity.log
+*.log
