@@ -33,8 +33,7 @@ namespace Assets.Scripts.Managers
     // Members for animal following mouse position
     private GameObject _currentAnimal;            // Current animal to be placed
     private int _currentIndex;                    // Index of _animals for current animal
-    [SerializeField]
-    private GameObject _terrain;                  // Used for Y axis placement
+    private LayerMask _terrainLayer;              // Used for mouse following
 
     /////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -48,6 +47,7 @@ namespace Assets.Scripts.Managers
 
       // Setup exceptions
       Assert.raiseExceptions = true;
+      _terrainLayer = LayerMask.GetMask("Ground");
 
       // Setup behaviour tree
       _behaviours = new BehaviourCreator();
@@ -148,18 +148,10 @@ namespace Assets.Scripts.Managers
           Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
           RaycastHit hit;
 
-          //if (Physics.Raycast(ray, out hit, LayerMask.NameToLayer("Ground")))
-          //{ // If raycast hits collider, update position of _currentAnimal
-
-          Vector3 newPos = new Vector3();
-            Physics.Raycast(newPos + new Vector3(0, 200, 0), Vector3.down, out hit, 1000, LayerMask.NameToLayer("Ground"));
-
-            //Vector3 newPos = new Vector3(hit.point.x, hit.point.y, hit.point.z);
-
-            //Gets the highest usable y point on the terrain.
-            //newPos.y = _terrain.transform.position.y;// SampleHeight(newPos);
-            //_currentAnimal.transform.position = new Vector3(hit.point.x, hit.point.y + 200, hit.point.z);
-         // }
+          if (Physics.Raycast(ray, out hit, Mathf.Infinity, _terrainLayer))
+          { // If raycast hits collider, update position of _currentAnimal
+            _currentAnimal.transform.position = hit.point;
+          }
         }
       }
 
