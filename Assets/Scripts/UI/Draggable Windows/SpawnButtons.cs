@@ -29,7 +29,7 @@ public class SpawnButtons : MonoBehaviour {
       TMPButton.transform.SetParent(this.transform);
       TMPButton.GetComponent<RectTransform> ().localPosition = new Vector3 (-100 + (i % x * 80), -55 - ((Mathf.Floor(i/x - 1)) * 80), 0);
       TMPButton.GetComponent<RectTransform> ().localScale = new Vector3 (1, 1, 1);
-      TMPButton.GetComponent<Button>().onClick.AddListener(() => {Camera.main.gameObject.GetComponent<Assets.Scripts.Managers.AnimalManager>().Create(jsonInfo["animalTemplates"][i]["id"], 2, new Vector3(5, 10, 5));});
+      TMPButton.GetComponent<Button>().onClick.AddListener(() => {Camera.main.gameObject.GetComponent<Assets.Scripts.Managers.AnimalManager>().CreateFollowMouse(jsonInfo["animalTemplates"][i]["id"]);});
       buttons [i] = TMPButton;
     }
   }

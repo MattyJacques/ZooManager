@@ -7,12 +7,13 @@ using UnityEngine;
 using System.Collections;
 using Assets.Scripts.UI;
 using Assets.Scripts.Characters;
+using Assets.Scripts.Managers;
 
 namespace Assets.Scripts.Characters.Animals
 {
 
   public class AnimalBase : AIBase
-  { 
+  {
     // Template values never get set, they represent the animal's permanent properties (max age, speed, etc)
     public AnimalTemplate Template { get; set; }
 
@@ -20,9 +21,15 @@ namespace Assets.Scripts.Characters.Animals
     GameClock gameClock;
 
     public AnimalBase(AnimalTemplate template, GameObject model)
-    { // Constructor to set up the template and behaviour tree
+    { // Constructor to set up the template and behaviour tree and model
       Template = template;
       Model = model;
+    } // AnimalBase()
+
+    public AnimalBase(Assets.Scripts.Managers.AnimalManager.Animal animal)
+    { // Constructor to set up the template and behaviour tree and model
+      Template = animal.Template;
+      Model = animal.Prefab;
     } // AnimalBase()
 
     protected void Update()
@@ -53,8 +60,5 @@ namespace Assets.Scripts.Characters.Animals
         //Do dying stuff
       }
     } // Update()
-
-    
-
-  }
-}
+  } // AnimalBase
+} // namespace
