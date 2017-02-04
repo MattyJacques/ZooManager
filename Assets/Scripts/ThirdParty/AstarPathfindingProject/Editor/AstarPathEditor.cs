@@ -89,9 +89,6 @@ public class AstarPathEditor : Editor {
 
 	//Misc
 
-	/** Holds defines found in script files, used for optimizations.
-	 * \astarpro */
-	List<OptimizationHandler.DefineDefinition> defines;
 
 	//End Misc
 
@@ -309,13 +306,6 @@ public class AstarPathEditor : Editor {
 		}
 
 
-#if ProfileAstar
-		if (GUILayout.Button("Log Profiles")) {
-			AstarProfiler.PrintResults();
-			AstarProfiler.PrintFastResults();
-			AstarProfiler.Reset();
-		}
-#endif
 
 		// Handle undo
 		SaveGraphsAndUndo(storedEventType, storedEventCommand);
@@ -572,42 +562,11 @@ public class AstarPathEditor : Editor {
 		optimizationSettings = fadeArea.open;
 
 		if (fadeArea.Show()) {
-			if (defines == null) {
-				defines = OptimizationHandler.FindDefines();
+			GUIUtilityx.SetColor(Color.Lerp(Color.yellow, Color.white, 0.5F));
+			if (GUILayout.Button("Optimizations is an "+AstarProButton, helpBox)) {
+				Application.OpenURL(AstarUpdateChecker.GetURL("astarpro"));
 			}
-
-			EditorGUILayout.HelpBox("Using C# pre-processor directives, performance and memory usage can be improved by disabling features that you don't use in the project.\n" +
-				"Every change to these settings requires recompiling the scripts", MessageType.Info);
-
-			foreach (var define in defines) {
-				EditorGUILayout.Separator();
-
-				var label = new GUIContent(ObjectNames.NicifyVariableName(define.name), define.description);
-
-				define.enabled = EditorGUILayout.Toggle(label, define.enabled);
-
-				EditorGUILayout.HelpBox(define.description, MessageType.None);
-
-				if (!define.consistent) {
-					Color preColor = GUI.color;
-					GUI.color *= Color.red;
-					EditorGUILayout.HelpBox("This define is not consistent for all build targets, some have it enabled enabled some have it disabled. Press Apply to change them to the same value", MessageType.Error);
-					GUI.color = preColor;
-				}
-			}
-
-			EditorGUILayout.Separator();
-			GUILayout.BeginHorizontal();
-			GUILayout.FlexibleSpace();
-
-			if (GUILayout.Button("Apply", GUILayout.Width(150))) {
-				if (EditorUtility.DisplayDialog("Apply Optimizations", "Applying optimizations requires (in case anything changed) a recompilation of the scripts. The inspector also has to be reloaded. Do you want to continue?", "Ok", "Cancel")) {
-					OptimizationHandler.ApplyDefines(defines);
-					AssetDatabase.Refresh();
-				}
-			}
-			GUILayout.FlexibleSpace();
-			GUILayout.EndHorizontal();
+			GUIUtilityx.ResetColor();
 		}
 
 		guiLayoutx.EndFadeArea();
@@ -1091,9 +1050,9 @@ public class AstarPathEditor : Editor {
 			EditorGUI.EndDisabledGroup();
 
 			int threads = AstarPath.CalculateThreadCount(script.threadCount);
-			if (threads > 0) EditorGUILayout.HelpBox("Using " + threads +" thread(s)" + (script.threadCount < 0 ? " on your machine" : ""), MessageType.None);
+			if (threads > 0) EditorGUILayout.HelpBox("Using " + threads +" thread(s)" + (script.threadCount < 0 ? " on your machine" : "") + ".\n" +
+					"The free version of the A* Pathfinding Project is limited to at most one thread.", MessageType.None);
 			else EditorGUILayout.HelpBox("Using a single coroutine (no threads)" + (script.threadCount < 0 ? " on your machine" : ""), MessageType.None);
-			if (threads > SystemInfo.processorCount) EditorGUILayout.HelpBox("Using more threads than there are CPU cores may not have a positive effect on performance", MessageType.Warning);
 
 			if (script.threadCount == ThreadCount.None) {
 				script.maxFrameTime = EditorGUILayout.FloatField(new GUIContent("Max Frame Time", "Max number of milliseconds to use for path calculation per frame"), script.maxFrameTime);
@@ -1163,39 +1122,7 @@ public class AstarPathEditor : Editor {
 	}
 
 	void DrawHeuristicOptimizationSettings () {
-		script.euclideanEmbedding.mode = (HeuristicOptimizationMode)EditorGUILayout.EnumPopup(new GUIContent("Heuristic Optimization"), script.euclideanEmbedding.mode);
-
-		EditorGUI.indentLevel++;
-		if (script.euclideanEmbedding.mode == HeuristicOptimizationMode.Random) {
-			script.euclideanEmbedding.spreadOutCount = EditorGUILayout.IntField(new GUIContent("Count", "Number of optimization points, higher numbers give better heuristics and could make it faster, " +
-					"but too many could make the overhead too great and slow it down. Try to find the optimal value for your map. Recommended value < 100"), script.euclideanEmbedding.spreadOutCount);
-		} else if (script.euclideanEmbedding.mode == HeuristicOptimizationMode.Custom) {
-			script.euclideanEmbedding.pivotPointRoot = EditorGUILayout.ObjectField(new GUIContent("Pivot point root",
-					"All children of this transform are going to be used as pivot points. " +
-					"Recommended count < 100"), script.euclideanEmbedding.pivotPointRoot, typeof(Transform), true) as Transform;
-			if (script.euclideanEmbedding.pivotPointRoot == null) {
-				EditorGUILayout.HelpBox("Please assign an object", MessageType.Error);
-			}
-		} else if (script.euclideanEmbedding.mode == HeuristicOptimizationMode.RandomSpreadOut) {
-			script.euclideanEmbedding.pivotPointRoot = EditorGUILayout.ObjectField(new GUIContent("Pivot point root",
-					"All children of this transform are going to be used as pivot points. " +
-					"They will seed the calculation of more pivot points. " +
-					"Recommended count < 100"), script.euclideanEmbedding.pivotPointRoot, typeof(Transform), true) as Transform;
-
-			if (script.euclideanEmbedding.pivotPointRoot == null) {
-				EditorGUILayout.HelpBox("No root is assigned. A random node will be choosen as the seed.", MessageType.Info);
-			}
-
-			script.euclideanEmbedding.spreadOutCount = EditorGUILayout.IntField(new GUIContent("Count", "Number of optimization points, higher numbers give better heuristics and could make it faster, " +
-					"but too many could make the overhead too great and slow it down. Try to find the optimal value for your map. Recommended value < 100"), script.euclideanEmbedding.spreadOutCount);
-		}
-
-		if (script.euclideanEmbedding.mode != HeuristicOptimizationMode.None) {
-			EditorGUILayout.HelpBox("Heuristic optimization assumes the graph remains static. No graph updates, dynamic obstacles or similar should be applied to the graph " +
-				"when using heuristic optimization.", MessageType.Info);
-		}
-
-		EditorGUI.indentLevel--;
+		// Pro only feature
 	}
 
 	/** Opens the A* Inspector and shows the section for editing tags */
@@ -1620,9 +1547,6 @@ public class AstarPathEditor : Editor {
 			sr.SerializeEditorSettings(graphEditors);
 			bytes = sr.CloseSerialize();
 			ch = sr.GetChecksum();
-	#if ASTARDEBUG
-			Debug.Log("Got a whole bunch of data, "+bytes.Length+" bytes");
-	#endif
 			return true;
 		}));
 
@@ -1709,9 +1633,6 @@ public class AstarPathEditor : Editor {
 
 		var graphList = new List<System.Type>();
 
-#if ASTARDEBUG
-		string debugString = "Graph Types Found\n";
-#endif
 
 		// Iterate through the assembly for classes which inherit from GraphEditor
 		foreach (System.Type type in types) {
@@ -1728,9 +1649,6 @@ public class AstarPathEditor : Editor {
 							cge.editorType = type;
 							graphList.Add(cge.graphType);
 							graphEditorTypes.Add(cge.graphType.Name, cge);
-#if ASTARDEBUG
-							debugString += "-- "+cge.graphType.Name +"\n";
-#endif
 						}
 					}
 					break;
@@ -1742,36 +1660,5 @@ public class AstarPathEditor : Editor {
 
 		// Make sure graph types (not graph editor types) are also up to date
 		script.astarData.FindGraphTypes();
-
-#if ASTARDEBUG
-		asm = Assembly.GetAssembly(typeof(AstarPath));
-		types = asm.GetTypes();
-
-		// Not really required, but it's so fast so why not make a check and see if any graph types didn't have any editors
-		foreach (System.Type type in types) {
-			System.Type baseType = type.BaseType;
-			while (baseType != null) {
-				if (System.Type.Equals(baseType, typeof(NavGraph))) {
-					bool alreadyFound = false;
-					for (int i = 0; i < graphList.Count; i++) {
-						if (graphList[i] == type) {
-							alreadyFound = true;
-							break;
-						}
-					}
-					if (!alreadyFound) {
-						graphList.Add(type);
-						debugString += "-- "+type.Name+" was found, but it has no editor\n";
-					}
-					break;
-				}
-
-				baseType = baseType.BaseType;
-			}
-		}
-
-		debugString += "\n"+script.astarData.graphTypes.Length+" in total\n";
-		Debug.Log("Graph Editors:\n"+debugString);
-#endif
 	}
 }

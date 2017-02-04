@@ -26,14 +26,12 @@ namespace Pathfinding.Util {
 	 * \see Pathfinding.Util.ListPool
 	 */
 	public static class ArrayPool<T>{
-#if !ASTAR_NO_POOLING
 		/** Internal pool.
 		 * The arrays in each bucket have lengths of 2^i
 		 */
 		static readonly Stack<T[]>[] pool = new Stack<T[]>[31];
 
 		static readonly HashSet<T[]> inPool = new HashSet<T[]>();
-#endif
 
 		/** Returns an array with at least the specified length */
 		public static T[] Claim (int minimumLength) {
@@ -46,7 +44,6 @@ namespace Pathfinding.Util {
 			if (bucketIndex == 30)
 				throw new System.ArgumentException("Too high minimum length");
 
-#if !ASTAR_NO_POOLING
 			lock (pool) {
 				if (pool[bucketIndex] == null) {
 					pool[bucketIndex] = new Stack<T[]>();
@@ -58,18 +55,14 @@ namespace Pathfinding.Util {
 					return array;
 				}
 			}
-#endif
 			return new T[1 << bucketIndex];
 		}
 
 		public static void Release (ref T[] array) {
-#if !ASTAR_NO_POOLING
 			lock (pool) {
-#if !ASTAR_OPTIMIZE_POOLING
 				if (!inPool.Add(array)) {
 					throw new InvalidOperationException("You are trying to pool an array twice. Please make sure that you only pool it once.");
 				}
-#endif
 
 				int bucketIndex = 0;
 				while ((1 << bucketIndex) < array.Length && bucketIndex < 30) {
@@ -86,7 +79,6 @@ namespace Pathfinding.Util {
 
 				pool[bucketIndex].Push(array);
 			}
-#endif
 			array = null;
 		}
 	}

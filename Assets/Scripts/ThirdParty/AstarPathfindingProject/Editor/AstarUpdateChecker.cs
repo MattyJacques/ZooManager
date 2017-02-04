@@ -172,7 +172,7 @@ namespace Pathfinding {
 			bool mecanim = GameObject.FindObjectOfType(typeof(Animator)) != null;
 			string query = updateURL+
 						   "?v="+AstarPath.Version+
-						   "&pro=1"+
+						   "&pro=0"+
 						   "&check="+updateCheckRate+"&distr="+AstarPath.Distribution+
 						   "&unitypro="+(Application.HasProLicense() ? "1" : "0")+
 						   "&inscene="+(use ? "1" : "0")+
@@ -200,9 +200,6 @@ namespace Pathfinding {
 
 			hasParsedServerMessage = true;
 
-			#if ASTARDEBUG
-			Debug.Log("Result from update check:\n"+result);
-			#endif
 
 			string[] splits = result.Split('|');
 			latestVersionDescription = splits.Length > 1 ? splits[1] : "";

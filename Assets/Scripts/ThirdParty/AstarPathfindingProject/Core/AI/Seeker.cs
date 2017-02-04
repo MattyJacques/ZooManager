@@ -96,8 +96,6 @@ public class Seeker : MonoBehaviour, ISerializationCallbackReceiver {
 
 	/** Cached delegate to avoid allocating one every time a path is started */
 	private readonly OnPathDelegate onPathDelegate;
-	/** Cached delegate to avoid allocating one every time a path is started */
-	private readonly OnPathDelegate onPartialPathDelegate;
 
 	/** Temporary callback only called for the current path. This value is set by the StartPath functions */
 	private OnPathDelegate tmpPathCallback;
@@ -116,7 +114,6 @@ public class Seeker : MonoBehaviour, ISerializationCallbackReceiver {
 
 	public Seeker () {
 		onPathDelegate = OnPathComplete;
-		onPartialPathDelegate = OnPartialPathComplete;
 	}
 
 	/** Initializes a few variables */
@@ -275,18 +272,6 @@ public class Seeker : MonoBehaviour, ISerializationCallbackReceiver {
 		}
 	}
 
-	/** Called for each path in a MultiTargetPath.
-	 * Only post processes the path, does not return it.
-	 * \astarpro */
-	void OnPartialPathComplete (Path p) {
-		OnPathComplete(p, true, false);
-	}
-
-	/** Called once for a MultiTargetPath. Only returns the path, does not post process.
-	 * \astarpro */
-	void OnMultiPathComplete (Path p) {
-		OnPathComplete(p, false, true);
-	}
 
 	/** Returns a new path instance.
 	 * The path will be taken from the path pool if path recycling is turned on.\n
@@ -349,21 +334,7 @@ public class Seeker : MonoBehaviour, ISerializationCallbackReceiver {
 	 * It now behaves identically to the StartMultiTargetPath(MultiTargetPath) method.
 	 */
 	public Path StartPath (Path p, OnPathDelegate callback = null, int graphMask = -1) {
-		var mtp = p as MultiTargetPath;
-
-		if (mtp != null) {
-			// TODO: Allocation, cache
-			var callbacks = new OnPathDelegate[mtp.targetPoints.Length];
-
-			for (int i = 0; i < callbacks.Length; i++) {
-				callbacks[i] = onPartialPathDelegate;
-			}
-
-			mtp.callbacks = callbacks;
-			p.callback += OnMultiPathComplete;
-		} else {
-			p.callback += onPathDelegate;
-		}
+		p.callback += onPathDelegate;
 
 		p.enabledTags = traversableTags;
 		p.tagPenalties = tagPenalties;
@@ -400,70 +371,6 @@ public class Seeker : MonoBehaviour, ISerializationCallbackReceiver {
 		AstarPath.StartPath(path);
 	}
 
-	/** Starts a Multi Target Path from one start point to multiple end points.
-	 * A Multi Target Path will search for all the end points in one search and will return all paths if \a pathsForAll is true, or only the shortest one if \a pathsForAll is false.\n
-	 *
-	 * \param start			The start point of the path
-	 * \param endPoints		The end points of the path
-	 * \param pathsForAll	Indicates whether or not a path to all end points should be searched for or only to the closest one
-	 * \param callback		The function to call when the path has been calculated
-	 * \param graphMask		Mask used to specify which graphs should be searched for close nodes. See Pathfinding.NNConstraint.graphMask.
-	 *
-	 * \a callback and #pathCallback will be called when the path has completed. \a Callback will not be called if the path is canceled (e.g when a new path is requested before the previous one has completed)
-	 * \astarpro
-	 * \see Pathfinding.MultiTargetPath
-	 * \see \ref MultiTargetPathExample.cs "Example of how to use multi-target-paths"
-	 */
-	public MultiTargetPath StartMultiTargetPath (Vector3 start, Vector3[] endPoints, bool pathsForAll, OnPathDelegate callback = null, int graphMask = -1) {
-		MultiTargetPath p = MultiTargetPath.Construct(start, endPoints, null, null);
-
-		p.pathsForAll = pathsForAll;
-		StartPath(p, callback, graphMask);
-		return p;
-	}
-
-	/** Starts a Multi Target Path from multiple start points to a single target point.
-	 * A Multi Target Path will search from all start points to the target point in one search and will return all paths if \a pathsForAll is true, or only the shortest one if \a pathsForAll is false.\n
-	 *
-	 * \param startPoints	The start points of the path
-	 * \param end			The end point of the path
-	 * \param pathsForAll	Indicates whether or not a path from all start points should be searched for or only to the closest one
-	 * \param callback		The function to call when the path has been calculated
-	 * \param graphMask		Mask used to specify which graphs should be searched for close nodes. See Pathfinding.NNConstraint.graphMask.
-	 *
-	 * \a callback and #pathCallback will be called when the path has completed. \a Callback will not be called if the path is canceled (e.g when a new path is requested before the previous one has completed)
-	 * \astarpro
-	 * \see Pathfinding.MultiTargetPath
-	 * \see \ref MultiTargetPathExample.cs "Example of how to use multi-target-paths"
-	 */
-	public MultiTargetPath StartMultiTargetPath (Vector3[] startPoints, Vector3 end, bool pathsForAll, OnPathDelegate callback = null, int graphMask = -1) {
-		MultiTargetPath p = MultiTargetPath.Construct(startPoints, end, null, null);
-
-		p.pathsForAll = pathsForAll;
-		StartPath(p, callback, graphMask);
-		return p;
-	}
-
-	/** Starts a Multi Target Path.
-	 * Takes a MultiTargetPath and wires everything up for it to send callbacks to the seeker for post-processing.\n
-	 *
-	 * \param p				The path to start calculating
-	 * \param callback		The function to call when the path has been calculated
-	 * \param graphMask	Mask used to specify which graphs should be searched for close nodes. See Pathfinding.NNConstraint.graphMask.
-	 *
-	 * \a callback and #pathCallback will be called when the path has completed. \a Callback will not be called if the path is canceled (e.g when a new path is requested before the previous one has completed)
-	 * \astarpro
-	 * \see Pathfinding.MultiTargetPath
-	 * \see \ref MultiTargetPathExample.cs "Example of how to use multi-target-paths"
-	 *
-	 * \version Since 3.8.3 calling this method behaves identically to calling StartPath with a MultiTargetPath.
-	 * \version Since 3.8.3 this method also sets enabledTags and tagPenalties on the path object.
-	 */
-	[System.Obsolete("You can use StartPath instead of this method now. It will behave identically.")]
-	public MultiTargetPath StartMultiTargetPath (MultiTargetPath p, OnPathDelegate callback = null, int graphMask = -1) {
-		StartPath(p, callback, graphMask);
-		return p;
-	}
 
 	/** Draws gizmos for the Seeker */
 	public void OnDrawGizmos () {
