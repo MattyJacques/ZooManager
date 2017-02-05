@@ -123,7 +123,8 @@ namespace Assets.Scripts.BehaviourTree
     private ReturnCode SetTarget(AIBase theBase)
     { // Calculate the cloest source matching next target type
 
-      //theBase.pathfinder.target = BuildingManager.GetClosestOfType(theBase.Model.transform.position, theBase.NextTarget).transform;
+      theBase.Target = BuildingManager.GetClosestOfType(theBase.Model.transform.position
+                                                        , theBase.NextTarget);
 
       Debug.Log("SetTarget(), returning success");
       return ReturnCode.Success;
@@ -244,3 +245,6 @@ namespace Assets.Scripts.BehaviourTree
 
   } // BehaviourCreator
 }
+
+      theBase.pathfinder.target = BuildingManager.GetClosestOfType(theBase.Model.transform.position
+                                                        , theBase.NextTarget).transform;

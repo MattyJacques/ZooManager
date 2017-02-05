@@ -6,9 +6,6 @@ using Pathfinding;
 
 namespace Assets.Scripts.Characters
 {
-
-  [RequireComponent(typeof(Seeker))]
-  [RequireComponent(typeof(SimpleSmoothModifier))]
   public class AIBase
   {
     public enum FeedType { Food, Water }          // Enum for feed() to tell which stat to increase
@@ -24,15 +21,8 @@ namespace Assets.Scripts.Characters
 
     // Target / Path members
     public BuildingManager.TargetType NextTarget { get; set; }  // Type of target, example: food or water
-    public Transform Target { get; set; }                       // Target of current behaviour
-    public Path path { get; set; }                              // Current path
-    public int CurrentWaypoint { get; set; }                    // The current waypoint to move to
-    public float RepathRate { get; set; }                       // After how much seconds the path should be recalculated
-    public float LastRepath { get; set; }                       // The time when the last repath happened
-    public bool HasArrived { get; set; }                        // Has the AI arrived to target
-    public Seeker Pathfinder { get; set; }                      // The seeker script (pathfinder)
-    public CharacterController Controller { get; set; }         // The character controller of the gameobject
-    public float Speed { get; set; }                            // The speed of the AI
+    public GameObject Target { get; set; }                      // Target of current behaviour
+    public GameObject Path { get; set; }                        // Path to current behaviour
 
     // Behaviour object for AI
     public BehaviourTree.Base.Behaviour Behave { get; set; }
@@ -47,14 +37,7 @@ namespace Assets.Scripts.Characters
       {
         Thirst += amount;
       }
-     // Pathfinding.Mover mover = new Pathfinding.Mover(ref this);
-     //Model.AddComponent<Pathfinding.Mover>();
     } // Feed()
-
-    public virtual void AddFun(int amount)
-    { // Increase the fun meter
-      Boredom += amount;
-    } // AddFun()
 
     public virtual void CheckNeeds()
     { // Perform the behaviour for this base
@@ -130,3 +113,18 @@ namespace Assets.Scripts.Characters
 
   } // AIBase
 } // namespace
+
+
+  //[RequireComponent(typeof(Seeker))]
+  //[RequireComponent(typeof(Pathfinding.Mover))]
+    public Transform Target { get; set; }                      // Target of current behaviour
+    //public GameObject Path { get; set; }                        // Path to current behaviour
+    public bool HasArrived { get; set; }
+    public Pathfinding.Mover pathfinder { get; set; }
+     // Pathfinding.Mover mover = new Pathfinding.Mover(ref this);
+     Model.AddComponent<Pathfinding.Mover>();
+    } // Feed()
+    public virtual void AddFun(int amount)
+    { // Increase the fun meter
+      Boredom += amount;
+    } // AddFun()
