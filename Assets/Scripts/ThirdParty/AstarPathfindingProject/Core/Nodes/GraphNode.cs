@@ -18,12 +18,14 @@ namespace Pathfinding {
 		 */
 		protected uint flags;
 
+#if !ASTAR_NO_PENALTY
 		/** Penalty cost for walking on this node.
 		 * This can be used to make it harder/slower to walk over certain nodes.
 		 *
 		 * A penalty of 1000 (Int3.Precision) corresponds to the cost of walking one world unit.
 		 */
 		private uint penalty;
+#endif
 
 		/** Constructor for a graph node. */
 		protected GraphNode (AstarPath astar) {
@@ -120,6 +122,7 @@ namespace Pathfinding {
 
 		/** Penalty cost for walking on this node. This can be used to make it harder/slower to walk over certain areas. */
 		public uint Penalty {
+#if !ASTAR_NO_PENALTY
 			get {
 				return penalty;
 			}
@@ -130,6 +133,10 @@ namespace Pathfinding {
 						"Penalty value applied: "+value);
 				penalty = value;
 			}
+#else
+			get { return 0U; }
+			set {}
+#endif
 		}
 
 		/** True if the node is traversable */

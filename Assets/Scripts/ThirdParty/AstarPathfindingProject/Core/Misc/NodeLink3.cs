@@ -118,6 +118,7 @@ namespace Pathfinding {
 		}
 
 		public void InternalOnPostScan () {
+#if !ASTAR_NO_POINT_GRAPH
 			if (AstarPath.active.astarData.pointGraph == null) {
 				AstarPath.active.astarData.AddGraph(new PointGraph());
 			}
@@ -127,6 +128,9 @@ namespace Pathfinding {
 			startNode.link = this;
 			endNode = AstarPath.active.astarData.pointGraph.AddNode(new NodeLink3Node(AstarPath.active), (Int3)EndTransform.position);    //AstarPath.active.astarData.pointGraph.GetNearest(EndTransform.position).node as PointNode;
 			endNode.link = this;
+#else
+			throw new System.Exception("Point graphs are not included. Check your A* Optimization settings.");
+#endif
 			connectedNode1 = null;
 			connectedNode2 = null;
 
@@ -163,9 +167,11 @@ namespace Pathfinding {
 		protected override void OnEnable () {
 			base.OnEnable();
 
+#if !ASTAR_NO_POINT_GRAPH
 			if (Application.isPlaying && AstarPath.active != null && AstarPath.active.astarData != null && AstarPath.active.astarData.pointGraph != null) {
 				OnGraphsPostUpdate();
 			}
+#endif
 		}
 
 		protected override void OnDisable () {

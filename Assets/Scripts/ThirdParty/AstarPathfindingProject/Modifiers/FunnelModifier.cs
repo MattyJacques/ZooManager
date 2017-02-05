@@ -107,6 +107,10 @@ namespace Pathfinding {
 
 			//Test
 			while (VectorMath.IsColinearXZ(left[0], left[1], right[1]) || VectorMath.RightOrColinearXZ(left[1], right[1], swPoint) == VectorMath.RightOrColinearXZ(left[1], right[1], left[0])) {
+	#if ASTARDEBUG
+				Debug.DrawLine(left[1], right[1], new Color(0, 0, 0, 0.5F));
+				Debug.DrawLine(left[0], swPoint, new Color(0, 0, 0, 0.5F));
+	#endif
 				left.RemoveAt(1);
 				right.RemoveAt(1);
 
@@ -129,6 +133,16 @@ namespace Pathfinding {
 				right = tmp;
 			}
 
+			#if ASTARDEBUG
+			for (int i = 0; i < left.Count-1; i++) {
+				Debug.DrawLine(left[i], left[i+1], Color.red);
+				Debug.DrawLine(right[i], right[i+1], Color.magenta);
+				Debug.DrawRay(right[i], Vector3.up, Color.magenta);
+			}
+			for (int i = 0; i < left.Count; i++) {
+				//Debug.DrawLine (right[i],left[i], Color.cyan);
+			}
+			#endif
 
 			funnelPath.Add(left[0]);
 

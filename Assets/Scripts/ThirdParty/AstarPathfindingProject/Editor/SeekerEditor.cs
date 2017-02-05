@@ -20,6 +20,7 @@ public class SeekerEditor : Editor {
 		// A callback is necessary because Unity's GenericMenu uses callbacks
 		EditorGUILayoutx.TagMaskField(new GUIContent("Valid Tags"), script.traversableTags, result => script.traversableTags = result);
 
+#if !ASTAR_NoTagPenalty
 		EditorGUI.indentLevel = 0;
 		tagPenaltiesOpen = EditorGUILayout.Foldout(tagPenaltiesOpen, new GUIContent("Tag Penalties", "Penalties for each tag"));
 		if (tagPenaltiesOpen) {
@@ -41,6 +42,7 @@ public class SeekerEditor : Editor {
 			}
 		}
 		EditorGUI.indentLevel = 1;
+#endif
 
 		if (GUI.changed) {
 			EditorUtility.SetDirty(target);

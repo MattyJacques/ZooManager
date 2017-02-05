@@ -225,6 +225,9 @@ namespace Pathfinding {
 
 		protected virtual void DrawCutCorners (GridGraph graph) {
 			graph.cutCorners = EditorGUILayout.Toggle(new GUIContent("Cut Corners", "Enables or disables cutting corners. See docs for image example"), graph.cutCorners);
+			if (!graph.cutCorners && graph.useJumpPointSearch) {
+				EditorGUILayout.HelpBox("Jump Point Search only works if 'Cut Corners' is enabled.", MessageType.Error);
+			}
 		}
 
 		protected virtual void DrawNeighbours (GridGraph graph) {
@@ -247,6 +250,10 @@ namespace Pathfinding {
 			}
 
 			EditorGUI.indentLevel--;
+
+			if (graph.neighbours != NumNeighbours.Eight && graph.useJumpPointSearch) {
+				EditorGUILayout.HelpBox("Jump Point Search only works for 8 neighbours.", MessageType.Error);
+			}
 		}
 
 		protected virtual void DrawMaxClimb (GridGraph graph) {
@@ -317,15 +324,31 @@ namespace Pathfinding {
 					EditorGUI.indentLevel--;
 				}
 
-				GUI.enabled = false;
-				ToggleGroup(new GUIContent("Use Texture", AstarPathEditor.AstarProTooltip), false);
-				GUI.enabled = true;
+				DrawTextureData(graph.textureData, graph);
 				EditorGUI.indentLevel -= 2;
 			}
 		}
 
 		protected virtual void DrawJPS (GridGraph graph) {
-			// Jump point search is a pro only feature
+			graph.useJumpPointSearch = EditorGUILayout.Toggle(new GUIContent("Use Jump Point Search", "Jump Point Search can significantly speed up pathfinding. But only works on uniformly weighted graphs"), graph.useJumpPointSearch);
+			if (graph.useJumpPointSearch) {
+				EditorGUILayout.HelpBox("Jump Point Search assumes that there are no penalties applied to the graph. Tag penalties cannot be used either.", MessageType.Warning);
+
+#if !ASTAR_JPS
+				EditorGUILayout.HelpBox("JPS needs to be enabled using a compiler directive before it can be used.\n" +
+					"Enabling this will add ASTAR_JPS to the Scriping Define Symbols field in the Unity Player Settings", MessageType.Warning);
+				if (GUILayout.Button("Enable Jump Point Search support")) {
+					OptimizationHandler.EnableDefine("ASTAR_JPS");
+				}
+#endif
+			} else {
+#if ASTAR_JPS
+				EditorGUILayout.HelpBox("If you are not using JPS in any scene, you can disable it to save memory", MessageType.Info);
+				if (GUILayout.Button("Disable Jump Point Search support")) {
+					OptimizationHandler.DisableDefine("ASTAR_JPS");
+				}
+#endif
+			}
 		}
 
 		/** Draws the inspector for a \link Pathfinding.GraphCollision GraphCollision class \endlink */
@@ -382,7 +405,130 @@ namespace Pathfinding {
 			collision.use2D = EditorGUILayout.Toggle(new GUIContent("Use 2D Physics", "Use the Physics2D API for collision checking"), collision.use2D);
 		}
 
+		static void SaveReferenceTexture (GridGraph graph) {
+			if (graph.nodes == null || graph.nodes.Length != graph.width * graph.depth) {
+				AstarPath.active.Scan();
+			}
 
+			if (graph.nodes.Length != graph.width * graph.depth) {
+				Debug.LogError("Couldn't create reference image since width*depth != nodes.Length");
+				return;
+			}
+
+			if (graph.nodes.Length == 0) {
+				Debug.LogError("Couldn't create reference image since the graph is too small (0*0)");
+				return;
+			}
+
+			var tex = new Texture2D(graph.width, graph.depth);
+
+			float maxY = float.NegativeInfinity;
+			for (int i = 0; i < graph.nodes.Length; i++) {
+				Vector3 p = graph.inverseMatrix.MultiplyPoint((Vector3)graph.nodes[i].position);
+				maxY = p.y > maxY ? p.y : maxY;
+			}
+
+			var cols = new Color[graph.width*graph.depth];
+
+			for (int z = 0; z < graph.depth; z++) {
+				for (int x = 0; x < graph.width; x++) {
+					GraphNode node = graph.nodes[z*graph.width+x];
+					float v = node.Walkable ? 1F : 0.0F;
+					Vector3 p = graph.inverseMatrix.MultiplyPoint((Vector3)node.position);
+					float q = p.y / maxY;
+					cols[z*graph.width+x] = new Color(v, q, 0);
+				}
+			}
+			tex.SetPixels(cols);
+			tex.Apply();
+
+			string path = AssetDatabase.GenerateUniqueAssetPath("Assets/gridReference.png");
+
+			using (var outstream = new System.IO.StreamWriter(path)) {
+				using (var outfile = new System.IO.BinaryWriter(outstream.BaseStream)) {
+					outfile.Write(tex.EncodeToPNG());
+				}
+			}
+			AssetDatabase.Refresh();
+			Object obj = AssetDatabase.LoadAssetAtPath(path, typeof(Texture));
+
+			EditorGUIUtility.PingObject(obj);
+		}
+
+		protected static readonly string[] ChannelUseNames = { "None", "Penalty", "Height", "Walkability and Penalty" };
+
+		/** Draws settings for using a texture as source for a grid.
+		 * \astarpro
+		 */
+		protected virtual void DrawTextureData (GridGraph.TextureData data, GridGraph graph) {
+			if (data == null) {
+				return;
+			}
+
+			data.enabled = ToggleGroup("Use Texture", data.enabled);
+			if (!data.enabled) {
+				return;
+			}
+
+			bool preGUI = GUI.enabled;
+			GUI.enabled = data.enabled && GUI.enabled;
+
+			EditorGUI.indentLevel++;
+			data.source = ObjectField("Source", data.source, typeof(Texture2D), false) as Texture2D;
+
+			if (data.source != null) {
+				string path = AssetDatabase.GetAssetPath(data.source);
+
+				if (path != "") {
+					var importer = AssetImporter.GetAtPath(path) as TextureImporter;
+					if (!importer.isReadable) {
+						if (FixLabel("Texture is not readable")) {
+							importer.isReadable = true;
+							EditorUtility.SetDirty(importer);
+							AssetDatabase.ImportAsset(path);
+						}
+					}
+				}
+			}
+
+			for (int i = 0; i < 3; i++) {
+				string channelName = i == 0 ? "R" : (i == 1 ? "G" : "B");
+				data.channels[i] = (GridGraph.TextureData.ChannelUse)EditorGUILayout.Popup(channelName, (int)data.channels[i], ChannelUseNames);
+
+				if (data.channels[i] != GridGraph.TextureData.ChannelUse.None) {
+					EditorGUI.indentLevel++;
+					data.factors[i] = EditorGUILayout.FloatField("Factor", data.factors[i]);
+
+					string help = "";
+					switch (data.channels[i]) {
+					case GridGraph.TextureData.ChannelUse.Penalty:
+						help = "Nodes are applied penalty according to channel '"+channelName+"', multiplied with factor";
+						break;
+					case GridGraph.TextureData.ChannelUse.Position:
+						help = "Nodes Y position is changed according to channel '"+channelName+"', multiplied with factor";
+
+						if (graph.collision.heightCheck) {
+							HelpBox("Getting position both from raycast and from texture. You should disable one of them");
+						}
+						break;
+					case GridGraph.TextureData.ChannelUse.WalkablePenalty:
+						help = "If channel '"+channelName+"' is 0, the node is made unwalkable. Otherwise the node is applied penalty multiplied with factor";
+						break;
+					}
+
+					HelpBox(help);
+
+					EditorGUI.indentLevel--;
+				}
+			}
+
+			if (GUILayout.Button("Generate Reference")) {
+				SaveReferenceTexture(graph);
+			}
+
+			GUI.enabled = preGUI;
+			EditorGUI.indentLevel--;
+		}
 
 		public void SnapSizeToNodes (int newWidth, int newDepth, GridGraph graph) {
 			graph.unclampedSize = new Vector2(newWidth*graph.nodeSize, newDepth*graph.nodeSize);

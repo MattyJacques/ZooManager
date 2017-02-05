@@ -2,9 +2,6 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using Pathfinding;
-#if UNITY_5_5_OR_NEWER
-using UnityEngine.Profiling;
-#endif
 
 #if NETFX_CORE
 using Thread = Pathfinding.WindowsStore.Thread;
@@ -29,7 +26,7 @@ public class AstarPath : MonoBehaviour {
 	 */
 	public static System.Version Version {
 		get {
-			return new System.Version(3, 8, 8, 1);
+			return new System.Version(3, 8, 6);
 		}
 	}
 
@@ -44,7 +41,7 @@ public class AstarPath : MonoBehaviour {
 	 * users of the development versions can get notifications of development
 	 * updates.
 	 */
-	public static readonly string Branch = "master_Free";
+	public static readonly string Branch = "3.8_Pro";
 
 	/** See Pathfinding.AstarData
 	 * \deprecated
@@ -325,6 +322,15 @@ public class AstarPath : MonoBehaviour {
 	/** @name Debug Members
 	 * @{ */
 
+#if ProfileAstar
+	/** How many paths has been computed this run. From application start.\n
+	 * Debugging variable
+	 */
+	public static int PathsCompleted = 0;
+
+	public static System.Int64 TotalSearchedNodes = 0;
+	public static System.Int64 TotalSearchTime = 0;
+#endif
 
 	/** The time it took for the last call to Scan() to complete.
 	 * Used to prevent automatically rescanning the graphs too often (editor only)
@@ -792,6 +798,7 @@ public class AstarPath : MonoBehaviour {
 		return true;
 	}
 
+	#if !ASTAR_NO_GUI
 	/** Draws the InGame debugging (if enabled), also shows the fps if 'L' is pressed down.
 	 * \see #logPathResults PathLog
 	 */
@@ -806,6 +813,7 @@ public class AstarPath : MonoBehaviour {
 		 *  Application.LoadLevel (0);
 		 * }*/
 	}
+	#endif
 
 #line hidden
 	/** Logs a string while taking into account #logPathResults */
@@ -1434,6 +1442,10 @@ public class AstarPath : MonoBehaviour {
 		return 0;
 #else
 		if (count == ThreadCount.AutomaticLowLoad || count == ThreadCount.AutomaticHighLoad) {
+#if ASTARDEBUG
+			Debug.Log(SystemInfo.systemMemorySize + " " + SystemInfo.processorCount + " " + SystemInfo.processorType);
+#endif
+
 			int logicalCores = Mathf.Max(1, SystemInfo.processorCount);
 			int memory = SystemInfo.systemMemorySize;
 
@@ -1443,11 +1455,27 @@ public class AstarPath : MonoBehaviour {
 			}
 
 			if (logicalCores <= 1) return 0;
+
 			if (memory <= 512) return 0;
 
-			return 1;
+			if (count == ThreadCount.AutomaticHighLoad) {
+				if (memory <= 1024) logicalCores = System.Math.Min(logicalCores, 2);
+			} else {
+				//Always run at at most processorCount-1 threads (one core reserved for unity thread).
+				// Many computers use hyperthreading, so dividing by two is used to remove the hyperthreading cores, pathfinding
+				// doesn't scale well past the number of physical cores anyway
+				logicalCores /= 2;
+				logicalCores = Mathf.Max(1, logicalCores);
+
+				if (memory <= 1024) logicalCores = System.Math.Min(logicalCores, 2);
+
+				logicalCores = System.Math.Min(logicalCores, 6);
+			}
+
+			return logicalCores;
 		} else {
-			return (int)count > 0 ? 1 : 0;
+			int val = (int)count;
+			return val;
 		}
 #endif
 	}
@@ -1488,11 +1516,6 @@ public class AstarPath : MonoBehaviour {
 
 		int numThreads = CalculateThreadCount(threadCount);
 
-		// Trying to prevent simple modding to add support for more than one thread
-		if (numThreads > 1) {
-			threadCount = ThreadCount.One;
-			numThreads = 1;
-		}
 
 		threads = new Thread[numThreads];
 
@@ -1669,6 +1692,10 @@ public class AstarPath : MonoBehaviour {
 
 		if (active != this) return;
 
+#if ASTARDEBUG
+		System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
+		watch.Start();
+#endif
 
 		BlockUntilPathQueueBlocked();
 
@@ -1790,6 +1817,9 @@ public class AstarPath : MonoBehaviour {
 	public void FloodFill () {
 		queuedWorkItemFloodFill = false;
 
+#if ASTARDEBUG
+		System.DateTime startTime = System.DateTime.UtcNow;
+#endif
 
 		if (astarData.graphs == null) {
 			return;
@@ -1896,6 +1926,10 @@ public class AstarPath : MonoBehaviour {
 		}
 
 		Pathfinding.Util.ListPool<GraphNode>.Release(smallAreaList);
+
+#if ASTARDEBUG
+		Debug.Log("Flood fill complete, "+area+" area"+(area > 1 ? "s" : "")+" found - "+((System.DateTime.UtcNow.Ticks-startTime.Ticks)*0.0001).ToString("0.00")+" ms");
+#endif
 	}
 
 	/** Returns a new global node index.
@@ -1974,6 +2008,12 @@ public class AstarPath : MonoBehaviour {
 	 * \see graph-updates
 	 */
 	public void Scan () {
+#if ASTARDEBUG
+		OnScanStatus info = delegate(Progress p) {
+			Debug.Log("+++ " + p.description);
+		};
+		ScanLoop(info);
+#endif
 		ScanLoop(null);
 	}
 
@@ -2418,141 +2458,148 @@ public class AstarPath : MonoBehaviour {
 
 		AstarPath astar = threadInfo.astar;
 
+#if !ASTAR_FAST_BUT_NO_EXCEPTIONS
 		try {
-			//Initialize memory for this thread
-			PathHandler runData = threadInfo.runData;
-
-			if (runData.nodes == null)
-				throw new System.NullReferenceException("NodeRuns must be assigned to the threadInfo.runData.nodes field before threads are started\nthreadInfo is an argument to the thread functions");
-
-			//Max number of ticks before yielding/sleeping
-			long maxTicks = (long)(astar.maxFrameTime*10000);
-			long targetTick = System.DateTime.UtcNow.Ticks + maxTicks;
-
-			while (true) {
-				//The path we are currently calculating
-				Path p = astar.pathQueue.Pop();
-
-				//Max number of ticks we are allowed to continue working in one run
-				//One tick is 1/10000 of a millisecond
-				maxTicks = (long)(astar.maxFrameTime*10000);
-
-				//Trying to prevent simple modding to allow more than one thread
-				if (threadInfo.threadIndex > 0) {
-					throw new System.Exception("Thread Error");
-				}
-
-				AstarProfiler.StartFastProfile(0);
-				p.PrepareBase(runData);
-
-				//Now processing the path
-				//Will advance to Processing
-				p.AdvanceState(PathState.Processing);
-
-				//Call some callbacks
-				if (OnPathPreSearch != null) {
-					OnPathPreSearch(p);
-				}
-
-				//Tick for when the path started, used for calculating how long time the calculation took
-				long startTicks = System.DateTime.UtcNow.Ticks;
-				long totalTicks = 0;
-
-				//Prepare the path
-				p.Prepare();
-
-				AstarProfiler.EndFastProfile(0);
-
-				if (!p.IsDone()) {
-					//For debug uses, we set the last computed path to p, so we can view debug info on it in the editor (scene view).
-					astar.debugPath = p;
-
-					AstarProfiler.StartFastProfile(1);
-
-					//Initialize the path, now ready to begin search
-					p.Initialize();
-
-					AstarProfiler.EndFastProfile(1);
-
-					//The error can turn up in the Init function
-					while (!p.IsDone()) {
-						//Do some work on the path calculation.
-						//The function will return when it has taken too much time
-						//or when it has finished calculation
-						AstarProfiler.StartFastProfile(2);
-						p.CalculateStep(targetTick);
-						p.searchIterations++;
-
-						AstarProfiler.EndFastProfile(2);
-
-						//If the path has finished calculation, we can break here directly instead of sleeping
-						if (p.IsDone()) break;
-
-						//Yield/sleep so other threads can work
-						totalTicks += System.DateTime.UtcNow.Ticks-startTicks;
-						Thread.Sleep(0);
-						startTicks = System.DateTime.UtcNow.Ticks;
-
-						targetTick = startTicks + maxTicks;
-
-						//Cancel function (and thus the thread) if no more paths should be accepted.
-						//This is done when the A* object is about to be destroyed
-						//The path is returned and then this function will be terminated
-						if (astar.pathQueue.IsTerminating) {
-							p.Error();
-						}
-					}
-
-					totalTicks += System.DateTime.UtcNow.Ticks-startTicks;
-					p.duration = totalTicks*0.0001F;
-				}
-
-				// Cleans up node tagging and other things
-				p.Cleanup();
-
-				AstarProfiler.StartFastProfile(9);
-
-				//Log path results
-				astar.LogPathResults(p);
-
-				if (p.immediateCallback != null) p.immediateCallback(p);
-
-				if (OnPathPostSearch != null) {
-					OnPathPostSearch(p);
-				}
-
-				//Push the path onto the return stack
-				//It will be detected by the main Unity thread and returned as fast as possible (the next late update hopefully)
-				pathReturnStack.Push(p);
-
-				//Will advance to ReturnQueue
-				p.AdvanceState(PathState.ReturnQueue);
-
-				AstarProfiler.EndFastProfile(9);
-
-				//Wait a bit if we have calculated a lot of paths
-				if (System.DateTime.UtcNow.Ticks > targetTick) {
-					Thread.Sleep(1);
-					targetTick = System.DateTime.UtcNow.Ticks + maxTicks;
-				}
-			}
-		}
-		catch (System.Exception e) {
-#if !NETFX_CORE
-			if (e is System.Threading.ThreadAbortException || e is ThreadControlQueue.QueueTerminationException)
-#else
-			if (e is ThreadControlQueue.QueueTerminationException)
 #endif
-			{
-				if (astar.logPathResults == PathLog.Heavy)
-					Debug.LogWarning("Shutting down pathfinding thread #"+threadInfo.threadIndex);
-				return;
+
+		//Initialize memory for this thread
+		PathHandler runData = threadInfo.runData;
+
+		if (runData.nodes == null)
+			throw new System.NullReferenceException("NodeRuns must be assigned to the threadInfo.runData.nodes field before threads are started\nthreadInfo is an argument to the thread functions");
+
+		//Max number of ticks before yielding/sleeping
+		long maxTicks = (long)(astar.maxFrameTime*10000);
+		long targetTick = System.DateTime.UtcNow.Ticks + maxTicks;
+
+		while (true) {
+			//The path we are currently calculating
+			Path p = astar.pathQueue.Pop();
+
+			//Max number of ticks we are allowed to continue working in one run
+			//One tick is 1/10000 of a millisecond
+			maxTicks = (long)(astar.maxFrameTime*10000);
+
+
+			AstarProfiler.StartFastProfile(0);
+			p.PrepareBase(runData);
+
+			//Now processing the path
+			//Will advance to Processing
+			p.AdvanceState(PathState.Processing);
+
+			//Call some callbacks
+			if (OnPathPreSearch != null) {
+				OnPathPreSearch(p);
 			}
-			Debug.LogException(e);
-			Debug.LogError("Unhandled exception during pathfinding. Terminating.");
-			//Unhandled exception, kill pathfinding
-			astar.pathQueue.TerminateReceivers();
+
+			//Tick for when the path started, used for calculating how long time the calculation took
+			long startTicks = System.DateTime.UtcNow.Ticks;
+			long totalTicks = 0;
+
+			//Prepare the path
+			p.Prepare();
+
+			AstarProfiler.EndFastProfile(0);
+
+			if (!p.IsDone()) {
+				//For debug uses, we set the last computed path to p, so we can view debug info on it in the editor (scene view).
+				astar.debugPath = p;
+
+				AstarProfiler.StartFastProfile(1);
+
+				//Initialize the path, now ready to begin search
+				p.Initialize();
+
+				AstarProfiler.EndFastProfile(1);
+
+				//The error can turn up in the Init function
+				while (!p.IsDone()) {
+					//Do some work on the path calculation.
+					//The function will return when it has taken too much time
+					//or when it has finished calculation
+					AstarProfiler.StartFastProfile(2);
+					p.CalculateStep(targetTick);
+					p.searchIterations++;
+
+					AstarProfiler.EndFastProfile(2);
+
+					//If the path has finished calculation, we can break here directly instead of sleeping
+					if (p.IsDone()) break;
+
+					//Yield/sleep so other threads can work
+					totalTicks += System.DateTime.UtcNow.Ticks-startTicks;
+					Thread.Sleep(0);
+					startTicks = System.DateTime.UtcNow.Ticks;
+
+					targetTick = startTicks + maxTicks;
+
+					//Cancel function (and thus the thread) if no more paths should be accepted.
+					//This is done when the A* object is about to be destroyed
+					//The path is returned and then this function will be terminated
+					if (astar.pathQueue.IsTerminating) {
+						p.Error();
+					}
+				}
+
+				totalTicks += System.DateTime.UtcNow.Ticks-startTicks;
+				p.duration = totalTicks*0.0001F;
+
+#if ProfileAstar
+				System.Threading.Interlocked.Increment(ref PathsCompleted);
+				System.Threading.Interlocked.Add(ref TotalSearchedNodes, p.searchedNodes);
+				System.Threading.Interlocked.Add(ref TotalSearchTime, totalTicks);
+#endif
+			}
+
+			// Cleans up node tagging and other things
+			p.Cleanup();
+
+			AstarProfiler.StartFastProfile(9);
+
+			//Log path results
+			astar.LogPathResults(p);
+
+			if (p.immediateCallback != null) p.immediateCallback(p);
+
+			if (OnPathPostSearch != null) {
+				OnPathPostSearch(p);
+			}
+
+			//Push the path onto the return stack
+			//It will be detected by the main Unity thread and returned as fast as possible (the next late update hopefully)
+			pathReturnStack.Push(p);
+
+			//Will advance to ReturnQueue
+			p.AdvanceState(PathState.ReturnQueue);
+
+			AstarProfiler.EndFastProfile(9);
+
+			//Wait a bit if we have calculated a lot of paths
+			if (System.DateTime.UtcNow.Ticks > targetTick) {
+				Thread.Sleep(1);
+				targetTick = System.DateTime.UtcNow.Ticks + maxTicks;
+			}
 		}
+#if !ASTAR_FAST_BUT_NO_EXCEPTIONS
+	}
+	catch (System.Exception e) {
+#if !NETFX_CORE
+		if (e is System.Threading.ThreadAbortException || e is ThreadControlQueue.QueueTerminationException)
+#else
+		if (e is ThreadControlQueue.QueueTerminationException)
+#endif
+		{
+			if (astar.logPathResults == PathLog.Heavy)
+				Debug.LogWarning("Shutting down pathfinding thread #"+threadInfo.threadIndex);
+			return;
+		}
+		Debug.LogException(e);
+		Debug.LogError("Unhandled exception during pathfinding. Terminating.");
+		//Unhandled exception, kill pathfinding
+		astar.pathQueue.TerminateReceivers();
+	}
+#endif
 
 		Debug.LogError("Error : This part should never be reached.");
 		astar.pathQueue.ReceiverTerminated();
@@ -2701,6 +2748,11 @@ public class AstarPath : MonoBehaviour {
 
 				totalTicks += System.DateTime.UtcNow.Ticks-startTicks;
 				p.duration = totalTicks*0.0001F;
+
+#if ProfileAstar
+				System.Threading.Interlocked.Increment(ref PathsCompleted);
+				System.Threading.Interlocked.Add(ref TotalSearchedNodes, p.searchedNodes);
+#endif
 			}
 
 			// Cleans up node tagging and other things

@@ -39,6 +39,9 @@ namespace Pathfinding.Util {
 		 * After usage, this object should be released using the Release function (though not strictly necessary).
 		 */
 		public static T Claim () {
+#if ASTAR_NO_POOLING
+			return new T();
+#else
 			if (pool.Count > 0) {
 				T ls = pool[pool.Count-1];
 				pool.RemoveAt(pool.Count-1);
@@ -46,6 +49,7 @@ namespace Pathfinding.Util {
 			} else {
 				return new T();
 			}
+#endif
 		}
 
 		/** Makes sure the pool contains at least \a count pooled items with capacity \a size.
@@ -67,11 +71,15 @@ namespace Pathfinding.Util {
 		 * \see Claim
 		 */
 		public static void Release (T obj) {
+#if !ASTAR_NO_POOLING
+#if !ASTAR_OPTIMIZE_POOLING
 			for (int i = 0; i < pool.Count; i++)
 				if (pool[i] == obj)
 					throw new System.InvalidOperationException("The object is released even though it is in the pool. Are you releasing it twice?");
+#endif
 			obj.OnEnterPool();
 			pool.Add(obj);
+#endif
 		}
 
 		/** Clears the pool for objects of this type.

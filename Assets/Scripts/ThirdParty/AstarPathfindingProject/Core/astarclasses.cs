@@ -465,8 +465,10 @@ namespace Pathfinding {
 				backupPositionData.Add(node.position);
 				backupData.Add(node.Penalty);
 				backupData.Add(node.Flags);
+#if !ASTAR_NO_GRID_GRAPH
 				var gg = node as GridNode;
 				if (gg != null) backupData.Add(gg.InternalGridFlags);
+#endif
 			}
 		}
 
@@ -482,11 +484,13 @@ namespace Pathfinding {
 					counter++;
 					changedNodes[i].Flags = backupData[counter];
 					counter++;
+#if !ASTAR_NO_GRID_GRAPH
 					var gg = changedNodes[i] as GridNode;
 					if (gg != null) {
 						gg.InternalGridFlags = (ushort)backupData[counter];
 						counter++;
 					}
+#endif
 					changedNodes[i].position = backupPositionData[i];
 				}
 
@@ -775,16 +779,11 @@ namespace Pathfinding {
 
 	/** How path results are logged by the system */
 	public enum PathLog {
-		/** Does not log anything. This is recommended for release since logging path results has a performance overhead. */
-		None,
-		/** Logs basic info about the paths */
-		Normal,
-		/** Includes additional info */
-		Heavy,
-		/** Same as heavy, but displays the info in-game using GUI */
-		InGame,
-		/** Same as normal, but logs only paths which returned an error */
-		OnlyErrors
+		None,       /**< Does not log anything */
+		Normal,     /**< Logs basic info about the paths */
+		Heavy,      /**< Includes additional info */
+		InGame,     /**< Same as heavy, but displays the info in-game using GUI */
+		OnlyErrors  /**< Same as normal, but logs only paths which returned an error */
 	}
 
 	/** Heuristic to use. Heuristic is the estimated cost from the current node to the target */

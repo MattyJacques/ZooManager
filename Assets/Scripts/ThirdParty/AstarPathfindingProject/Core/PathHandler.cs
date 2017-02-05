@@ -167,6 +167,29 @@ namespace Pathfinding {
 		public PathHandler (int threadID, int totalThreadCount) {
 			this.threadID = threadID;
 			this.totalThreadCount = totalThreadCount;
+
+#if ASTAR_INIT_BUCKETS && !ASTAR_CONTINOUS_PATH_DATA
+			for (int bucketNumber = 10; bucketNumber >= 0; bucketNumber--) {
+				if (bucketNumber >= nodes.Length) {
+					//At least increase the size to:
+					//Current size * 1.5
+					//Current size + 2 or
+					//bucketNumber
+
+					PathNode[][] newNodes = new PathNode[System.Math.Max(System.Math.Max(nodes.Length*3 / 2, bucketNumber+1), nodes.Length+2)][];
+					for (int i = 0; i < nodes.Length; i++) newNodes[i] = nodes[i];
+					// Resizing Bucket List from nodes.Length to newNodes.Length for bucket #bucketNumber
+					nodes = newNodes;
+				}
+
+				if (nodes[bucketNumber] == null) {
+					// Creating Bucket #bucketNumber
+					PathNode[] ns = new PathNode[BucketSize];
+					for (int i = 0; i < BucketSize; i++) ns[i] = new PathNode();
+					nodes[bucketNumber] = ns;
+				}
+			}
+#endif
 		}
 
 		public void InitializeForPath (Path p) {

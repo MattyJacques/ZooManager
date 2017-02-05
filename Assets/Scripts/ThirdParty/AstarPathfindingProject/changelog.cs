@@ -1,29 +1,10 @@
 /** \page changelog Changelog
 
-- 3.8.8.1 (2017-01-12)
-	- Fixes
-		- Fixed the 'Optimization' tab sometimes logging errors when clicking Apply on Unity 5.4 and higher.
-		- More UWP fixes (pro version only).
-
-- 3.8.8 (2017-01-11)
-	- Fixes
-		- Fixed errors when deploying for the Universal Windows Platform (UWP).
-			This includes the Hololens platform.
-		- It is no longer necessary to use the compiler directive ASTAR_NO_ZIP when deploying for UWP.
-			zipping will be handled by the System.IO.Compression.ZipArchive class on those platforms (ZipArchive is not available on other platforms).
-			If you have previously enabled ASTAR_NO_ZIP it will stay enabled to ensure compatibility.
-		- Changed some comments from the '/**<' format to '/**' since Monodevelop shows the wrong docs when using the '/**<' format.
-
-- 3.8.7 (2016-11-26)
-	- Fixes
-		- Improved compatibility with Unity 5.5 which was needed due to the newly introduced UnityEngine.Profiling namespace.
-
 - 3.8.6 (2016-10-31)
 	- Upgrade Notes
 		- Note that a few features and some fixes that have been available in the beta releases are not
 			included in this version because they were either not ready to be released or depended on other
 			changes that were not ready.
-		- Dropped support for Unity 5.1.
 		- Moved some things to inside the Pathfinding namespace to avoid naming collisions with other packages.
 			Make sure you have the line 'using Pathfinding;' at the top of your scripts.
 		- Seeker.StartMultiTargetPath will now also set the enabledTags and tagPenalties fields on the path.

@@ -39,6 +39,16 @@ namespace Pathfinding {
 				graph.mask = EditorGUILayoutx.LayerMaskField("Mask", graph.mask);
 				EditorGUI.indentLevel--;
 			}
+
+			graph.optimizeForSparseGraph = EditorGUILayout.Toggle(new GUIContent("Optimize For Sparse Graph", "Check online documentation for more information."), graph.optimizeForSparseGraph);
+
+			if (graph.optimizeForSparseGraph) {
+				EditorGUI.indentLevel++;
+
+				graph.optimizeFor2D = EditorGUILayout.Toggle(new GUIContent("Optimize For XZ Plane", "Check online documentation for more information."), graph.optimizeFor2D);
+
+				EditorGUI.indentLevel--;
+			}
 		}
 
 		public override void OnDrawGizmos () {
