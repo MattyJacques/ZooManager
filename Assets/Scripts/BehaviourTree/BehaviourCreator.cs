@@ -123,8 +123,7 @@ namespace Assets.Scripts.BehaviourTree
     private ReturnCode SetTarget(AIBase theBase)
     { // Calculate the cloest source matching next target type
 
-      theBase.Target = BuildingManager.GetClosestOfType(theBase.Model.transform.position
-                                                        , theBase.NextTarget);
+      theBase.pathfinder.Target = BuildingManager.GetClosestOfType(theBase.Model.transform.position, theBase.NextTarget).transform;
 
       Debug.Log("SetTarget(), returning success");
       return ReturnCode.Success;
@@ -232,19 +231,16 @@ namespace Assets.Scripts.BehaviourTree
 
     private bool HasTarget(AIBase theBase)
     { // Return true if the base currently has a target
-      Debug.Log("HasTarget(), returning " + (theBase.Target != null));
-      return theBase.Target != null;
+      Debug.Log("HasTarget(), returning " + (theBase.pathfinder.Target != null));
+      return theBase.pathfinder.Target != null;
     } // HasTarget()
 
     private bool HasArrived(AIBase theBase)
     { // Return true if we have arrived at target
-      Debug.Log("HasArrived(), returning " + theBase.HasArrived);
+      Debug.Log("HasArrived(), returning " + theBase.pathfinder.HasArrived);
 
-      return theBase.HasArrived;
+      return theBase.pathfinder.HasArrived;
     } // HasArrived()
 
   } // BehaviourCreator
-}
-
-      theBase.pathfinder.target = BuildingManager.GetClosestOfType(theBase.Model.transform.position
-                                                        , theBase.NextTarget).transform;
+}
