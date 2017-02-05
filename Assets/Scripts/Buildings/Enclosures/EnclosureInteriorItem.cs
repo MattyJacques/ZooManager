@@ -7,22 +7,22 @@ using UnityEngine;
 
 public class EnclosureInteriorItem
 {
-    public GameObject gameObject;
-    public Transform transform;
-    public InteriorItemType type;
+  public GameObject gameObject;
+  public Transform transform;
+  public InteriorItemType type;
 
-    public EnclosureInteriorItem(GameObject gameObject, InteriorItemType type)
-    {
-        transform = gameObject.transform;
-        this.gameObject = gameObject;
-        this.type = type;
-    }
-    
-    public enum InteriorItemType
-    {
-        Food,
-        Water,
-        Fun
-    }
+  public EnclosureInteriorItem(GameObject gameObject, InteriorItemType type)
+  {
+    transform = gameObject.transform;
+    this.gameObject = gameObject;
+    this.type = type;
+  } // EnclosureInteriorItem()
 
-}
+  public enum InteriorItemType
+  {
+    Food,
+    Water,
+    Fun
+  }
+
+} // EnclosureInteriorItem

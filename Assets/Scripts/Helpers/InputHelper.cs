@@ -13,23 +13,23 @@ using UnityEngine;
 
 namespace Assets.Scripts.Helpers
 {
-    public static class InputHelper
-    {
-        public static bool GetMousePositionInWorldSpace(out Vector3 mousePosition,
-            int layerMask = ~0,
-            float maximumRangeToCheck = Mathf.Infinity,
-            QueryTriggerInteraction triggerInteraction = QueryTriggerInteraction.UseGlobal)
-        {
-            Ray ray = Camera.main.ScreenPointToRay (UnityEngine.Input.mousePosition);
-            RaycastHit rayHit = new RaycastHit ();
-            if (Physics.Raycast (ray, out rayHit, maximumRangeToCheck, layerMask, QueryTriggerInteraction.Ignore))
-            {
-                mousePosition = rayHit.point;
-                return true;
-            }
+  public static class InputHelper
+  {
+    public static bool GetMousePositionInWorldSpace(out Vector3 mousePosition,
+        int layerMask = ~0,
+        float maximumRangeToCheck = Mathf.Infinity,
+        QueryTriggerInteraction triggerInteraction = QueryTriggerInteraction.UseGlobal)
+    { // Get the mouse position in relation to the world space
+      Ray ray = Camera.main.ScreenPointToRay(UnityEngine.Input.mousePosition);
+      RaycastHit rayHit = new RaycastHit();
+      if (Physics.Raycast(ray, out rayHit, maximumRangeToCheck, layerMask, QueryTriggerInteraction.Ignore))
+      {
+        mousePosition = rayHit.point;
+        return true;
+      }
 
-            mousePosition = Vector3.zero;
-            return false;
-        }
-    }
-}
+      mousePosition = Vector3.zero;
+      return false;
+    } // GetMousePositionInWorldSpace()
+  } // InputHelper
+} // namespace

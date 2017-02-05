@@ -9,10 +9,10 @@ public class EnclosureBuilderGUI : MonoBehaviour
 
     public EnclosureBuilder _targetEnclosureBuilder;
 
-    private void OnGUI()
+    public void OnGUI()
     {
         if (GUI.Button(new Rect(0, 50, 150, 25), "Build new enclosure")) {
             _targetEnclosureBuilder.BeginBuildingNewEnclosure ();
         }
-    } 
+    } // OnGUI()
 }   //EnclosureBuilderGUI
