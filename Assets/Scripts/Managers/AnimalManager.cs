@@ -185,12 +185,10 @@ namespace Assets.Scripts.Managers
 
       // Read animal JSON data
       AnimalTemplateCollection _templates;
-      _templates = JSONReader.ReadJSON<AnimalTemplateCollection>("Animals/Animals");
+      _templates = JSONReader.ReadJSON<AnimalTemplateCollection>("AnimalData");
 
       foreach (DirectoryInfo dir in subDirectories)
       { // Loop through all directorys looking for animals
-
-        Debug.Log("Searching directory: " + dir.Name);    // Output directory name
 
         foreach (FileInfo file in dir.GetFiles())
         { // Check each directory to see if it contains a prefab file, if so store
@@ -218,7 +216,6 @@ namespace Assets.Scripts.Managers
             if (newAnimal.Template != null)
             { // Add the animal to the collection if setup was successful
               _animalCollection.Add(newAnimal);
-              Debug.Log("Loaded " + dir.Name + "/" + file.Name);
             }
             else
             { // Raise an exception if template not found

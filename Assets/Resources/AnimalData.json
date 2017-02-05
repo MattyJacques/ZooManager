@@ -40,6 +40,45 @@
       "lifespan": 20
     },
     {
+      "id": "Lemur",
+      "animalname": "Lemur",
+      "price": 1,
+      "habitat": "Savannah",
+      "food": [ "Meat" ],
+      "fun": [ "Tussling", "Basking" ],
+      "tags": [ "Terrestrial" ],
+      "healthRate": 1,
+      "hungerRate": 1,
+      "thirstRate": 1,
+      "lifespan": 18
+    },
+    {
+      "id": "Meerkat",
+      "animalname": "Meerkat",
+      "price": 1,
+      "habitat": "Savannah",
+      "food": [ "Meat" ],
+      "fun": [ "Tussling", "Basking" ],
+      "tags": [ "Terrestrial" ],
+      "healthRate": 1,
+      "hungerRate": 1,
+      "thirstRate": 1,
+      "lifespan": 18
+    },
+    {
+      "id": "SilverbackGorilla",
+      "animalname": "Silverback Gorilla",
+      "price": 1,
+      "habitat": "Savannah",
+      "food": [ "Meat" ],
+      "fun": [ "Tussling", "Basking" ],
+      "tags": [ "Terrestrial" ],
+      "healthRate": 1,
+      "hungerRate": 1,
+      "thirstRate": 1,
+      "lifespan": 18
+    },
+    {
       "id": "AfricanLion",
       "animalname": "African Lion",
       "price": 1,
