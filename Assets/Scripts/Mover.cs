@@ -4,12 +4,12 @@ using Pathfinding.RVO;
 using Pathfinding;
 
 [RequireComponent(typeof(Seeker))]
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(RVOController))]
 public class Mover : MonoBehaviour 
 {
     
     public Seeker Pathfinder;
-    public CharacterController Controller;
+    public RVOController Controller;
     public float LastRepath;
     public float RepathRate;
     public Transform Target;
@@ -20,12 +20,15 @@ public class Mover : MonoBehaviour
     public float ReachedDistance;
     public bool CanSearch;
     public bool CanMove;
+    public float WaypointDistance;
 
     void Start()
     { // Initializes all needed parts for pathfinding
 
         Pathfinder = GetComponent<Seeker>();
-        Controller = GetComponent<CharacterController>();
+        Controller = GetComponent<RVOController>();
+
+        Controller.maxSpeed = Speed;
 
     } // InitPathfinding()
 
@@ -33,7 +36,7 @@ public class Mover : MonoBehaviour
     { // Update method, currently only used for path following
 
         // Repathing if repath time has been reached
-        if(CanSearch && (Time.time - LastRepath > RepathRate) && Pathfinder.IsDone())
+        if(CanSearch && Target != null && (Time.time - LastRepath > RepathRate) && Pathfinder.IsDone())
         {
             LastRepath = Time.time + Random.value * RepathRate * 0.5f;
 
@@ -46,19 +49,28 @@ public class Mover : MonoBehaviour
             Vector3 dir = (path.vectorPath[CurrentWaypoint] - transform.position).normalized;
             dir *= Speed;
 
-            Controller.SimpleMove(dir);
+            Controller.Move(dir);
 
-            if(transform.position == path.vectorPath[CurrentWaypoint])
+            if(Vector3.Distance(transform.position, path.vectorPath[CurrentWaypoint]) < WaypointDistance)
             { // Waypoint reached
                 CurrentWaypoint++;
             }
 
         }
-        else if(Vector3.Distance(transform.position, Target.position) < ReachedDistance)
+
+        if(Target != null && Vector3.Distance(transform.position, Target.position) < ReachedDistance)
         { // We reached the end of the path
             
             HasArrived = true; // We arrived at the target
+            Debug.Log("Arrived at Target");
+            Target = null;
+            path = null;
 
+        }
+
+        if(!CanMove || Target == null || HasArrived)
+        {
+            Controller.Move(Vector3.zero);
         }
 
     } // Update()
