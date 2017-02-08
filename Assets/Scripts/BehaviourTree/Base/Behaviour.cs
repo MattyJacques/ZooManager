@@ -32,33 +32,21 @@ namespace Assets.Scripts.BehaviourTree.Base
     public ReturnCode Behave(AIBase theBase)
     { // Process the behaviour of the current selector
 
-      try
-      {
-        switch (_root.Behave(theBase))
-        { // Process behaviour and return the correct return code
-          case ReturnCode.Failure:
-            _returnCode = ReturnCode.Failure;
-            return _returnCode;
-          case ReturnCode.Success:
-            _returnCode = ReturnCode.Success;
-            return _returnCode;
-          case ReturnCode.Running:
-            _returnCode = ReturnCode.Running;
-            return _returnCode;
-          default:
-            _returnCode = ReturnCode.Running;
-            return _returnCode;
-        }
-      } // try
-      catch (Exception excep)
-      { // Print out the exception for debugging purposes and continue with
-        // behaviour checking
+            while(theBase.StopBehaviour == false) // Do it forever since we are in a thread
+            {
+                try
+                {
+                    _root.Behave(theBase);
+                }
+                catch(Exception excep)
+                {
+                    Debug.Log(excep.ToString());
+                    break;
+                }
+            }
 
-        Debug.Log(excep.ToString());
-        _returnCode = ReturnCode.Failure;
-        return _returnCode;
-     
-      } // catch
+            return ReturnCode.Failure;
+       
     } // Behave()
   } // Behaviour
 }
