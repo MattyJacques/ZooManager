@@ -1,0 +1,113 @@
+{
+  "buildingTemplates": [
+    {
+      "id": "ticketBooth",
+      "buildingname": "Ticket Booth",
+      "price": 10,
+      "features": [ "Tickets" ],
+      "tags": [ "Shop" ],
+      "upkeep": 1
+    },
+    {
+      "id": "ticketControlePost",
+      "buildingname": "Ticket Controle Post",
+      "price": 2,
+      "features": "TicketCheck",
+      "tags": [ "Booth" ],
+      "upkeep": 1
+    },
+    {
+      "id": "candyStand",
+      "buildingname": "Candy Stand",
+      "price": 1,
+      "features": [ "Candy", "Chocolate" ],
+      "tags": [ "Shop" ],
+      "upkeep": 1
+    },
+    {
+      "id": "burgerStand",
+      "buildingname": "Burger Stand",
+      "price": 1,
+      "features": [ "Burgers" ],
+      "tags": [ "Shop" ],
+      "upkeep": 1
+    },
+    {
+      "id": "5",
+      "buildingname": "DrinkStand",
+      "price": 1,
+      "features": [ "Drink" ],
+      "tags": [ "Shop" ],
+      "upkeep": 1
+    },
+    {
+      "id": "giftStand",
+      "buildingname": "Gift Stand",
+      "price": 1,
+      "features": [ "Gifts" ],
+      "tags": [ "Shop" ],
+      "upkeep": 1
+    },
+    {
+      "id": "bench",
+      "itemname": "Bench",
+      "price": 1,
+      "tags": "Item"
+    },
+    {
+      "id": "trashcan",
+      "itemname": "Trashcan",
+      "price": 1,
+      "tags": "Item",
+      "type": "Themed"
+    },
+    {
+      "id": "recyclebin",
+      "itemname": "Recyclebin",
+      "price": 1,
+      "tags": "Item"
+    },
+    {
+      "id": "musicBox",
+      "itemname": "Music Box",
+      "price": 1,
+      "tags": "Item",
+      "type": "basic"
+    },
+    {
+      "id": "fence",
+      "itemname": "Fence",
+      "price": 1,
+      "tags": [ "Item", "Wall" ],
+      "type": [ "Logs", "Bricks", "NaturalRocks", "Hedges" ]
+    },
+    {
+      "id": "path",
+      "itemname": "Path",
+      "price": 1,
+      "tags": "Path",
+      "type": [ "Cobblestone", "Tiles", "Bricks", "Dirt" ]
+    },
+    {
+      "id": "trees",
+      "itemname": "Trees",
+      "price": 1,
+      "tags": "Tree",
+      "types": [ "Oak", "Birch", "Pine" ]
+    },
+    {
+      "id": "rocks",
+      "itemname": "Rocks",
+      "price": 1,
+      "tags": "Rock",
+      "types": [ "Large Basic", "Medium Basic", "Small Basic" ]
+    },
+    {
+      "id": "flowers",
+      "itemname": "Flowers",
+      "price": 1,
+      "tags": "",
+      "types": [ "Orchid", "Poppy", "Rose", "Dandelion", "Tulips" ]
+    }
+  ]
+}

@@ -28,6 +28,7 @@ ExportedObj/
 *.pidb
 *.booproj
 *.svd
+.vs/
 
 
 # Unity3D generated meta files
@@ -39,3 +40,7 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+Cubiquity.log
+*.log
+Cubiquity.log
+*.log

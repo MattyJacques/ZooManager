@@ -37,9 +37,9 @@ namespace Assets.Scripts.Managers
 
     public Texture2D _leftArrow;            //Images for buttons
     public Texture2D _rightArrow;           //Images for buttons
-    public Texture2D _lockTexture;           //Images for lock
+    public Texture2D _lockTexture;          //Images for lock
 
-    public Terrain terrain;                 //Allows the script to find the highest y point to place the building
+    public LayerMask _terrainLayer;         // Use terrain for mouse following
     
     public bool _isPave = false;            //Are you placing pavement or building
     public PaveScript _pave;                //Assistance in placing script
@@ -58,6 +58,8 @@ namespace Assets.Scripts.Managers
       _pave = gameObject.AddComponent<PaveScript>() as PaveScript;
       _pave.Start();
       _aStar = gameObject.GetComponent<AStar>() as AStar;
+
+      _terrainLayer = LayerMask.GetMask("Ground");
 
     } // Start()
   
@@ -205,7 +207,25 @@ namespace Assets.Scripts.Managers
       // stop mouse position updating building position
 
       _buildings.Add(_currentBuild.gameObject);
-      _aStar._map = _aStar.PlaceWall((int)_currentBuild.position.x/_aStar._scale,(int)_currentBuild.position.z/_aStar._scale, _aStar._map);
+            //Eivind: I don't even know what this does but I'm assuming I can get the objects position after this?
+      _aStar._map = _aStar.PlaceWall ((int) _currentBuild.position.x / _aStar._scale, (int) _currentBuild.position.z / _aStar._scale, _aStar._map);
+
+            //Check to see if we're adding something to an enclosure
+            Vector3 aboveObjectPos = _currentBuild.position;
+            aboveObjectPos.y = 100f;
+            Ray ray = new Ray (aboveObjectPos, Vector3.down);
+            RaycastHit[] rayHit = Physics.RaycastAll (ray);
+
+
+            foreach (RaycastHit hit in rayHit)
+            {
+                if (hit.collider.tag == "Enclosure")
+                {
+                    //TODO: Get the type of the item from the JSON files, for now it defaults to food
+                    EnclosureInteriorItem.InteriorItemType itemType = EnclosureInteriorItem.InteriorItemType.Food;
+                    hit.collider.GetComponent<Enclosure> ().RegisterNewInteriorItem (_currentBuild.gameObject, itemType);
+                }
+            }
       _currentBuild = null;
      
     } // PlaceBuilding()
@@ -253,24 +273,16 @@ namespace Assets.Scripts.Managers
 
       if (_isPave)
       {
-        _currentBuild.position = _pave.UpdateMouseBuild(_currentBuild.position, terrain);
+        //_currentBuild.position = _pave.UpdateMouseBuild(_currentBuild.position, terrain);
         return;
       }
       // Create raycast from screen point using mouse position
       Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
       RaycastHit hit;
 
-      if (Physics.Raycast(ray, out hit))
+      if (Physics.Raycast(ray, out hit, Mathf.Infinity, _terrainLayer))
       { // If raycast hits collider, update position of _currentBuild
-        
-        Vector3 newPos = new Vector3(hit.point.x, _currBuildY, hit.point.z);
-
-        //Resets _currBuildY = a usable variable
-        _currBuildY = 1;
-        //Gets the highest usable y point on the terrain.
-        newPos.y = terrain.SampleHeight(newPos);
-
-        _currentBuild.position = newPos;
+        _currentBuild.position = hit.point;
       }
 
     } // UpdateMouseBuilding()
