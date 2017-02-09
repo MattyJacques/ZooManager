@@ -8,10 +8,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TestEmperorPenguin : MonoBehaviour{
+public class TestEmperorPenguin : MonoBehaviour
+{
   private Animator anim;  //for accessing the GameObject's animator
   private Rigidbody rbody;  //for accessing the GameObject's rigidbidy
-  private int radius=47;  //radius of the circle the animals can wander...this will be removed and replaced
+  private int radius = 47;  //radius of the circle the animals can wander...this will be removed and replaced
   private float minWalk = 2;  //minimum amount of time taken walking
   private float maxWalk = 5;  //maximum amount of time taken walking
   private float minWait = 3;  //minimum amount of time taken idling
@@ -19,14 +20,14 @@ public class TestEmperorPenguin : MonoBehaviour{
   private float walkSpeed, rotationSpeed; //walking speed and rotation speed
 
   // Use this for initialization
-	void Start () 
+  void Start()
   {
     anim = GetComponent<Animator>();
     rbody = GetComponent<Rigidbody>();
     walkSpeed = anim.GetFloat("walkSpeed");
     rotationSpeed = anim.GetFloat("rotationSpeed");
     WalkorIdle();
-	}//Start()
+  }//Start()
 
   void WalkorIdle()
   {//50% chance to idle when destination reached
@@ -41,14 +42,14 @@ public class TestEmperorPenguin : MonoBehaviour{
     }
   }//WalkorIdle()
 
-  IEnumerator Wander() 
+  IEnumerator Wander()
   {//picks a random waypoint and has the animal walk towards it
     float moveX = 10;
     float moveZ = 10;
     //TODO: replace below with range of enclosure
     Vector3 wayPoint = new Vector3(Random.Range(-moveX, moveX), 0, Random.Range(-moveZ, moveZ));
-   
-    rbody.velocity = wayPoint.normalized*walkSpeed;
+
+    rbody.velocity = wayPoint.normalized * walkSpeed;
     yield return new WaitForSeconds(Random.Range(minWalk, maxWalk));
     WalkorIdle();
   }//Wander()
@@ -69,5 +70,5 @@ public class TestEmperorPenguin : MonoBehaviour{
       transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
     }
     anim.SetFloat("speed", rbody.velocity.magnitude);
-	}//Update()
+  }//Update()
 }
