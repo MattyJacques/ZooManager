@@ -20,7 +20,7 @@ public class Enclosure : MonoBehaviour
     DisplayingMenu,
   };
 
-  private State _state = State.Idle;
+  //private State _state = State.Idle;
 
   private string _name;
   private GameObject _canvas;

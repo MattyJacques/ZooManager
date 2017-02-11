@@ -3,11 +3,16 @@
 // Author       : Eivind Andreassen
 // Date         : 20/12/2016
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class EnclosureInteraction : MonoBehaviour
 {
   private LayerMask _layerMask;
-  private LayerMask _uiLayer;
+
+  void Start()
+  {
+    _layerMask = -1; //Interacts with all layers
+  }
 
   void Update()
   {
@@ -17,9 +22,12 @@ public class EnclosureInteraction : MonoBehaviour
       RaycastHit rayHit = new RaycastHit();
 
       //If we're clicking a UI element, don't interact with the enclosure
-      if (Physics.Raycast(ray, out rayHit, Mathf.Infinity, _uiLayer, QueryTriggerInteraction.Collide))
+      if (EventSystem.current != null)
       {
-        return;
+        if (EventSystem.current.IsPointerOverGameObject ())
+        {
+          return;
+        }
       }
 
       if (Physics.Raycast(ray, out rayHit, Mathf.Infinity, _layerMask, QueryTriggerInteraction.Ignore))
