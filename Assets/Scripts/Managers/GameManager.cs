@@ -1,4 +1,4 @@
-// Title        : metaManager.cs
+﻿// Title        : GameManager.cs
 // Purpose      : To store game instance information
 // Author       : Jeremy Mann
 // Date         : 03/01/2017
@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour {
 		
 	}
 
-	IEnumerator EconomyCycler () // The economy works in cycles or ticks. Every X seconds revenue/expenses/attraction is calculated and added.
+	IEnumerator EconomyCycler () // The economy works in cycles or ticks. Every X seconds revenue/expenses/attraction is calculated and added
 	{
 		yield return new WaitForSeconds (_secondsPerEconomyCycle);
 		Expenses();
@@ -73,7 +73,7 @@ public class GameManager : MonoBehaviour {
 		_currentFunds = (_currentFunds - _totalExpenses);
 	}
 
-	public void Attraction () // Calculate the attraction value of the park and draw in appropriate viistors
+	public void Attraction () // Calculate the attraction value of the park and draw in appropriate vistors
 	{
 		_visitorsOldNum = Mathf.Round((_visitorsOldNum/100)*_retentionValue);
 		_visitorsOldNum = (_visitorsOldNum + _visitorsNewNum);
@@ -82,7 +82,6 @@ public class GameManager : MonoBehaviour {
 		_totalAttractionValue = (_animalNum * _animalAttractionValue);
 
 		_visitorsNewNum = (_totalAttractionValue * _visitorSpawnRate);
-
 	}
 }
 
