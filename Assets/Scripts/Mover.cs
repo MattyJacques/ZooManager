@@ -11,16 +11,16 @@ public class Mover : MonoBehaviour
     public Seeker Pathfinder;
     public RVOController Controller;
     public float LastRepath;
-    public float RepathRate;
+    public float RepathRate = 0.5f;
     public Transform Target;
     public int CurrentWaypoint;
     public Path path;
-    public bool HasArrived;
-    public float Speed;
-    public float ReachedDistance;
-    public bool CanSearch;
-    public bool CanMove;
-    public float WaypointDistance;
+    public bool HasArrived = false;
+    public float Speed = 2f;
+    public float ReachedDistance = 1f;
+    public bool CanSearch = true;
+    public bool CanMove = false;
+    public float WaypointDistance = 1f;
 
     void Start()
     { // Initializes all needed parts for pathfinding

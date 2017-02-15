@@ -58,25 +58,27 @@ namespace Assets.Scripts.BehaviourTree
 
     #region Actions
 
-    private ReturnCode EatFood(AIBase theBase)
+    private IEnumerator EatFood(AIBase theBase, System.Action<ReturnCode> returnCode)
     { // Handle the eating of food
         Debug.Log("EatFood(), returning success");
         theBase.Feed(AIBase.FeedType.Food, 100);
-        return ReturnCode.Success;
+        returnCode(ReturnCode.Success);
+        yield break;
     } // EatFood()
 
-    private ReturnCode GetFood(AIBase theBase)
+    private IEnumerator GetFood(AIBase theBase, System.Action<ReturnCode> returnCode)
     { // Get food target
         Debug.Log("GetFood(), returning success");
         theBase.SetFoodTarget();
-        return ReturnCode.Success;
+        returnCode(ReturnCode.Success);
+        yield break;
     } // GetFood()
 
     #endregion
 
     #region Conditionals
 
-    private bool IsHungry(AIBase theBase)
+    private IEnumerator IsHungry(AIBase theBase, System.Action<bool> conditionResult)
     { // Check if the animal base's hunger is at a level we class as hungry
         // If so set the next target of the base to suitable food and return true
 
@@ -89,15 +91,17 @@ namespace Assets.Scripts.BehaviourTree
             theBase.NextTarget = BuildingManager.TargetType.Food; // TODO: get a suitable food for animal... might be enclosure code stuff
         }
 
-        return isHunger;
+        conditionResult(isHunger);
+        yield break;
     } // IsHungry()
 
-    private bool HasMyFood(AIBase theBase)
+    private IEnumerator HasMyFood(AIBase theBase, System.Action<bool> conditionResult)
     { // Check if the enclosure has the preffered food type
 
         Debug.Log("HasMyFood(), returning true");
-        return true;
-
+        
+        conditionResult(true);
+        yield break;
     } // HasMyFood()
 
 
@@ -105,17 +109,20 @@ namespace Assets.Scripts.BehaviourTree
 
     #region GeneralActions
 
-    private ReturnCode MoveToTarget(AIBase theBase)
+    private IEnumerator MoveToTarget(AIBase theBase, System.Action<ReturnCode> returnCode)
     { // Move to the target
 
-        theBase.pathfinder.CanMove = true;  // Start movement
+        /*theBase.pathfinder.CanMove = true;  // Start movement
 
-        while(theBase.pathfinder.HasArrived == false);  // Wait for reaching target
+        while(theBase.pathfinder.HasArrived == false)  // Wait for reaching target
+            yield return null; // yield coroutine
 
         theBase.pathfinder.CanMove = false; // Prevent further movement
 
-        Debug.Log("MoveToTarget(), returning success");
-        return ReturnCode.Success;
+        Debug.Log("MoveToTarget(), returning success");*/
+        
+        returnCode(ReturnCode.Success);
+        yield break;
     } // MoveToTarget()
 
     #endregion

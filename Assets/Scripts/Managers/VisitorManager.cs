@@ -54,7 +54,6 @@ namespace Assets.Scripts.Managers
 		{
 			foreach (VisitorBase visitor in _visitors)
 			{
-				visitor.CheckNeeds();
 			}
 		}
 

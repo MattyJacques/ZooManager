@@ -12,11 +12,11 @@ namespace Assets.Scripts.BehaviourTree.Base
 
         public ForceFailure() { }
 
-        public override ReturnCode Behave(AIBase theBase)
+        public override IEnumerator Behave(AIBase theBase, System.Action<ReturnCode> returnCode)
         { // Return failure
             
-            _returnCode = ReturnCode.Failure;
-            return _returnCode;
+            returnCode(ReturnCode.Failure); // Set returncode
+            yield break; // Exit coroutine
 
         }
 

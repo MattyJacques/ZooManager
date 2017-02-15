@@ -29,23 +29,18 @@ namespace Assets.Scripts.BehaviourTree.Base
     } // Behaviour()
 
 
-    public ReturnCode Behave(AIBase theBase)
+    public IEnumerator Behave(AIBase theBase)
     { // Process the behaviour of the current selector
 
-            while(theBase.StopBehaviour == false) // Do it forever since we are in a thread
+            while(true) // Do it forever since we are in a thread
             {
-                try
-                {
-                    _root.Behave(theBase);
-                }
-                catch(Exception excep)
-                {
-                    Debug.Log(excep.ToString());
-                    break;
-                }
+                yield return null;
+                ReturnCode result;
+                Debug.Log("Start BT");
+                yield return CoroutineSys.Instance.StartCoroutine(_root.Behave(theBase, val => result = val)); // Start the root selector as coroutine
+                Debug.Log("End BT");
+                yield return new WaitForSeconds(5f);
             }
-
-            return ReturnCode.Failure;
        
     } // Behave()
   } // Behaviour

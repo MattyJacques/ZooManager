@@ -61,6 +61,12 @@ namespace Assets.Scripts.Managers
     void Update()
     {
       UpdateMouseAnimal();
+
+            foreach(AnimalBase ab in _animals)
+            {
+                ab.TickBehaviour();
+            }
+
     } // Update()
 
     #endregion
@@ -161,6 +167,13 @@ namespace Assets.Scripts.Managers
     { // Place the animal located in the _currentAnimal member into the game world
 
       AnimalBase newAnimal = new AnimalBase(_animalCollection[_currentIndex]);
+
+            newAnimal.Behave = _behaviours.GetBehaviour(0);
+
+            _currentAnimal.AddComponent<Mover>();
+            newAnimal.pathfinder = _currentAnimal.GetComponent<Mover>();
+            StartCoroutine(newAnimal.Behave.Behave(newAnimal));
+
       _animals.Add(newAnimal);
       _currentAnimal = null;
       _currentIndex = -1;
