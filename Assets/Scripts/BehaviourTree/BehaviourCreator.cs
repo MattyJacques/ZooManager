@@ -10,24 +10,50 @@ namespace Assets.Scripts.BehaviourTree
 {
   public class BehaviourCreator
   {
-    private List<Base.Behaviour> _behaviours;
+    private Dictionary<string, Base.Behaviour> _behaviours;
 
-    public Base.Behaviour GetBehaviour(int index)
-    { // Return the behaviour at the given index
+        private static BehaviourCreator _instance;
 
-      return _behaviours[index];
+        public static BehaviourCreator Instance 
+        {
+            get 
+            { 
+                if(_instance == null)
+                {
+                    _instance = new BehaviourCreator();
+                    _instance.CreateBehaviours();
+                }
+
+                return _instance; 
+            }
+        }
+
+    public Base.Behaviour GetBehaviour(string name)
+    { // Return the behaviour with the given name
+
+        if(_behaviours.ContainsKey(name))
+        {
+            Debug.Log("Behaviour \"" + name + "\" found");
+            return _behaviours[name];
+        }
+        else
+        {
+            Debug.Log("Behaviour \"" + name + "\" not found");
+            return null;
+        }
+
     } // GetBehaviour()
 
-    public void CreateBehaviours()
+    private void CreateBehaviours()
     { // Create all of the behaviours needed, storing them in the list
 
-      _behaviours = new List<Base.Behaviour>();
+      _behaviours = new Dictionary<string, Base.Behaviour>();
       
       // Animal Behaviour (index 0)
       BehaveComponent[] animalComponents = new BehaveComponent[1];
-      animalComponents[0] = CreateAnimalHunger();
+            animalComponents[0] = CreateAnimalWander();
       Selector animalSelector = new Selector(animalComponents);
-      _behaviours.Add(new Base.Behaviour(animalSelector));
+      _behaviours.Add("basicAnimal", new Base.Behaviour(animalSelector));
 
     } // CreateBehaviours()
 
@@ -54,6 +80,19 @@ namespace Assets.Scripts.BehaviourTree
         
     } // CreateAnimalHunger()
 
+        private Sequence CreateAnimalWander()
+        { // Creates a sequence that will allow an animal to wander around
+          // in his enclosure randomly
+
+            BehaveComponent[] animalWander = new BehaveComponent[2];
+
+            animalWander[0] = new Action(GetRandomInterestPoint);
+            animalWander[1] = new Action(MoveToTarget);
+
+            return new Sequence(animalWander);
+            
+        }
+
     #endregion
 
     #region Actions
@@ -73,6 +112,17 @@ namespace Assets.Scripts.BehaviourTree
         returnCode(ReturnCode.Success);
         yield break;
     } // GetFood()
+
+        private IEnumerator GetRandomInterestPoint(AIBase theBase, System.Action<ReturnCode> returnCode)
+        {
+            Debug.Log("Getting random Interest Point");
+
+            theBase.pathfinder.Target = IPManager.Instance.GetRandomIP();
+            theBase.pathfinder.CanSearch = true;
+
+            returnCode(ReturnCode.Success);
+            yield break;
+        }
 
     #endregion
 
@@ -112,14 +162,18 @@ namespace Assets.Scripts.BehaviourTree
     private IEnumerator MoveToTarget(AIBase theBase, System.Action<ReturnCode> returnCode)
     { // Move to the target
 
-        /*theBase.pathfinder.CanMove = true;  // Start movement
+        theBase.pathfinder.HasArrived = false;
+        theBase.pathfinder.CanMove = true;  // Start movement
+        theBase.pathfinder.CanSearch = true;
 
         while(theBase.pathfinder.HasArrived == false)  // Wait for reaching target
             yield return null; // yield coroutine
 
         theBase.pathfinder.CanMove = false; // Prevent further movement
+        theBase.pathfinder.CanSearch = false;
+        theBase.pathfinder.HasArrived = false;
 
-        Debug.Log("MoveToTarget(), returning success");*/
+        Debug.Log("MoveToTarget(), returning success");
         
         returnCode(ReturnCode.Success);
         yield break;

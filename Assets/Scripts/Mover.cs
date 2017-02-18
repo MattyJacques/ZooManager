@@ -3,6 +3,7 @@ using System.Collections;
 using Pathfinding.RVO;
 using Pathfinding;
 
+[RequireComponent(typeof(FunnelModifier))]
 [RequireComponent(typeof(Seeker))]
 [RequireComponent(typeof(RVOController))]
 public class Mover : MonoBehaviour 
@@ -12,12 +13,12 @@ public class Mover : MonoBehaviour
     public RVOController Controller;
     public float LastRepath;
     public float RepathRate = 0.5f;
-    public Transform Target;
+    public Vector3 Target;
     public int CurrentWaypoint;
     public Path path;
     public bool HasArrived = false;
-    public float Speed = 2f;
-    public float ReachedDistance = 1f;
+    public float Speed = 10f;
+    public float ReachedDistance = 2.5f;
     public bool CanSearch = true;
     public bool CanMove = false;
     public float WaypointDistance = 1f;
@@ -36,11 +37,11 @@ public class Mover : MonoBehaviour
     { // Update method, currently only used for path following
 
         // Repathing if repath time has been reached
-        if(CanSearch && Target != null && (Time.time - LastRepath > RepathRate) && Pathfinder.IsDone())
+        if(CanSearch && (Time.time - LastRepath > RepathRate) && Pathfinder.IsDone())
         {
             LastRepath = Time.time + Random.value * RepathRate * 0.5f;
 
-            Pathfinder.StartPath(transform.position, Target.position, OnPathComplete);
+            Pathfinder.StartPath(transform.position, Target, OnPathComplete);
         }
 
         if(CanMove && path != null && CurrentWaypoint < path.vectorPath.Count)
@@ -58,12 +59,11 @@ public class Mover : MonoBehaviour
 
         }
 
-        if(Target != null && Vector3.Distance(transform.position, Target.position) < ReachedDistance)
+        if(CanMove && Vector3.Distance(transform.position, Target) < ReachedDistance)
         { // We reached the end of the path
             
             HasArrived = true; // We arrived at the target
             Debug.Log("Arrived at Target");
-            Target = null;
             path = null;
 
         }

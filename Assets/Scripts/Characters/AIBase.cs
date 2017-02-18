@@ -4,9 +4,6 @@ using System.Threading;
 using Assets.Scripts.Managers;
 using Pathfinding;
 
-//[RequireComponent(typeof(Seeker))]
-//[RequireComponent(typeof(Pathfinding.Mover))]
-
 namespace Assets.Scripts.Characters
 {
   public class AIBase
@@ -50,11 +47,6 @@ namespace Assets.Scripts.Characters
     { // Increase the fun meter
       Boredom += amount;
     } // AddFun()
-
-        public virtual void TickBehaviour()
-        { // runs the behaviour tree a tick (to next yield)
-            //CoroutineSys.Instance.StartCoroutine(Behave.Behave(this));
-        } // TickBehaviour();
 
     public virtual void Kill()
     { // Kill the character

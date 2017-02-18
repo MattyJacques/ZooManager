@@ -28,7 +28,6 @@ namespace Assets.Scripts.Managers
     // Storage for animal data
     private List<Animal> _animalCollection = new List<Animal>();  // Animal templates
     private List<AnimalBase> _animals = new List<AnimalBase>();   // Active animals
-    BehaviourCreator _behaviours;                                 // Creates behaviours
 
     // Members for animal following mouse position
     private GameObject _currentAnimal;            // Current animal to be placed
@@ -49,10 +48,7 @@ namespace Assets.Scripts.Managers
       Assert.raiseExceptions = true;
       _terrainLayer = LayerMask.GetMask("Ground");
 
-      // Setup behaviour tree
-      _behaviours = new BehaviourCreator();
-      _behaviours.CreateBehaviours();
-
+      
       // Load all animals
       LoadAnimals();
     } // Start()
@@ -61,11 +57,6 @@ namespace Assets.Scripts.Managers
     void Update()
     {
       UpdateMouseAnimal();
-
-            foreach(AnimalBase ab in _animals)
-            {
-                ab.TickBehaviour();
-            }
 
     } // Update()
 
@@ -168,10 +159,9 @@ namespace Assets.Scripts.Managers
 
       AnimalBase newAnimal = new AnimalBase(_animalCollection[_currentIndex]);
 
-            newAnimal.Behave = _behaviours.GetBehaviour(0);
+            newAnimal.Behave = BehaviourCreator.Instance.GetBehaviour("basicAnimal");
 
-            _currentAnimal.AddComponent<Mover>();
-            newAnimal.pathfinder = _currentAnimal.GetComponent<Mover>();
+            newAnimal.pathfinder =  _currentAnimal.AddComponent<Mover>();
             StartCoroutine(newAnimal.Behave.Behave(newAnimal));
 
       _animals.Add(newAnimal);
