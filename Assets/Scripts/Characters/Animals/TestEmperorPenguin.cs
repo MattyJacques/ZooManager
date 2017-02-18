@@ -1,59 +1,74 @@
-﻿using Assets.Scripts.Characters.Animals;
+﻿// Title        : TestEmperorPenguin.cs
+// Purpose      : Basic Animation Controller Script that makes animal objects stand and walk around
+// Author       : Chii
+// Date         : 02/06/2017
+
+using Assets.Scripts.Characters.Animals;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TestEmperorPenguin : MonoBehaviour{
-  private Animator anim;
-  private Vector2 wayPoint;
-  private Rigidbody rbody;
-
-  float x;
+public class TestEmperorPenguin : MonoBehaviour
+{
+  private Animator anim;  //for accessing the GameObject's animator
+  private Rigidbody rbody;  //for accessing the GameObject's rigidbidy
+  private int radius = 47;  //radius of the circle the animals can wander...this will be removed and replaced
+  private float minWalk = 2;  //minimum amount of time taken walking
+  private float maxWalk = 5;  //maximum amount of time taken walking
+  private float minWait = 3;  //minimum amount of time taken idling
+  private float maxWait = 5;  //maximum amount of time taken idling
+  private float walkSpeed, rotationSpeed; //walking speed and rotation speed
 
   // Use this for initialization
-	void Start () 
+  void Start()
   {
-      anim = GetComponent<Animator>();
-      rbody = GetComponent<Rigidbody>();
-      
-      //TODO, move to Update() later...
-      InvokeRepeating("Wander", 2, 20);
-	}
+    anim = GetComponent<Animator>();
+    rbody = GetComponent<Rigidbody>();
+    walkSpeed = anim.GetFloat("walkSpeed");
+    rotationSpeed = anim.GetFloat("rotationSpeed");
+    WalkorIdle();
+  }//Start()
 
-  void Wander() 
-  { 
-    //random point to wander to, 47 is the radius
-    wayPoint = Random.insideUnitCircle *47;
+  void WalkorIdle()
+  {//50% chance to idle when destination reached
+    float randomFloat = Random.Range(0f, 1f);
+    if (randomFloat < 0.5f)
+    {
+      StartCoroutine(Idle());
+    }
+    else
+    {
+      StartCoroutine(Wander());
+    }
+  }//WalkorIdle()
 
-    //TODO: blend animations
-    //anim.SetFloat("PosX", wayPoint.x);
-    //anim.SetFloat("PosY", wayPoint.y);
+  IEnumerator Wander()
+  {//picks a random waypoint and has the animal walk towards it
+    float moveX = 10;
+    float moveZ = 10;
+    //TODO: replace below with range of enclosure
+    Vector3 wayPoint = new Vector3(Random.Range(-moveX, moveX), 0, Random.Range(-moveZ, moveZ));
 
-    //sets movement point
-    float moveX = wayPoint.x*Time.deltaTime;
-    float moveZ = wayPoint.y*Time.deltaTime;
+    rbody.velocity = wayPoint.normalized * walkSpeed;
+    yield return new WaitForSeconds(Random.Range(minWalk, maxWalk));
+    WalkorIdle();
+  }//Wander()
 
-    //TODO: replace with pathfinding
-    rbody.velocity = new Vector3(moveX, 0, moveZ).normalized;
+  IEnumerator Idle()
+  {//this makes the animal stand 
+    rbody.velocity = Vector3.zero;
+    yield return new WaitForSeconds(Random.Range(minWait, maxWait));
+    WalkorIdle();
+  }//Idle()
 
-    //changed rotation to -velocity because GameObject was moonwalking
-    Quaternion DesiredRotation = Quaternion.LookRotation(-rbody.velocity);
-    transform.rotation = DesiredRotation;
-
-    anim.Play("Walk", -1);
-
-    Debug.Log("Waypoint=" + wayPoint + "Velocity=" + rbody.velocity.magnitude + "Rotation=" + rbody.rotation); 
-  }
-	
   // Update is called once per frame
   void Update()
   { // Process the needs of the base then process the behaviour for AI
-    
-    /*
-    if(****ISHUNGRY******){
-     //TODO: move to food
-      anim.Play("PenguinEat",-1);
+    Quaternion targetRotation = Quaternion.LookRotation(-rbody.velocity);
+    if (rbody.velocity.magnitude != 0)
+    {
+      transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
     }
-     */
-	}
+    anim.SetFloat("speed", rbody.velocity.magnitude);
+  }//Update()
 }
