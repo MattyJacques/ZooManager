@@ -19,7 +19,7 @@ public class Mover : MonoBehaviour
     public bool HasArrived = false;
     public float Speed = 10f;
     public float ReachedDistance = 2.5f;
-    public bool CanSearch = true;
+    public bool CanSearch = false;
     public bool CanMove = false;
     public float WaypointDistance = 1f;
 

@@ -38,11 +38,6 @@ namespace Assets.Scripts.Characters
       }
     } // Feed()
 
-    public virtual void SetFoodTarget()
-    { // Find the nearest suitable food and set the pahtfinding target to this
-      //pathfinder.Target = BuildingManager.GetClosestOfType(Model.transform.position, BuildingManager.TargetType.Food).transform; // Replace this with enclosure stuff
-    } // SetFoodTarget()
-
     public virtual void AddFun(int amount)
     { // Increase the fun meter
       Boredom += amount;

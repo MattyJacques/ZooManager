@@ -2,39 +2,43 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IPManager : MonoBehaviour {
+public class IPManager : MonoBehaviour 
+{
 
 
-    private static IPManager _instance;
+  private static IPManager _instance;
 
-    public static IPManager Instance
+  public static IPManager Instance
+  {
+    get
     {
-        get
-        {
-            if(_instance == null)
-            {
-                _instance = new GameObject("IPManager").AddComponent<IPManager>();
-            }
+      if(_instance == null)
+      {
+        _instance = new GameObject("IPManager").AddComponent<IPManager>();
+      }
 
-            return _instance;
-        }
+      return _instance;
+    }
+  }
+
+
+  public Vector3 GetRandomIP()
+  {
+    List<Vector3> ips = new List<Vector3>();
+
+    GameObject[] gos = GameObject.FindGameObjectsWithTag("InterestPoint");
+
+    if(gos.Length == 0)
+      return Vector3.zero;
+
+    foreach(GameObject go in gos)
+    {
+        ips.Add(go.transform.position);
     }
 
+    return ips[Random.Range(0, ips.Count - 1)];
 
-    public Vector3 GetRandomIP()
-    {
-        List<Vector3> ips = new List<Vector3>();
-
-        GameObject[] gos = GameObject.FindGameObjectsWithTag("InterestPoint");
-
-        foreach(GameObject go in gos)
-        {
-            ips.Add(go.transform.position);
-        }
-
-        return ips[Random.Range(0, ips.Count - 1)];
-
-    }
+  }
 
 
 	// Use this for initialization
@@ -45,5 +49,8 @@ public class IPManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		
+        // Search for interest points
+        // and create them
+
 	}
 }

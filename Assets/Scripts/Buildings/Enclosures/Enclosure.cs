@@ -119,8 +119,8 @@ public class Enclosure : MonoBehaviour
         break;
     }
   } //UIChangeState()
-
-  private Transform GetClosestInteriorItem(Vector3 fromPosition, EnclosureInteriorItem.InteriorItemType itemType)
+        
+  public Transform GetClosestInteriorItem(Vector3 fromPosition, EnclosureInteriorItem.InteriorItemType itemType)
   { //Returns the closest Transform of itemType
     EnclosureInteriorItem interiorItem = _interiorItems.Where(x => x.type == itemType)
         .OrderBy(x => Vector3.Distance(fromPosition, x.transform.position))
