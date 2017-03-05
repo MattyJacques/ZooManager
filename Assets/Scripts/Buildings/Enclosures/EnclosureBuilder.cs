@@ -301,6 +301,10 @@ public class EnclosureBuilder : MonoBehaviour
     enclosure.AddComponent<Enclosure>();
     enclosure.tag = "Enclosure";
 
+    //Add the GUI controller
+    enclosure.AddComponent<EnclosureGUIController> ();
+
+    //Set up the collider
     BoxCollider enclosureCollider = enclosure.AddComponent<BoxCollider>();
     enclosureCollider.size = new Vector3(
         Mathf.Abs(firstCorner.x - secondCorner.x),

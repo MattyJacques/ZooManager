@@ -35,9 +35,10 @@ public class EnclosureInteraction : MonoBehaviour
         Enclosure enclosure = rayHit.collider.GetComponent<Enclosure>();
         if (enclosure != null)
         {
-          enclosure.Interact();
+          enclosure.OnClick();
         }
       }
     }
   } // Update()
-} // EnclosureInteraction()
+
+} // EnclosureInteraction
