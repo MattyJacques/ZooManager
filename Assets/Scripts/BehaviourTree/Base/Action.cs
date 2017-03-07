@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿// Title        : Action.cs
+// Purpose      : Template for an action node for behaviours
+// Author       : Matthew Jacques
+
+using UnityEngine;
 using System.Collections;
 using System;
 using Assets.Scripts.Characters;
