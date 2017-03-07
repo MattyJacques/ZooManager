@@ -7,7 +7,6 @@ using UnityEngine;
 using System.Collections;
 using Assets.Scripts.UI;
 using Assets.Scripts.Characters;
-using Assets.Scripts.Managers;
 
 namespace Assets.Scripts.Characters.Animals
 {
@@ -21,15 +20,9 @@ namespace Assets.Scripts.Characters.Animals
     GameClock gameClock;
 
     public AnimalBase(AnimalTemplate template, GameObject model)
-    { // Constructor to set up the template and behaviour tree and model
+    { // Constructor to set up the template and behaviour tree
       Template = template;
       Model = model;
-    } // AnimalBase()
-
-    public AnimalBase(Assets.Scripts.Managers.AnimalManager.Animal animal)
-    { // Constructor to set up the template and behaviour tree and model
-      Template = animal.Template;
-      Model = animal.Prefab;
     } // AnimalBase()
 
     protected void Update()
