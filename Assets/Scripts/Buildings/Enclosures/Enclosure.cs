@@ -64,19 +64,69 @@ public class Enclosure : MonoBehaviour
     }
   } //OnClick()
 
-  public Transform GetClosestInteriorItem(Vector3 fromPosition, EnclosureInteriorItem.InteriorItemType itemType)
-  { //Returns the closest Transform of itemType
-    EnclosureInteriorItem interiorItem = _interiorItems.Where(x => x.type == itemType)
-        .OrderBy(x => Vector3.Distance(fromPosition, x.transform.position))
-        .FirstOrDefault();
+  public Vector3 GetRandomPointOnTheGround()
+  { //Returns a random point inside of the enclosure that is on the ground
 
-    if (interiorItem == null)
+    //Get the extents of the enclosure's collider
+    Bounds colBounds = GetComponent<Collider> ().bounds;
+    float xExtent = colBounds.extents.x;
+    xExtent -= 0.25f; //Subtract so that the point isn't too close to a wall
+    float zExtent = colBounds.extents.z;
+    zExtent -= 0.25f;
+
+    //Get a random point
+    Vector3 randomPoint = colBounds.center;
+    randomPoint.x = Random.Range (-xExtent, xExtent);
+    randomPoint.z = Random.Range (-zExtent, zExtent);
+
+    //Move the point to the ground (incase the ground is uneven)
+    randomPoint.y = colBounds.extents.y - 0.2f;
+    RaycastHit rayHit = new RaycastHit ();
+    if (!Physics.Raycast (randomPoint, Vector3.down, out rayHit))
     {
-      Debug.LogWarning("Tried getting the closest interiorItem transform of type " + itemType.ToString()
-          + ", from the position " + fromPosition.ToString()
-          + ", but enclosure \"" + _name + "\" contains no such type of interiorItem.");
+      Debug.LogError ("Raycast inside of enclosure " + _name + " originating at " + randomPoint.ToString() + 
+        " and going straight down, did not hit the ground.");
     }
-    return interiorItem.transform;
+    
+    //TODO: Implement checks for what we hit right here.
+    //NOTE: Really should have a layer for the ground to make this easier.
+    return rayHit.point;
+
+  } //GetRandomPointOnTheGround()
+
+  public Transform GetClosestInteriorItemTransform(Vector3 fromPosition, EnclosureInteriorItem.InteriorItemType itemType)
+  { //Returns the closest Transform of itemType
+
+    //Check if any items of itemType exists
+    if (_interiorItems.Count <= 0)
+    {
+      Debug.LogWarning ("Tried getting the closest interior items of type " + itemType.ToString () +
+        " but enclosure " + _name + " contains no interiorItems at all!");
+    }
+    else
+    {
+      if (_interiorItems.Count (x => x.type == itemType) <= 0)
+      {
+      Debug.LogWarning ("Tried getting the closest interior items of type " + itemType.ToString () +
+        " but enclosure " + _name + " contains no interiorItems of that type!");
+      }
+    }
+
+    //Get the item of type itemType
+    if (itemType == EnclosureInteriorItem.InteriorItemType.Random)
+    { //Random is a wildcard, so we return any item
+      int r = Random.Range (0, _interiorItems.Count);
+      return _interiorItems[r].transform;
+    }
+
+    else
+    { //Return the closest item of itemType
+      EnclosureInteriorItem interiorItem = _interiorItems.Where (x => x.type == itemType)
+          .OrderBy (x => Vector3.Distance (fromPosition, x.transform.position))
+          .FirstOrDefault ();
+
+      return interiorItem.transform;
+    }
   } //GetClosest()
 
   public void RegisterNewInteriorItem(GameObject gameObject, EnclosureInteriorItem.InteriorItemType itemType)
@@ -111,6 +161,14 @@ public class Enclosure : MonoBehaviour
     }
 
   } //Rename()
+
+  public bool PositionExistsInsideEnclosure(Vector3 pos)
+  { //Returns true if pos is inside enclosure bounds
+
+    //NOTE: Assumes that enclosure only has ONE collider, might not work with multiple.
+    return GetComponent<Collider> ().bounds.Contains (pos);
+
+  } //PositionExistsInsideEnclosure()
 
   private void DeleteThisEnclosure()
   { //Deletes this enclosure and all attached objects
