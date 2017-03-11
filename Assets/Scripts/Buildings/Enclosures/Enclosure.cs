@@ -75,12 +75,12 @@ public class Enclosure : MonoBehaviour
     zExtent -= 0.25f;
 
     //Get a random point
-    Vector3 randomPoint = colBounds.center;
-    randomPoint.x = Random.Range (-xExtent, xExtent);
-    randomPoint.z = Random.Range (-zExtent, zExtent);
+    Vector3 randomPoint = transform.position;
+    randomPoint.x += Random.Range (-xExtent, xExtent);
+    randomPoint.z += Random.Range (-zExtent, zExtent);
 
     //Move the point to the ground (incase the ground is uneven)
-    randomPoint.y = colBounds.extents.y - 0.2f;
+    randomPoint.y += colBounds.extents.y - 0.2f;
     RaycastHit rayHit = new RaycastHit ();
     if (!Physics.Raycast (randomPoint, Vector3.down, out rayHit))
     {
