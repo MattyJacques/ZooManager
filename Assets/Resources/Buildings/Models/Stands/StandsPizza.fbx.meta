@@ -1,0 +1,313 @@
+fileFormatVersion: 2
+guid: 5c52fd353fbdef440a56b0b3e6ce79fa
+timeCreated: 1482880555
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Decoration
+    100002: Grate
+    100004: Oven_Window
+    100006: Pizza_Stand
+    100008: Pizza_Stand_Door
+    100010: Pizza_Stand_Sign
+    100012: //RootNode
+    100014: Windows
+    400000: Decoration
+    400002: Grate
+    400004: Oven_Window
+    400006: Pizza_Stand
+    400008: Pizza_Stand_Door
+    400010: Pizza_Stand_Sign
+    400012: //RootNode
+    400014: Windows
+    2300000: Decoration
+    2300002: Grate
+    2300004: Oven_Window
+    2300006: Pizza_Stand
+    2300008: Pizza_Stand_Door
+    2300010: Pizza_Stand_Sign
+    2300012: Windows
+    3300000: Decoration
+    3300002: Grate
+    3300004: Oven_Window
+    3300006: Pizza_Stand
+    3300008: Pizza_Stand_Door
+    3300010: Pizza_Stand_Sign
+    3300012: Windows
+    4300000: Grate
+    4300002: Pizza_Stand_Sign
+    4300004: Windows
+    4300006: Oven_Window
+    4300008: Pizza_Stand_Door
+    4300010: Pizza_Stand
+    4300012: Decoration
+    6400000: Decoration
+    6400002: Grate
+    6400004: Oven_Window
+    6400006: Pizza_Stand
+    6400008: Pizza_Stand_Door
+    6400010: Pizza_Stand_Sign
+    6400012: Windows
+    7400000: StandDoor-Open
+    7400002: Oven_Window|Pizza_Stand_DoorAction
+    7400004: Pizza_Stand_Door|Oven_WindowAction
+    7400006: StandDoor-Open
+    7400008: StandDoor-Close
+    7400010: Oven-Open
+    7400012: Oven-Close
+    7400014: Pizza_Stand_Door|Pizza_Stand_Door|Pizza_Stand_Door|Pizza_Stand_DoorAction|Pizza_
+    7400016: Pizza_Stand_Door|Pizza_Stand_Door|Pizza_Stand_Door|Pizza_Stand_DoorAction|Pizza_0
+    7400018: Oven_Window|Oven_Window|Oven_Window|Oven_WindowAction|Oven_Window|Oven_Wind
+    7400020: Oven_Window|Oven_Window|Oven_Window|Oven_WindowAction|Oven_Window|Oven_Wind0
+    7400022: Pizza_Stand_Door|Open
+    7400024: Pizza_Stand_Door|Close
+    7400026: Oven_Window|Open
+    7400028: Oven_Window|Close
+    9500000: //RootNode
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 1
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths:
+    - Oven_Window
+    - Pizza_Stand_Door
+    clipAnimations:
+    - serializedVersion: 16
+      name: Pizza_Stand_Door|Open
+      takeName: Pizza_Stand_Door|Pizza_Stand_DoorAction
+      firstFrame: 0
+      lastFrame: 20
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Grate
+        weight: 0
+      - path: Pizza_Stand_Sign
+        weight: 0
+      - path: Windows
+        weight: 0
+      - path: Oven_Window
+        weight: 1
+      - path: Pizza_Stand_Door
+        weight: 1
+      - path: Pizza_Stand
+        weight: 0
+      - path: Decoration
+        weight: 0
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Pizza_Stand_Door|Close
+      takeName: Pizza_Stand_Door|Pizza_Stand_DoorAction
+      firstFrame: 20
+      lastFrame: 34
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Decoration
+        weight: 1
+      - path: Grate
+        weight: 1
+      - path: Oven_Window
+        weight: 1
+      - path: Pizza_Stand
+        weight: 1
+      - path: Pizza_Stand_Door
+        weight: 1
+      - path: Pizza_Stand_Sign
+        weight: 1
+      - path: Windows
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Oven_Window|Open
+      takeName: Oven_Window|Oven_WindowAction
+      firstFrame: 0
+      lastFrame: 8
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Decoration
+        weight: 1
+      - path: Grate
+        weight: 1
+      - path: Oven_Window
+        weight: 1
+      - path: Pizza_Stand
+        weight: 1
+      - path: Pizza_Stand_Door
+        weight: 1
+      - path: Pizza_Stand_Sign
+        weight: 1
+      - path: Windows
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Oven_Window|Close
+      takeName: Oven_Window|Oven_WindowAction
+      firstFrame: 8
+      lastFrame: 20
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Decoration
+        weight: 1
+      - path: Grate
+        weight: 1
+      - path: Oven_Window
+        weight: 1
+      - path: Pizza_Stand
+        weight: 1
+      - path: Pizza_Stand_Door
+        weight: 1
+      - path: Pizza_Stand_Sign
+        weight: 1
+      - path: Windows
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 1
+    importBlendShapes: 1
+    swapUVChannels: 1
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 1
+    secondaryUVAreaDistortion: 15
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 1
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

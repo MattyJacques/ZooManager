@@ -1,16 +1,15 @@
 ﻿// Title        : AnimalManager.cs
 // Purpose      : Initiates templates, manages instances of animals
 // Author       : Matthew Jacques
-// Date         : 27/08/2016
+// Date         : 27/01/2017
 
-using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using Assets.Scripts.Characters.Animals;
-using Assets.Scripts.Helpers;
-using Assets.Scripts.BehaviourTree;
-
+using System.Collections.Generic;         // Lists
+using System.IO;                          // Directory Infos
+using UnityEngine;                        // Monobehaviour
+using UnityEngine.Assertions;             // Debug Asserts
+using Assets.Scripts.Characters.Animals;  // AnimalBAse
+using Assets.Scripts.BehaviourTree;       // Behaviours
+using Assets.Scripts.Helpers;             // JSONReader
 
 namespace Assets.Scripts.Managers
 {
@@ -18,7 +17,7 @@ namespace Assets.Scripts.Managers
   public class AnimalManager : MonoBehaviour
   {
 
-    struct Animal
+    public struct Animal
     { // Struct to hold all the information on an animal, this includes the ID,
       // the template and the prefab
       public string ID { get; set; }
@@ -26,130 +25,187 @@ namespace Assets.Scripts.Managers
       public GameObject Prefab { get; set; }
     };
 
-    // Holds all animal templates read from JSON array
-    public AnimalTemplateCollection _templates;
+    // Storage for animal data
+    private List<Animal> _animalCollection = new List<Animal>();  // Animal templates
+    private List<AnimalBase> _animals = new List<AnimalBase>();   // Active animals
+    BehaviourCreator _behaviours;                                 // Creates behaviours
 
-    private List<Animal> _animalCollection;
+    // Members for animal following mouse position
+    private GameObject _currentAnimal;            // Current animal to be placed
+    private int _currentIndex;                    // Index of _animals for current animal
+    private LayerMask _terrainLayer;              // Used for mouse following
 
-    // List of all active animals
-    List<AnimalBase> _animals = new List<AnimalBase> { };
-
-    BehaviourCreator _behaviours;         // Creates all behaviours for animals
+    /////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Monobehaviours
+    //
+    /////////////////////////////////////////////////////////////////////////////////////////
+    #region Monobehaviours
 
     void Start()
-    { // Call to get the templates from JSON
+    { // Set up behaviour tree and load animals. Set raise exceptions for debugging
+
+      // Setup exceptions
+      Assert.raiseExceptions = true;
+      _terrainLayer = LayerMask.GetMask("Ground");
 
       // Setup behaviour tree
       _behaviours = new BehaviourCreator();
-      _templates = JSONReader.ReadJSON<AnimalTemplateCollection>("Animals/Animals");
       _behaviours.CreateBehaviours();
 
       // Load all animals
-      _animalCollection = new List<Animal>();
       LoadAnimals();
-
     } // Start()
 
+    // Update is called once per frame
     void Update()
     {
-      foreach (AnimalBase animal in _animals)
-      {
-        animal.CheckNeeds();
-      }
-    }
+      UpdateMouseAnimal();
+    } // Update()
 
-    public void Create(string id, int amount, Vector3 location)
-    { // Create an animal instance using the ID field of the templates
+    #endregion
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Creating Animals
+    //
+    /////////////////////////////////////////////////////////////////////////////////////////
+    #region Create Animals
+
+    public void CreateFollowMouse(string id)
+    { // Create an animal that will follow the mouse
 
       // Find index in array
-      int index = GetAnimalIndex(id);
+      _currentIndex = GetIndex(id);
 
-      if (index >= 0)
+      if (_currentIndex >= 0)
       { // Make sure template was found before creating the animal
-        CreateAnimal(index, amount, location);
+
+        // Create the animal
+        _currentAnimal = Instantiate(_animalCollection[_currentIndex].Prefab);
       }
 
-    } // Create(id)
+    } // Create(string)
 
     public void Create(LevelAnimalTemplate template)
     { // Create an animal instance using the template loaded from the level
       // loader
 
       // Find index in array
-      int index = GetAnimalIndex(template.id);
+      _currentIndex = GetIndex(template.id);
 
-      if (index >= 0)
+      if (_currentIndex >= 0)
       { // Make sure template was found before creating the animal
-        CreateAnimal(index, 1, new Vector3(template.coords.x,
-                                           template.coords.y,
-                                           template.coords.z));
+
+        // Create the animal
+        _currentAnimal = Instantiate(_animalCollection[_currentIndex].Prefab);
+        _currentAnimal.transform.position = new Vector3(template.coords.x,
+                                                        template.coords.y,
+                                                        template.coords.z);
+
+        PlaceAnimal();
       }
 
     } // Create(LevelAnimalTemplate)
 
-
-    private int GetAnimalIndex(string id)
+    private int GetIndex(string id)
     { // Get the index of the Animal struct within the _animalCollection
 
       int animalIndex = -1;              // Holds the template index found
 
-      for (int i = 0; i < _templates.animalTemplates.Length; i++)
+      for (int i = 0; i < _animalCollection.Count; i++)
       { // Check if there is a match for every template in the array
 
-
-        if (_templates.animalTemplates[i].id == id)
+        if (_animalCollection[i].ID == id)
         { // Check for matching ID, if found set index and break out of loop
           animalIndex = i;
           break;
         }
       }
 
+      // Make sure index has been found
+      Assert.AreNotEqual(-1, animalIndex, "Index not found");
+
       return animalIndex;
 
-    } // GetTemplateIndex()
+    } // GetIndex()
 
+    private void UpdateMouseAnimal()
+    { // Update the position of the animal object that is currently following the
+      // mouse position
 
-    private void CreateAnimal(int index, int amount, Vector3 location)
-    { // Create and store the animal using the template index, amount of animals
-      // and the current location of the animal
+      if (_currentAnimal)
+      {
+        if (Input.GetMouseButtonDown(0))
+        { // If left mouse button is pressed, place the animal, update animal position with
+          // the mouse position again.
+          PlaceAnimal();
+        }
+        else
+        { // Update animal position with the mouse position again
 
-      for (int i = 0; i < amount; i++)
-      { // Create as many animals as needed
+          // Create raycast from screen point using mouse position
+          Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+          RaycastHit hit;
 
-        // Create new animal with found template
-        AnimalBase newBase = new AnimalBase(_animalCollection[index].Template,
-                                            _animalCollection[index].Prefab);
-
-        // Update location of object
-        newBase.Model.transform.position = location;
-
-        // Add animal to instances list
-        _animals.Add(newBase);
+          if (Physics.Raycast(ray, out hit, Mathf.Infinity, _terrainLayer))
+          { // If raycast hits collider, update position of _currentAnimal
+            _currentAnimal.transform.position = hit.point;
+          }
+        }
       }
 
-    } // Create()
+    } // UpdateMouseAnimal()
+
+    private void PlaceAnimal()
+    { // Place the animal located in the _currentAnimal member into the game world
+
+      AnimalBase newAnimal = new AnimalBase(_animalCollection[_currentIndex]);
+      _animals.Add(newAnimal);
+      _currentAnimal = null;
+      _currentIndex = -1;
+
+    } // PlaceAnimal()
+
+    #endregion
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Loading Animals
+    //
+    /////////////////////////////////////////////////////////////////////////////////////////
+    #region Load Animals
 
     private void LoadAnimals()
-    { // Load animals from Assets/Resources
+    { // Load animals from Assets/Resources sotring in list of Animal types
 
+      // Get the directories in the Animals folder
       DirectoryInfo directoryInfo = new DirectoryInfo("Assets/Resources/Animals");
       DirectoryInfo[] subDirectories = directoryInfo.GetDirectories();
 
+      // Read animal JSON data
+      AnimalTemplateCollection _templates;
+      _templates = JSONReader.ReadJSON<AnimalTemplateCollection>("AnimalData");
+
       foreach (DirectoryInfo dir in subDirectories)
-      {
-        Debug.Log("Searching directory: " + dir.Name);
+      { // Loop through all directorys looking for animals
 
         foreach (FileInfo file in dir.GetFiles())
-        {
+        { // Check each directory to see if it contains a prefab file, if so store
+          // in an Animal object
+
           if (file.Name.EndsWith("prefab"))
-          { // Create a new Animal struct with the ID, prefab and template of
-            // the animal found
+          { // Create a new Animal object with the ID, prefab and template
+            // of the animal found
+
             Animal newAnimal = new Animal();
             newAnimal.ID = Path.GetFileNameWithoutExtension(file.Name);
-            newAnimal.Prefab = (GameObject)Resources.Load(dir.Name + "/" + file.Name);
-            
+            newAnimal.Prefab = (GameObject)Resources.Load("Animals/" + dir.Name + "/"
+              + Path.GetFileNameWithoutExtension(file.Name));
+
             foreach (AnimalTemplate template in _templates.animalTemplates)
-            {
+            { // Search the loaded templates for one matching the prefab, setting
+              // if found
               if (template.id == newAnimal.ID)
               {
                 newAnimal.Template = template;
@@ -157,12 +213,21 @@ namespace Assets.Scripts.Managers
               }
             }
 
-            Debug.Log("Loaded " + dir.Name + "/" + file.Name);
-          }
-        }
-      }
+            if (newAnimal.Template != null)
+            { // Add the animal to the collection if setup was successful
+              _animalCollection.Add(newAnimal);
+            }
+            else
+            { // Raise an exception if template not found
+              Assert.IsNotNull(newAnimal.Template);
+            }
+
+          } // if (file.Name.EndsWith("prefab"))
+        } // foreach (FileInfo file in dir.GetFiles())
+      } // foreach (DirectoryInfo dir in subDirectories)
     } // LoadAnimals()
 
-  } // AnimalManager
+    #endregion
 
+  } // AnimalManager
 } // Namespace

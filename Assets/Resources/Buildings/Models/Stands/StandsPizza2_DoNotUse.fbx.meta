@@ -1,0 +1,117 @@
+fileFormatVersion: 2
+guid: 45ff6ca516981124ea19456a203b6d43
+timeCreated: 1483397915
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Decoration
+    100002: Grate
+    100004: Oven_Window
+    100006: Pizza_Stand
+    100008: Pizza_Stand_Door
+    100010: Pizza_Stand_Sign
+    100012: //RootNode
+    100014: Windows
+    400000: Decoration
+    400002: Grate
+    400004: Oven_Window
+    400006: Pizza_Stand
+    400008: Pizza_Stand_Door
+    400010: Pizza_Stand_Sign
+    400012: //RootNode
+    400014: Windows
+    2300000: Decoration
+    2300002: Grate
+    2300004: Oven_Window
+    2300006: Pizza_Stand
+    2300008: Pizza_Stand_Door
+    2300010: Pizza_Stand_Sign
+    2300012: Windows
+    3300000: Decoration
+    3300002: Grate
+    3300004: Oven_Window
+    3300006: Pizza_Stand
+    3300008: Pizza_Stand_Door
+    3300010: Pizza_Stand_Sign
+    3300012: Windows
+    4300000: Grate
+    4300002: Pizza_Stand_Sign
+    4300004: Windows
+    4300006: Oven_Window
+    4300008: Pizza_Stand_Door
+    4300010: Pizza_Stand
+    4300012: Decoration
+    7400000: Oven_Window|Oven_WindowAction
+    7400002: Oven_Window|Pizza_Stand_DoorAction
+    7400004: Pizza_Stand_Door|Oven_WindowAction
+    7400006: Pizza_Stand_Door|Pizza_Stand_DoorAction
+    9500000: //RootNode
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 1
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
