@@ -16,6 +16,7 @@ public class TerrainTools : MonoBehaviour {
   public LayerMask _terrainLayers;
   public LayerMask _heightLayers;
   public TerrainVolume _terrainVolume;
+  public TerrainVolumeCollider _terrainVolumeCollider;
   public GameObject __ghostTilePrefab;
   public GameObject _heightPrefab;
   public Slider __gridSizeSlider;
