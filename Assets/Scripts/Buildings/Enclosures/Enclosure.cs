@@ -28,115 +28,110 @@ public class Enclosure : MonoBehaviour
 
   private string _name;
   private GameObject _canvas;
-
-  private enum UIState
-  {
-    Exit,
-    Main,
-    EditName
-  }
+  private EnclosureGUIController _enclosureGUIController;
 
   private List<EnclosureInteriorItem> _interiorItems = new List<EnclosureInteriorItem>();
 
   public void Start()
   { //Initialization
+
+    //Check that we have a general collider
     if (!GetComponent<BoxCollider>() && !GetComponent<MeshCollider>())
     {
       Debug.LogError("Enclosure " + name + " at " + transform.position.ToString() + " has no collider!");
     }
+
+    //Get the GUI controller
+    _enclosureGUIController = GetComponent<EnclosureGUIController> ();
+
   } //Start()
 
-  public void Interact()
+  public void OnClick()
   { //Is called when the player clicks on the Enclosure NOTE: replace with onclick?
     //Instantiates and initializes the GUI that allows for player interaction with the enclosure
 
-    //Don't create a new canvas if we already have one
-    if (_canvas != null)
+    if (_enclosureGUIController._state == EnclosureGUIController.UIState.Uninitialized)
     {
-      return;
+      _enclosureGUIController.Initialize ();
     }
-
-    //Create the new canvas
-    _canvas = Instantiate(Resources.Load("Menus/Prefabs/Canvas_Enclosure") as GameObject);
-    _canvas.transform.FindChild("Text_EnclosureName").GetComponent<Text>().text = _name;
-    _canvas.transform.position = transform.position + new Vector3(0f, 6f, 0f); //TODO: place canvas so that the camera sees it
-
-    //Hook up functionality to the different GUI events
-    InputField input = _canvas.transform.FindChild("InputField").GetComponent<InputField>();
-    input.onEndEdit.AddListener(delegate
+    else if (_enclosureGUIController._state == EnclosureGUIController.UIState.Hidden)
     {
-      Rename(input.text);
-      //Go back to main after we have edited the name
-      UIChangeState(UIState.Main);
-    });
-
-    Button button_Rename = _canvas.transform.FindChild("InitialButtons/Button_Rename").GetComponent<Button>();
-    button_Rename.onClick.AddListener(delegate
-    {
-      UIChangeState(UIState.EditName);
-    });
-
-    Button button_Exit = _canvas.transform.FindChild("Button_Exit").GetComponent<Button>();
-    button_Exit.onClick.AddListener(delegate
-    {
-      UIChangeState(UIState.Exit);
-    });
-    //Delete
-
-    UIChangeState(UIState.Main);
-  } //Interact()
-
-  //TODO: Move ui stuff to it's own class
-  private void UIChangeState(UIState state)
-  { //Changes the state of the canvas that is attached to the enclosure
-
-    if (_canvas == null)
-    {
-      Debug.LogWarning("UIChangeState was called, but there is no canvas attached to enclosure.");
-      return;
+      _enclosureGUIController.ShowCanvas ();
     }
-
-    //Reset everything
-    _canvas.transform.FindChild("InitialButtons").gameObject.SetActive(false);
-    _canvas.transform.FindChild("InputField").gameObject.SetActive(false);
-
-    //Activate whatever UI object we need for this state
-    switch (state)
-    {
-      case UIState.Exit:
-        Destroy(_canvas);
-        _canvas = null;
-        break;
-
-      //Main state, displays navigation buttons
-      case UIState.Main:
-        _canvas.transform.FindChild("InitialButtons").gameObject.SetActive(true);
-        break;
-
-      case UIState.EditName:
-        _canvas.transform.FindChild("InputField").gameObject.SetActive(true);
-        _canvas.transform.FindChild("InputField").GetComponent<InputField>().text = "";
-        break;
+    else
+    { //We might not want to hide the GUI on aditional clicks.
+      _enclosureGUIController.HideCanvas ();
     }
-  } //UIChangeState()
-        
-  public Transform GetClosestInteriorItem(Vector3 fromPosition, EnclosureInteriorItem.InteriorItemType itemType)
+  } //OnClick()
+
+  public Vector3 GetRandomPointOnTheGround()
+  { //Returns a random point inside of the enclosure that is on the ground
+
+    //Get the extents of the enclosure's collider
+    Bounds colBounds = GetComponent<Collider> ().bounds;
+    float xExtent = colBounds.extents.x;
+    xExtent -= 0.25f; //Subtract so that the point isn't too close to a wall
+    float zExtent = colBounds.extents.z;
+    zExtent -= 0.25f;
+
+    //Get a random point
+    Vector3 randomPoint = transform.position;
+    randomPoint.x += Random.Range (-xExtent, xExtent);
+    randomPoint.z += Random.Range (-zExtent, zExtent);
+
+    //Move the point to the ground (incase the ground is uneven)
+    randomPoint.y += colBounds.extents.y - 0.2f;
+    RaycastHit rayHit = new RaycastHit ();
+    if (!Physics.Raycast (randomPoint, Vector3.down, out rayHit))
+    {
+      Debug.LogError ("Raycast inside of enclosure " + _name + " originating at " + randomPoint.ToString() + 
+        " and going straight down, did not hit the ground.");
+    }
+    
+    //TODO: Implement checks for what we hit right here.
+    //NOTE: Really should have a layer for the ground to make this easier.
+    return rayHit.point;
+
+  } //GetRandomPointOnTheGround()
+
+  public Transform GetClosestInteriorItemTransform(Vector3 fromPosition, EnclosureInteriorItem.InteriorItemType itemType)
   { //Returns the closest Transform of itemType
-    EnclosureInteriorItem interiorItem = _interiorItems.Where(x => x.type == itemType)
-        .OrderBy(x => Vector3.Distance(fromPosition, x.transform.position))
-        .FirstOrDefault();
 
-    if (interiorItem == null)
+    //Check if any items of itemType exists
+    if (_interiorItems.Count <= 0)
     {
-      Debug.LogWarning("Tried getting the closest interiorItem transform of type " + itemType.ToString()
-          + ", from the position " + fromPosition.ToString()
-          + ", but enclosure \"" + _name + "\" contains no such type of interiorItem.");
+      Debug.LogWarning ("Tried getting the closest interior items of type " + itemType.ToString () +
+        " but enclosure " + _name + " contains no interiorItems at all!");
     }
-    return interiorItem.transform;
+    else
+    {
+      if (_interiorItems.Count (x => x.type == itemType) <= 0)
+      {
+      Debug.LogWarning ("Tried getting the closest interior items of type " + itemType.ToString () +
+        " but enclosure " + _name + " contains no interiorItems of that type!");
+      }
+    }
+
+    //Get the item of type itemType
+    if (itemType == EnclosureInteriorItem.InteriorItemType.Random)
+    { //Random is a wildcard, so we return any item
+      int r = Random.Range (0, _interiorItems.Count);
+      return _interiorItems[r].transform;
+    }
+
+    else
+    { //Return the closest item of itemType
+      EnclosureInteriorItem interiorItem = _interiorItems.Where (x => x.type == itemType)
+          .OrderBy (x => Vector3.Distance (fromPosition, x.transform.position))
+          .FirstOrDefault ();
+
+      return interiorItem.transform;
+    }
   } //GetClosest()
 
   public void RegisterNewInteriorItem(GameObject gameObject, EnclosureInteriorItem.InteriorItemType itemType)
   { // Register a new interior object into a enclosure
+
     EnclosureInteriorItem newItem = new EnclosureInteriorItem(gameObject, itemType);
     _interiorItems.Add(newItem);
 
@@ -145,10 +140,12 @@ public class Enclosure : MonoBehaviour
         + ", to enclosure " + _name
         + ", at position " + gameObject.transform.position.ToString()
         + ".");
+
   } //RegisterNewInteriorItem()
 
-  private bool Rename(string name)
+  public bool Rename(string name)
   { //Renames the enclosure
+
     if (name.Length > _minNameLength || name.Length < _maxNameLength)
     {
       _name = name;
@@ -162,7 +159,16 @@ public class Enclosure : MonoBehaviour
     {
       return false;
     }
+
   } //Rename()
+
+  public bool PositionExistsInsideEnclosure(Vector3 pos)
+  { //Returns true if pos is inside enclosure bounds
+
+    //NOTE: Assumes that enclosure only has ONE collider, might not work with multiple.
+    return GetComponent<Collider> ().bounds.Contains (pos);
+
+  } //PositionExistsInsideEnclosure()
 
   private void DeleteThisEnclosure()
   { //Deletes this enclosure and all attached objects

@@ -22,7 +22,8 @@ public class EnclosureInteriorItem
   {
     Food,
     Water,
-    Fun
+    Fun,
+    Random, //Not an actual type, just represents a wildcard when searching for type
   }
 
 } // EnclosureInteriorItem

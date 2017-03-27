@@ -21,10 +21,13 @@ public class EnclosureBuilder : MonoBehaviour
   public AudioClip _finalizeBuildAudioClip;
 
   private EnclosureBuilderPool _pool; //The pool we get out gameObjects from
-  private List<GameObject> _tempWalls = new List<GameObject>(); //The objects we are currently using(not pooled/deleted) to create the enclosure
+  //The objects we are currently using(not pooled/deleted) to create the enclosure
+  private List<GameObject> _tempWalls = new List<GameObject>(); 
   private List<GameObject> _tempCorners = new List<GameObject>();
   private Vector3 _cornerA;   //The first corner of the enclosure
   private Vector3 _cornerB;   //The second corner of the enclosure
+  //All of the enclosures created by this builder (there should only be one builder in the scene)
+  private List<Enclosure> _enclosures = new List<Enclosure> ();
 
   //The offsets account for the models rotation not being imported at zero..
   //If the pipeline ever changes and the models are imported with a different rotation this needs to be changed
@@ -82,10 +85,28 @@ public class EnclosureBuilder : MonoBehaviour
 
   public void BeginBuildingNewEnclosure()
   { // Create a new EnclosureBuilderPool ready for creating a new enclosure
+
     _pool = new EnclosureBuilderPool();
     _pool.Initialize(_wallPrefab, _cornerPrefab, _wallCantBuildMaterial, _cornerCantBuildMaterial);
     _state = State.GettingFirstCornerPosition;
+
   } // BeginBuildingNewEnclosure()
+
+  public Enclosure GetEnclosureAtPos(Vector3 positionToCheck)
+  { //Returns whatever enclosure that positionToCheck is inside of.
+    //Returns null if there is no enclosure there.
+
+    foreach (Enclosure e in _enclosures)
+    {
+      if (e.PositionExistsInsideEnclosure (positionToCheck))
+      {
+        return e;
+      }
+    }
+
+    return null;
+
+  } // GetEnclosureAtPos()
 
   private void AssignFirstCorner(Vector3 pos)
   { // Assing the first corner of the enclosure
@@ -301,6 +322,10 @@ public class EnclosureBuilder : MonoBehaviour
     enclosure.AddComponent<Enclosure>();
     enclosure.tag = "Enclosure";
 
+    //Add the GUI controller
+    enclosure.AddComponent<EnclosureGUIController> ();
+
+    //Set up the collider
     BoxCollider enclosureCollider = enclosure.AddComponent<BoxCollider>();
     enclosureCollider.size = new Vector3(
         Mathf.Abs(firstCorner.x - secondCorner.x),
