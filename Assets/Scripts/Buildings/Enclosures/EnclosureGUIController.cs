@@ -63,11 +63,13 @@ public class EnclosureGUIController : MonoBehaviour
   public void HideCanvas()
   { //Removes the canvas from sight
     _canvas.gameObject.SetActive (false);
+    ChangeState(UIState.Hidden);
   } //HideCanvas()
 
   public void ShowCanvas()
   { //Displays the canvas
     _canvas.gameObject.SetActive (true);
+    ChangeState(UIState.MainMenu);
   } //ShowCanvas()
 
   private void ChangeState(UIState newState)
@@ -91,5 +93,8 @@ public class EnclosureGUIController : MonoBehaviour
         _canvas.transform.FindChild("InputField").GetComponent<InputField>().text = "";
         break;
     }
+
+    _state = newState;
+
   } //ChangeState()
 }

@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.Characters.Animals;
 
 //TODO: separate the GUI into it's own class
 public class Enclosure : MonoBehaviour
@@ -31,6 +32,7 @@ public class Enclosure : MonoBehaviour
   private EnclosureGUIController _enclosureGUIController;
 
   private List<EnclosureInteriorItem> _interiorItems = new List<EnclosureInteriorItem>();
+  private List<AnimalBase> _animals = new List<AnimalBase>();
 
   public void Start()
   { //Initialization
@@ -136,12 +138,22 @@ public class Enclosure : MonoBehaviour
     _interiorItems.Add(newItem);
 
     Debug.Log("Added new interiorItem " + gameObject.name
-        + ", of type " + itemType.ToString()
+        + ", of type " + System.Enum.GetName(typeof(EnclosureInteriorItem.InteriorItemType), itemType)
         + ", to enclosure " + _name
         + ", at position " + gameObject.transform.position.ToString()
         + ".");
 
   } //RegisterNewInteriorItem()
+
+  public void RegisterNewAnimal(AnimalBase animal)
+  { // Register a new animal into a enclosure
+
+    _animals.Add(animal);
+
+    Debug.Log("Added new animal " + animal.Model.name
+          + " to enclosure " + _name);
+
+  }
 
   public bool Rename(string name)
   { //Renames the enclosure

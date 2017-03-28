@@ -20,10 +20,11 @@ public class EnclosureInteriorItem
 
   public enum InteriorItemType
   {
-    Food,
+    Food ,
     Water,
     Fun,
-    Random, //Not an actual type, just represents a wildcard when searching for type
+    Building,
+    Random //Not an actual type, just represents a wildcard when searching for type
   }
 
 } // EnclosureInteriorItem

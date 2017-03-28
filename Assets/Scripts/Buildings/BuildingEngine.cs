@@ -111,7 +111,7 @@ public class BuildingEngine : MonoBehaviour
 
         if (Input.GetMouseButtonDown (0) && !GameObject.Find ("EventSystem").GetComponent<UnityEngine.EventSystems.EventSystem> ().IsPointerOverGameObject ()) {
           if (!CheckIfOccupied (_positionToBuild, _gameObjectToBuildSize)) {
-            _previousBuildings.Add ((GameObject)Instantiate (_gameObjectToBuild, _positionToBuild, _ghostGameObject.transform.rotation));
+            _previousBuildings.Add ((GameObject)Instantiate(_gameObjectToBuild, _positionToBuild, _ghostGameObject.transform.rotation));
             GameObject tmpBoundingBox = new GameObject ();
             tmpBoundingBox.AddComponent<BoxCollider> ().size = _gameObjectToBuildSize;
             tmpBoundingBox.transform.position = _positionToBuild;

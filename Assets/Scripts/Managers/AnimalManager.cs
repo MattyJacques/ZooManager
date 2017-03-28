@@ -163,6 +163,8 @@ namespace Assets.Scripts.Managers
             newAnimal.pathfinder =  _currentAnimal.AddComponent<Mover>();
             StartCoroutine(newAnimal.Behave.Behave(newAnimal));
 
+      
+
       _animals.Add(newAnimal);
       _currentAnimal = null;
       _currentIndex = -1;

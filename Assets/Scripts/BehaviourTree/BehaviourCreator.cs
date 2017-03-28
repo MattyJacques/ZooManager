@@ -247,7 +247,7 @@ namespace Assets.Scripts.BehaviourTree
     private IEnumerator HasMyFood(AIBase theBase, System.Action<bool> conditionResult)
     { // Check if the enclosure has the preffered food type
       Debug.Log("HasMyFood(), returning false");
-      
+
       conditionResult(false);
       yield break;
     } // HasMyFood()
