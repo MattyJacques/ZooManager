@@ -160,6 +160,12 @@ namespace Assets.Scripts.BehaviourTree
     private IEnumerator EatFood(AIBase theBase, System.Action<ReturnCode> returnCode)
     { // Handle the eating of food
       Debug.Log("EatFood(), returning success");
+
+      Transform item = theBase.Enclosure.GetClosestInteriorItemTransform(theBase.Model.transform.position, EnclosureInteriorItem.InteriorItemType.Food);
+
+      theBase.Enclosure.RemoveInteriorItem(item.gameObject);
+      MonoBehaviour.Destroy(item.gameObject);
+
       theBase.Feed(AIBase.FeedType.Food, 100);
       returnCode(ReturnCode.Success);
       yield break;

@@ -150,6 +150,22 @@ public class Enclosure : MonoBehaviour
 
   } //RegisterNewInteriorItem()
 
+  public void RemoveInteriorItem(GameObject gameObject)
+  {
+    foreach(EnclosureInteriorItem item in _interiorItems)
+    {
+      if(item.gameObject == gameObject)
+      {
+        Debug.Log("Removed interiorItem " + gameObject.name
+          + ", of tpye " + System.Enum.GetName(typeof(EnclosureInteriorItem.InteriorItemType), item.type)
+          + ", from enclosure " + _name
+          + ", at position " + gameObject.transform.position.ToString() + ".");
+        _interiorItems.Remove(item);
+        return;
+      }
+    }
+  }
+
   public void RegisterNewAnimal(AnimalBase animal)
   { // Register a new animal into a enclosure
 
