@@ -31,6 +31,10 @@ public class Mover : MonoBehaviour
 
         Controller.maxSpeed = Speed;
 
+    HasArrived = false;
+    CanSearch = false;
+    CanMove = false;
+
     } // InitPathfinding()
 
     void FixedUpdate()

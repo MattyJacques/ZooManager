@@ -360,6 +360,13 @@ public class EnclosureBuilder : MonoBehaviour
     AudioSource.PlayClipAtPoint(_finalizeBuildAudioClip, centreOfEnclosure);
     //TODO: move sound closer to camera so it essentially is clamped to a higher min value? Or adjust volume bast on distance from camera
 
+    // Add enclosure to active enclosure list in EnclosureUtilites for AnimalBase
+    Enclosure enclose = enclosure.GetComponent<Enclosure>();
+    if (enclose != null)
+      EnclosureUtilities.AddEnclosure(ref enclose);
+    else
+      Debug.LogError("Enclosure component not found!");
+
     _state = State.Idle;
   }  // FinalizeEnclosureBuild()
 

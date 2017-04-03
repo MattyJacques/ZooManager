@@ -20,8 +20,9 @@ namespace Assets.Scripts.Characters
     public GameObject Model { get; set; } // Model of the object, used to render the object
 
     // Target / Path members
-    public BuildingManager.TargetType NextTarget { get; set; }  // Type of target, example: food or water
+    public EnclosureInteriorItem.InteriorItemType NextTarget { get; set; }  // Type of target, example: food or water
     public Mover pathfinder { get; set; }
+    public Enclosure Enclosure { get; set; }
 
     // Behaviour object for AI
     public BehaviourTree.Base.Behaviour Behave { get; set; }

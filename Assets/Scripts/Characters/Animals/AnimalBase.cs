@@ -8,6 +8,7 @@ using System.Collections;
 using Assets.Scripts.UI;
 using Assets.Scripts.Characters;
 using Assets.Scripts.Managers;
+using Assets.Scripts.BehaviourTree;
 
 namespace Assets.Scripts.Characters.Animals
 {
@@ -29,8 +30,28 @@ namespace Assets.Scripts.Characters.Animals
     public AnimalBase(Assets.Scripts.Managers.AnimalManager.Animal animal)
     { // Constructor to set up the template and behaviour tree and model
       Template = animal.Template;
-      Model = animal.Prefab;
+      Model = animal.Prefab;   
     } // AnimalBase()
+
+    public void Init()
+    { // Initializes the AIBase needs from template (WIP) and gets the animals enclosure
+      Hunger = 0;
+      Thirst = 100;
+      Boredom = 100;
+      Health = 100;
+      Age = 0;
+      Enclosure _enclosure = null;
+      if (EnclosureUtilities.IsActiveEnclosure(base.Model.transform.position, ref _enclosure) == false)
+        Debug.LogError("AnimalBase is not in a active enclosure!");
+      Enclosure = _enclosure;
+      Behave = BehaviourCreator.Instance.GetBehaviour("basicAnimal");
+
+      pathfinder = Model.AddComponent<Mover>();
+      if (pathfinder == null)
+        Debug.LogError("pathfinder not assigned");
+
+      CoroutineSys.Instance.StartCoroutine(Behave.Behave(this));
+    } // Init()
 
     protected void Update()
     { // Process the needs of the base then process the behaviour for AI

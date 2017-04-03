@@ -104,6 +104,7 @@ public class Enclosure : MonoBehaviour
     {
       Debug.LogWarning ("Tried getting the closest interior items of type " + itemType.ToString () +
         " but enclosure " + _name + " contains no interiorItems at all!");
+      return null;
     }
     else
     {
@@ -111,6 +112,7 @@ public class Enclosure : MonoBehaviour
       {
       Debug.LogWarning ("Tried getting the closest interior items of type " + itemType.ToString () +
         " but enclosure " + _name + " contains no interiorItems of that type!");
+        return null;
       }
     }
 
@@ -126,6 +128,9 @@ public class Enclosure : MonoBehaviour
       EnclosureInteriorItem interiorItem = _interiorItems.Where (x => x.type == itemType)
           .OrderBy (x => Vector3.Distance (fromPosition, x.transform.position))
           .FirstOrDefault ();
+
+      if (interiorItem == null)
+        return null;
 
       return interiorItem.transform;
     }
@@ -178,7 +183,10 @@ public class Enclosure : MonoBehaviour
   { //Returns true if pos is inside enclosure bounds
 
     //NOTE: Assumes that enclosure only has ONE collider, might not work with multiple.
-    return GetComponent<Collider> ().bounds.Contains (pos);
+    Debug.Log(GetComponent<Collider>().bounds.ToString());
+    Debug.Log(pos.ToString());
+
+    return GetComponent<Collider>().bounds.Contains (pos);
 
   } //PositionExistsInsideEnclosure()
 

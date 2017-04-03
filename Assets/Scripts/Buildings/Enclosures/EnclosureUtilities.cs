@@ -12,12 +12,12 @@ public class EnclosureUtilities : MonoBehaviour
   // List of active enclosures
   static List<Enclosure> _activeEnclosures = new List<Enclosure>();
 
-	static void AddEnclosure(ref Enclosure enclosure)
+	static public void AddEnclosure(ref Enclosure enclosure)
   { // Add a enclosure to the active list
     _activeEnclosures.Add(enclosure);
   } // AddEnclosure()
 
-  static void RemoveEnclosure(string encName)
+  static public void RemoveEnclosure(string encName)
   { // Remove the enclosure with the given name from the active list
 
     for (int i = 0; i < _activeEnclosures.Count; i++)
@@ -31,7 +31,7 @@ public class EnclosureUtilities : MonoBehaviour
 
   } // RemoveEnclosure()
 
-  static bool IsActiveEnclosure(Vector3 position, ref Enclosure enclosureRef)
+  static public bool IsActiveEnclosure(Vector3 position, ref Enclosure enclosureRef)
   { // Get the reference to the enclosure if there is one. 
 
     bool result = false;

@@ -99,7 +99,7 @@ namespace Assets.Scripts.Managers
                                                         template.coords.y,
                                                         template.coords.z);
 
-        PlaceAnimal();
+        //PlaceAnimal();
       }
 
     } // Create(LevelAnimalTemplate)
@@ -158,12 +158,9 @@ namespace Assets.Scripts.Managers
 
       AnimalBase newAnimal = new AnimalBase(_animalCollection[_currentIndex]);
 
-            newAnimal.Behave = BehaviourCreator.Instance.GetBehaviour("basicAnimal");
+      newAnimal.Model = _currentAnimal;
 
-            newAnimal.pathfinder =  _currentAnimal.AddComponent<Mover>();
-            StartCoroutine(newAnimal.Behave.Behave(newAnimal));
-
-      
+      newAnimal.Init();
 
       _animals.Add(newAnimal);
       _currentAnimal = null;
