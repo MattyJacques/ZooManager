@@ -314,7 +314,7 @@ namespace Pathfinding {
 		NavmeshTile[] tiles;
 
 		/** Currently updating tiles in a batch */
-		bool batchTileUpdate;
+		public bool batchTileUpdate;
 
 		/** List of tiles updating during batch */
 		List<int> batchUpdatedTiles = new List<int>();
