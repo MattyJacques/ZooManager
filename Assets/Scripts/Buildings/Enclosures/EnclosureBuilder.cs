@@ -245,6 +245,12 @@ public class EnclosureBuilder : MonoBehaviour
 
       cornerObjects[i].transform.position = corners[i];
 
+      BoxCollider coll;
+
+      if(cornerObjects[i].GetComponent<BoxCollider>())
+        coll = cornerObjects[i].AddComponent<BoxCollider>();
+
+
       //This rotation shit is 99% black magic because I'm awful at math. Don't touch any of the rotation stuff unless you want a migraine
       //Okay.. so we rotate the corners by the cornerRotationOffset based on which corner it is..
       cornerObjects[i].transform.Rotate(_cornerRotationOffset * (2 + i));
@@ -292,6 +298,9 @@ public class EnclosureBuilder : MonoBehaviour
         GameObject g = wallObjects[currentWallNum];
         currentWallNum++;
 
+        if(g.GetComponent<BoxCollider>() == null)
+          coll = g.AddComponent<BoxCollider>();
+
         const float wallLength = 2;
         Vector3 position = cornerA + ((cornerB - cornerA).normalized * x * wallLength);
 
@@ -321,6 +330,8 @@ public class EnclosureBuilder : MonoBehaviour
     enclosure.transform.position = centreOfEnclosure;
     enclosure.AddComponent<Enclosure>();
     enclosure.tag = "Enclosure";
+    enclosure.layer = LayerMask.NameToLayer("Enclosure");
+    Debug.Log("Layer of Enclosure Gameobject: " + LayerMask.LayerToName(enclosure.layer));
 
     //Add the GUI controller
     enclosure.AddComponent<EnclosureGUIController> ();

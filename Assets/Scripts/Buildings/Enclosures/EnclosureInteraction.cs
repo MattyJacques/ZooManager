@@ -11,7 +11,7 @@ public class EnclosureInteraction : MonoBehaviour
 
   void Start()
   {
-    _layerMask = -1; //Interacts with all layers
+    _layerMask = 1<<LayerMask.NameToLayer("Enclosure"); //Interacts with all layers
   }
 
   void Update()
