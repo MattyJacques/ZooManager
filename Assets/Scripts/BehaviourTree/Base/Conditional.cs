@@ -5,7 +5,7 @@ using Assets.Scripts.Characters;
 
 namespace Assets.Scripts.BehaviourTree.Base
 {
-  public delegate bool ConditionalDelegate(AIBase theBase);
+  public delegate IEnumerator ConditionalDelegate(AIBase theBase, System.Action<bool> conditionResult);
 
   public class Conditional : BehaveComponent
   {
@@ -19,33 +19,23 @@ namespace Assets.Scripts.BehaviourTree.Base
     } // Conditional
 
 
-    public override ReturnCode Behave(AIBase theBase)
+    public override IEnumerator Behave(AIBase theBase, System.Action<ReturnCode> returnCode)
     { // Perform the given behaviour by testing the condition given in
       // the constructor
 
-      try
+      bool result = false;
+      yield return CoroutineSys.Instance.StartCoroutine(_testCondition(theBase, val => result = val)); // Run the test condition (also coroutine for future proofing)
+      if(result)
       {
-        switch (_testCondition(theBase))
-        { // Run the test condition, setting the return code appropriately
-          case true:
-            _returnCode = ReturnCode.Success;
-            return _returnCode;
-          case false:
-            _returnCode = ReturnCode.Failure;
-            return _returnCode;
-          default:
-            _returnCode = ReturnCode.Failure;
-            return _returnCode;
-        }
-      } // try
-      catch (Exception excep)
-      { // Print out the exception for debugging purposes and continue with
-        // behaviour checking
+          returnCode(ReturnCode.Success); // Set returncode
+          yield break; // Exit coroutine
+      }
+      else
+      {
+          returnCode(ReturnCode.Failure);
+          yield break;
+      }
 
-        Debug.Log(excep.ToString());
-        _returnCode = ReturnCode.Failure;
-        return _returnCode;
-      } // catch
     } // Behave()
 
   } // Conditional

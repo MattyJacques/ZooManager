@@ -10,7 +10,7 @@ namespace Assets.Scripts.BehaviourTree.Base
 
     public BehaveComponent() { }
 
-    public abstract ReturnCode Behave(AIBase theBase);
+    public abstract IEnumerator Behave(AIBase theBase, System.Action<ReturnCode> returnCode);
    
   } // Component
 }

@@ -20,8 +20,9 @@
 		public float rotx;
 		public float timer;
 		public float startingRotation;
+  
 		void Start() 
-	{
+	  {
 			ispressed = false;
 			ispressed2 = false;
 			timer = 0f;

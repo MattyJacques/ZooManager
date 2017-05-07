@@ -34,15 +34,10 @@ namespace Assets.Scripts.Managers
 		// List of all active visitors
 		List<VisitorBase> _visitors = new List<VisitorBase> { };
 
-		BehaviourCreator _behaviours;         // Creates all behaviours for visitors
-
 		void Start()
 		{ // Call to get the templates from JSON
 
-			// Setup behaviour tree
-			_behaviours = new BehaviourCreator();
 			_templates = JSONReader.ReadJSON<VisitorTemplateCollection>("Visitors/Visitors");
-			_behaviours.CreateBehaviours();
 
 			// Load all visitors
 			_visitorCollection = new List<Visitor>();
@@ -54,7 +49,6 @@ namespace Assets.Scripts.Managers
 		{
 			foreach (VisitorBase visitor in _visitors)
 			{
-				visitor.CheckNeeds();
 			}
 		}
 

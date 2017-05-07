@@ -6,7 +6,6 @@
 using System.Collections.Generic;         // Lists
 using System.IO;                          // Directory Infos
 using UnityEngine;                        // Monobehaviour
-using UnityEngine.Assertions;             // Debug Asserts
 using Assets.Scripts.Characters.Animals;  // AnimalBAse
 using Assets.Scripts.BehaviourTree;       // Behaviours
 using Assets.Scripts.Helpers;             // JSONReader
@@ -29,6 +28,7 @@ namespace Assets.Scripts.Managers
     private List<Animal> _animalCollection = new List<Animal>();  // Animal templates
     private List<AnimalBase> _animals = new List<AnimalBase>();   // Active animals
     BehaviourCreator _behaviours;                                 // Creates behaviours
+    EnclosureUtilities _EnclosureCollection;                      // Holds all the enclsoures
 
     // Members for animal following mouse position
     private GameObject _currentAnimal;            // Current animal to be placed
@@ -45,14 +45,9 @@ namespace Assets.Scripts.Managers
     void Start()
     { // Set up behaviour tree and load animals. Set raise exceptions for debugging
 
-      // Setup exceptions
-      Assert.raiseExceptions = true;
       _terrainLayer = LayerMask.GetMask("Ground");
 
-      // Setup behaviour tree
-      _behaviours = new BehaviourCreator();
-      _behaviours.CreateBehaviours();
-
+      
       // Load all animals
       LoadAnimals();
     } // Start()
@@ -61,6 +56,7 @@ namespace Assets.Scripts.Managers
     void Update()
     {
       UpdateMouseAnimal();
+
     } // Update()
 
     #endregion
@@ -103,7 +99,7 @@ namespace Assets.Scripts.Managers
                                                         template.coords.y,
                                                         template.coords.z);
 
-        PlaceAnimal();
+        //PlaceAnimal();
       }
 
     } // Create(LevelAnimalTemplate)
@@ -124,7 +120,7 @@ namespace Assets.Scripts.Managers
       }
 
       // Make sure index has been found
-      Assert.AreNotEqual(-1, animalIndex, "Index not found");
+      Debug.Assert(-1 != animalIndex, "Animal index not found");
 
       return animalIndex;
 
@@ -161,6 +157,11 @@ namespace Assets.Scripts.Managers
     { // Place the animal located in the _currentAnimal member into the game world
 
       AnimalBase newAnimal = new AnimalBase(_animalCollection[_currentIndex]);
+
+      newAnimal.Model = _currentAnimal;
+
+      newAnimal.Init();
+
       _animals.Add(newAnimal);
       _currentAnimal = null;
       _currentIndex = -1;
@@ -219,7 +220,7 @@ namespace Assets.Scripts.Managers
             }
             else
             { // Raise an exception if template not found
-              Assert.IsNotNull(newAnimal.Template);
+              Debug.Assert(newAnimal.Template != null, "Animal template not found");
             }
 
           } // if (file.Name.EndsWith("prefab"))

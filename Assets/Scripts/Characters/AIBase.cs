@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Threading;
 using Assets.Scripts.Managers;
-
+using Pathfinding;
 
 namespace Assets.Scripts.Characters
 {
@@ -19,9 +20,9 @@ namespace Assets.Scripts.Characters
     public GameObject Model { get; set; } // Model of the object, used to render the object
 
     // Target / Path members
-    public BuildingManager.TargetType NextTarget { get; set; }  // Type of target, example: food or water
-    public GameObject Target { get; set; }                      // Target of current behaviour
-    public GameObject Path { get; set; }                        // Path to current behaviour
+    public EnclosureInteriorItem.InteriorItemType NextTarget { get; set; }  // Type of target, example: food or water
+    public Mover pathfinder { get; set; }
+    public Enclosure Enclosure { get; set; }
 
     // Behaviour object for AI
     public BehaviourTree.Base.Behaviour Behave { get; set; }
@@ -38,12 +39,10 @@ namespace Assets.Scripts.Characters
       }
     } // Feed()
 
-    public virtual void CheckNeeds()
-    { // Perform the behaviour for this base
-
-      Behave.Behave(this);
-
-    } // CheckNeeds()
+    public virtual void AddFun(int amount)
+    { // Increase the fun meter
+      Boredom += amount;
+    } // AddFun()
 
     public virtual void Kill()
     { // Kill the character
@@ -54,3 +53,4 @@ namespace Assets.Scripts.Characters
 
   } // AIBase
 } // namespace
+    

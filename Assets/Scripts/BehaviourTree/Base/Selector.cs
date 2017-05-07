@@ -15,37 +15,29 @@ namespace Assets.Scripts.BehaviourTree.Base
     } // Selector()
 
 
-    public override ReturnCode Behave(AIBase theBase)
+    public override IEnumerator Behave(AIBase theBase, System.Action<ReturnCode> returnCode)
     {
       for (int i = 0; i < _behaviours.Length; i++)
       { // Loop through and process all behaviours in the the array
-        try
-        {
-          switch (_behaviours[i].Behave(theBase))
-          { // Process current behaviour, checking return code
-            case ReturnCode.Failure:
-              continue;
-            case ReturnCode.Success:
-              _returnCode = ReturnCode.Success;
-              return _returnCode;
-            case ReturnCode.Running:
-              _returnCode = ReturnCode.Running;
-              return _returnCode;
-            default:
-              continue;
-          }
-        } // try
-        catch (Exception excep)
-        { // Print out the exception for debugging purposes and continue with
-          // behaviour checking
+        
+        ReturnCode result = ReturnCode.Failure;
+        yield return CoroutineSys.Instance.StartCoroutine(_behaviours[i].Behave(theBase, val => result = val)); // run the current behaviour as coroutine
 
-          Debug.Log(excep.ToString());
-          continue;
-        } // catch
+        switch (result)
+        { // Process current behaviour, checking return code
+        case ReturnCode.Failure:
+            continue;
+        case ReturnCode.Success:
+            returnCode(ReturnCode.Success); // set returncode
+            yield break; // exit coroutine
+        case ReturnCode.Running:
+            returnCode(ReturnCode.Failure);
+            yield break;
+        default:
+            continue;
+        }
       } // for i < _behaviours.Length
 
-      _returnCode = ReturnCode.Failure;
-      return _returnCode;
     } // Behave()
 
   } // Selector

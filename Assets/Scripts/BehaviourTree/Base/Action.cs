@@ -6,7 +6,7 @@ using Assets.Scripts.Characters;
 
 namespace Assets.Scripts.BehaviourTree.Base
 {
-  public delegate ReturnCode ActionDelegate(AIBase theBase);   // The action of the behaviour
+  public delegate IEnumerator ActionDelegate(AIBase theBase, System.Action<ReturnCode> returnCode);   // The action of the behaviour
 
   public class Action : BehaveComponent
   {
@@ -20,35 +20,15 @@ namespace Assets.Scripts.BehaviourTree.Base
     } // Action()
 
 
-    public override ReturnCode Behave(AIBase theBase)
+    public override IEnumerator Behave(AIBase theBase, System.Action<ReturnCode> returnCode)
     { // Perform the assigned action, returning the return code of the
       // behaviour
-      try
-      {
-        switch (_action(theBase))
-        { // 
-          case ReturnCode.Success:
-            _returnCode = ReturnCode.Success;
-            return _returnCode;
-          case ReturnCode.Failure:
-            _returnCode = ReturnCode.Failure;
-            return _returnCode;
-          case ReturnCode.Running:
-            _returnCode = ReturnCode.Running;
-            return _returnCode;
-          default:
-            _returnCode = ReturnCode.Failure;
-            return _returnCode;
-        }
-      } // try
-      catch (Exception excep)
-      { // Print out the exception for debugging purposes and continue with
-        // behaviour checking
 
-        Debug.Log(excep.ToString());
-        _returnCode = ReturnCode.Failure;
-        return _returnCode;
-      } // catch
+      ReturnCode result = ReturnCode.Failure;
+      yield return CoroutineSys.Instance.StartCoroutine(_action(theBase, val => result = val)); // Do the action as Coroutine and get it's result
+      returnCode(result); // Set the result
+      yield break; // Exit coroutine
+
     } // Behave()
 
   } // Action()

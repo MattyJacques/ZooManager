@@ -29,36 +29,19 @@ namespace Assets.Scripts.BehaviourTree.Base
     } // Behaviour()
 
 
-    public ReturnCode Behave(AIBase theBase)
+    public IEnumerator Behave(AIBase theBase)
     { // Process the behaviour of the current selector
 
-      try
-      {
-        switch (_root.Behave(theBase))
-        { // Process behaviour and return the correct return code
-          case ReturnCode.Failure:
-            _returnCode = ReturnCode.Failure;
-            return _returnCode;
-          case ReturnCode.Success:
-            _returnCode = ReturnCode.Success;
-            return _returnCode;
-          case ReturnCode.Running:
-            _returnCode = ReturnCode.Running;
-            return _returnCode;
-          default:
-            _returnCode = ReturnCode.Running;
-            return _returnCode;
-        }
-      } // try
-      catch (Exception excep)
-      { // Print out the exception for debugging purposes and continue with
-        // behaviour checking
-
-        Debug.Log(excep.ToString());
-        _returnCode = ReturnCode.Failure;
-        return _returnCode;
-     
-      } // catch
+            while(true) // Do it forever since we are in a thread
+            {
+                yield return null;
+                ReturnCode result;
+                Debug.Log("Start BT");
+                yield return CoroutineSys.Instance.StartCoroutine(_root.Behave(theBase, val => result = val)); // Start the root selector as coroutine
+                Debug.Log("End BT");
+                yield return new WaitForSeconds(5f);
+            }
+       
     } // Behave()
   } // Behaviour
 }
