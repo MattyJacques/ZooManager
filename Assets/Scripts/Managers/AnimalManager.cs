@@ -25,8 +25,8 @@ namespace Assets.Scripts.Managers
     };
 
     // Storage for animal data
-    private List<Animal> _animalCollection = new List<Animal>();  // Animal templates
-    private List<AnimalBase> _animals = new List<AnimalBase>();   // Active animals
+    public List<Animal> _animalCollection = new List<Animal>();  // Animal templates
+    public List<AnimalBase> _animals = new List<AnimalBase>();   // Active animals
     BehaviourCreator _behaviours;                                 // Creates behaviours
     EnclosureUtilities _EnclosureCollection;                      // Holds all the enclsoures
 
@@ -49,7 +49,7 @@ namespace Assets.Scripts.Managers
 
       
       // Load all animals
-      LoadAnimals();
+      //LoadAnimals();
     } // Start()
 
     // Update is called once per frame
@@ -176,7 +176,7 @@ namespace Assets.Scripts.Managers
     //
     /////////////////////////////////////////////////////////////////////////////////////////
     #region Load Animals
-
+/*
     private void LoadAnimals()
     { // Load animals from Assets/Resources sotring in list of Animal types
 
@@ -227,7 +227,7 @@ namespace Assets.Scripts.Managers
         } // foreach (FileInfo file in dir.GetFiles())
       } // foreach (DirectoryInfo dir in subDirectories)
     } // LoadAnimals()
-
+*/
     #endregion
 
   } // AnimalManager

@@ -24,8 +24,8 @@ namespace Assets.Scripts.Managers
     // Lists
     // Collection of building templates
     private BuildingTemplateCollection _buildingTemplates = null;
-    private static List<GameObject> _buildings = null;    // List of current active buildings
-    private static List<BuildingBase> _buildingBases = null;
+    public static List<GameObject> _buildings = null;    // List of current active buildings
+    public static List<BuildingBase> _buildingBases = null;
 
     // Objects
     public Transform _currentBuild;        // Current building to be placed
@@ -350,7 +350,7 @@ namespace Assets.Scripts.Managers
 
     private void LoadBuildings()
     { // Load buildings from Assets/Resources
-
+/*
       DirectoryInfo directoryInfo = new DirectoryInfo("Assets/Resources/Buildings");
       DirectoryInfo[] subDirectories = directoryInfo.GetDirectories();
 
@@ -370,7 +370,7 @@ namespace Assets.Scripts.Managers
         }
 
       }
-
+*/
     } // LoadBuildings()
 
     private void OnGUI()
