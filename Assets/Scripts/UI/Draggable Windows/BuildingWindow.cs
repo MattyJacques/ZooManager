@@ -17,47 +17,52 @@ public class BuildingWindow : MonoBehaviour
  
   private string buildingID;
   private Sprite buttonSprite;
-  private GameObject[] buildbuttons;                         //                      
+  private List<GameObject> buttons;                         //                      
   private GameObject window;                                     // The GUI window in which the buttons are placed
   private JSONNode jsonInfo;                                      // Used to load the buildingData Json file
-  private TextAsset jsonText;
+  private TextAsset[] jsonTexts;
   private int x;                                                                      // number of colums of building buttons
+  private int count;
 
   void Start()
   {    // Loads in the BuildingData json file, Then Generates a series of text buttons with the building name that lets the player then place an building from these
+    count = 0;
     GameObject button;
+    buttons = new  List<GameObject>();
 
-    jsonText = Resources.Load<TextAsset>("Buildings/Buildings_Base");
-    jsonInfo = JSON.Parse(jsonText.text);
- 
-    buildbuttons = new GameObject[jsonInfo["buildingTemplates"].Count];
-    buttonSprite = Resources.Load<Sprite>("Buildings/Previews/" + buildingID);
-  
-    for (int i = 0; i < jsonInfo["buildingTemplates"].Count; i++) 
+    jsonTexts = Resources.LoadAll<TextAsset>("Buildings/");
+    foreach(TextAsset jsonText in jsonTexts)
     {
-      buildingID = jsonInfo["buildingTemplates"][i]["id"];
 
-       if (jsonInfo["buildingTemplates"][i]["type"] != null)
-       {
-         buildingID = jsonInfo["buildingTemplates"][i]["type"] + "/" + buildingID;
-       }
-  
-       button = (GameObject)Instantiate (buttonPrefab,this.transform.position, Quaternion.identity);
-       button.GetComponent<BuildingFromGUI>().buildingName = buildingID;
+      jsonInfo = JSON.Parse(jsonText.text);
 
-      if (buttonSprite != null) {
-        button.GetComponent<Image>().sprite = buttonSprite;
-        Debug.Log("here!");
-      }
-      else {
-        button.GetComponentInChildren<Text>().text = jsonInfo["buildingTemplates"][i]["buildingname"];
-      }
+      for (int i = 0; i < jsonInfo["buildingTemplates"].Count; i++) 
+      {
+        buildingID = jsonInfo["buildingTemplates"][i]["id"];
+        buttonSprite = Resources.Load<Sprite>("Buildings/Previews/" + buildingID);
 
-       button.transform.SetParent(this.transform);
-       x = (int) this.GetComponent<RectTransform>().rect.width / 40 - 1;
-       button.GetComponent<RectTransform> ().localPosition = new Vector3 (-120 + (i % x * 40), -10 - ((Mathf.Floor(i/x - 1)) * 40), 0);
-       button.GetComponent<RectTransform> ().localScale = new Vector3 (.4F, .4F, 1);
-       buildbuttons[i] = button;
+         if (jsonInfo["buildingTemplates"][i]["type"] != null)
+         {
+           buildingID = jsonInfo["buildingTemplates"][i]["type"] + "/" + buildingID;
+         }
+    
+         button = (GameObject)Instantiate (buttonPrefab,this.transform.position, Quaternion.identity);
+         button.GetComponent<BuildingFromGUI>().buildingName = buildingID;
+
+        if (buttonSprite != null) {
+          button.GetComponent<Image>().sprite = buttonSprite;
+        }
+        else {
+          button.GetComponentInChildren<Text>().text = jsonInfo["buildingTemplates"][i]["buildingname"];
+        }
+
+         button.transform.SetParent(this.transform);
+         x = (int) this.GetComponent<RectTransform>().rect.width / 40 - 1;
+         button.GetComponent<RectTransform> ().localPosition = new Vector3 (-120 + (count % x * 40), -10 - ((Mathf.Floor(count/x - 1)) * 40), 0);
+         button.GetComponent<RectTransform> ().localScale = new Vector3 (.4F, .4F, 1);
+         buttons.Add(button);
+         count++;
+        }
       }
     } // Start()
 
@@ -70,8 +75,8 @@ public class BuildingWindow : MonoBehaviour
  
   public void OnScrollChange()
   {
-    for (int i = 0; i < buildbuttons.Length; i++) {
-      buildbuttons[i].GetComponent<RectTransform>().localPosition = new Vector3(buildbuttons[i].GetComponent<RectTransform>().localPosition.x, -10 - ((Mathf.Floor(i/x - 1)) * 40) + dragScrollBar.GetComponent<UnityEngine.UI.Scrollbar>().value * (Mathf.Floor(buildbuttons.Length/3) * 40), 0);
+    for (int i = 0; i < buttons.Count; i++) {
+      buttons[i].GetComponent<RectTransform>().localPosition = new Vector3(buttons[i].GetComponent<RectTransform>().localPosition.x, -10 - ((Mathf.Floor(i/x - 1)) * 40) + dragScrollBar.GetComponent<UnityEngine.UI.Scrollbar>().value * (Mathf.Floor(buttons.Count/3) * 40), 0);
     }
   } // OnScrollChange()
 
