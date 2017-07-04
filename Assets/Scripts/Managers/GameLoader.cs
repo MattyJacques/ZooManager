@@ -1,6 +1,6 @@
-﻿// Title        : GameManager.cs
+// Title        : GameManager.cs
 // Purpose      : Loads prefabs, IDs and templates into the BuildingManager and AnimalManager lists
-// Author       : Niels Weber
+// Author       : Niels Weber & Matthew Jacques
 // Date         : 02/07/2017
 
 using System.Collections;                 
@@ -17,7 +17,7 @@ namespace Assets.Scripts.Managers
     {
         private AnimalManager _animalManager;   //Refer to AnimalManager script in scene
         private bool loaded;                    //Check if the AnimalManager has been loaded, then move on to BuildingManager loading
-        public string test = "";                //DESTROY IF SCRIPT IS CORRECT AND CHANGE LoadPrefabDirectory("Assets/Resources/" + test) 
+        public string test = "Animals";         //DESTROY IF SCRIPT IS CORRECT AND CHANGE LoadPrefabDirectory("Assets/Resources/" + test) 
                                                 //INTO LoadPrefabDirectory("Assets/Resources/Animals");
 
         private void Start()
@@ -52,7 +52,7 @@ namespace Assets.Scripts.Managers
                 _templates = JSONReader.ReadJSON<AnimalTemplateCollection>("AnimalData");
 
                 foreach (DirectoryInfo dir in subDirInfo)
-                { // Loop through all directories looking for animals
+                { // Loop through all directories looking for animals and buildings
 
                     foreach (FileInfo file in dir.GetFiles())
                     { // Check each directory to see if it contains a prefab file. If so, store
@@ -84,7 +84,7 @@ namespace Assets.Scripts.Managers
                             }
                             else
                             { // Raise an exception if template not found
-                                Debug.Assert(newAnimal.Template != null, "Animal template not found");
+                                Debug.Assert(newAnimal.Template != null, "Animal template not found: " + file.Name);
                             }
 
                         } // if (file.Name.EndsWith("prefab"))
@@ -97,8 +97,6 @@ namespace Assets.Scripts.Managers
 
                 foreach (DirectoryInfo dir in subDirInfo)
                 {
-                    Debug.Log("Searching directory: " + dir.Name);
-
                     foreach (FileInfo file in dir.GetFiles())
                     {
                         if (file.Name.EndsWith("prefab"))
