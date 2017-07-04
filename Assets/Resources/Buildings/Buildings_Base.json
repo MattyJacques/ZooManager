@@ -1,0 +1,67 @@
+{
+  "buildingTemplates": [
+    {
+      "id": "DrinkStand",
+      "buildingname": "Drink Stand",
+      "price": 10,
+      "features": [ "Drinks" ],
+      "tags": [ "Shop" ],
+      "type": "Stands",
+      "upkeep": 1
+    },
+    {
+      "id": "PizzaStand",
+      "buildingname": "Pizza Stand",
+      "price": 10,
+      "features": [ "Pizza" ],
+      "tags": [ "Shop" ],
+      "type": "Stands",
+      "upkeep": 1
+    },
+    {
+      "id": "Toilet",
+      "buildingname": "Toilet",
+      "price": 10,
+      "features": [ "toilet" ],
+      "type": "Stands",
+      "upkeep": 1
+    },
+    {
+      "id": "WoodBench01",
+      "buildingname": "Wood Bench 1",
+      "price": 10,
+      "type": "Benches",
+      "upkeep": 1
+    },
+    {
+      "id": "WoodBench02",
+      "buildingname": "Wood Bench 2",
+      "price": 10,
+      "type": "Benches",
+      "upkeep": 1
+    },
+    {
+      "id": "WoodBenchBasic",
+      "buildingname": "Wood Bench 3",
+      "price": 10,
+      "type": "Benches",
+      "upkeep": 1
+    },
+    {
+      "id": "StreetLantern",
+      "buildingname": "Street Lantern",
+      "price": 10,
+      "type": "Decoration",
+      "upkeep": 1
+    },
+    {
+      "id": "TicketBooth",
+      "buildingname": "Ticket Booth",
+      "price": 10,
+      "features": [ "Tickets" ],
+      "tags": [ "Shop" ],
+      "upkeep": 1
+    },
+
+  ]
+}
