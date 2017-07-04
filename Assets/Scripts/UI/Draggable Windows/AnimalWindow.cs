@@ -3,17 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using SimpleJSON;
 using UnityEngine.UI;
+
 // Title        : AnimalWindow.cs
 // Purpose      : Lets you click on an animal in the GUI and spawn it
 // Author       : WeirdGamer
 // Date         : 25/05/2017
+
 public class AnimalWindow : MonoBehaviour 
 {
   
-  public string[] animalID; 
   public GameObject buttonPrefab;
   public GameObject dragScrollBar;
   
+  private string animalID;
+  private Sprite buttonSprite;
   private GameObject[] buttons;
   private GameObject window;
   private JSONNode jsonInfo;
@@ -23,17 +26,28 @@ public class AnimalWindow : MonoBehaviour
   void Start()
   {
     GameObject button;
+
     jsonText = Resources.Load<TextAsset>("AnimalData");
     jsonInfo = JSON.Parse(jsonText.text);
-   buttons = new GameObject[jsonInfo["animalTemplates"].Count];
-
-
+   
+    buttons = new GameObject[jsonInfo["animalTemplates"].Count];
+    buttonSprite = Resources.Load<Sprite>("Animals/Previews/" + animalID);
 
     for (int i = 0; i < jsonInfo["animalTemplates"].Count; i++) 
     {
-      button = (GameObject)Instantiate (buttonPrefab, new Vector3 (0, 0, 0), Quaternion.identity);
-      button.GetComponent<AnimalFromGUI>().animalID = jsonInfo["animalTemplates"][i]["id"];
-      button.GetComponentInChildren<Text>().text = jsonInfo["animalTemplates"][i]["animalname"];
+      animalID =jsonInfo["animalTemplates"][i]["id"];
+
+      button = (GameObject)Instantiate (buttonPrefab, this.transform.position, Quaternion.identity);
+      button.GetComponent<AnimalFromGUI>().animalID = animalID;
+
+      if (buttonSprite != null) {
+        button.GetComponent<Image>().sprite = buttonSprite;
+        Debug.Log("here!");
+      }
+      else {
+        button.GetComponentInChildren<Text>().text = jsonInfo["animalTemplates"][i]["animalname"];
+      }
+
       button.transform.SetParent(this.transform);
       x = (int) this.GetComponent<RectTransform>().rect.width / 40 - 1;
       button.GetComponent<RectTransform> ().localPosition = new Vector3 (-120 + (i % x * 40), -10 - ((Mathf.Floor(i/x - 1)) * 40), 0);
