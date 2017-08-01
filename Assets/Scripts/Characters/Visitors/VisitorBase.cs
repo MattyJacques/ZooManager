@@ -1,6 +1,6 @@
 ﻿// Title        : VisitorBase.cs
 // Purpose      : Base class which all visitors which instantiate from
-// Author       : Christos Alatzidis
+// Author       : Christos Alatzidis & Alexander Falk
 // Date         : 11/11/2016
 
 using UnityEngine;
@@ -19,11 +19,21 @@ namespace Assets.Scripts.Characters.Visitors
     [SerializeField]
     GameClock gameClock;
 
-	public VisitorBase(VisitorTemplate template,  GameObject model)
+    public VisitorBase(VisitorTemplate template,  GameObject model)
     { // Constructor to set up the template and behaviour tree
       Template = template;
 	  Model = model;
     } // VisitorBase()
+
+    public void init()
+    {
+      Hunger = Random.Range(0,100);
+      Thirst = Random.Range(0,100);
+      Boredom = Random.Range(0,100);
+      Age = Random.Range(1,100);
+      // TODO: Select 3 "favourite" animals out of the game's animal list
+      Behave = behaviourCreator.Instance.GetBehaviour("basicVisitor");
+    }
 
     protected void Update()
     { // Process the needs of the base then process the behaviour for AI

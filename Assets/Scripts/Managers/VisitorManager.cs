@@ -1,7 +1,7 @@
-﻿// Title        : VisitorManager.cs
-// Purpose      : Initiates templates, manages instances of visitors
-// Author       : Christos Alatzidis
-// Date         : 03/12/2016
+// Title        : VisitorManager.cs
+// Purpose      : Creates, destroys, and manages visitors
+// Author       : Eivind Andreassen & Alexander Falk
+// Date         : 11.02.2017
 
 using UnityEngine;
 using System.Collections;
@@ -26,22 +26,34 @@ namespace Assets.Scripts.Managers
 			public GameObject Prefab { get; set; }
 		};
 
-		// Holds all visitor templates read from JSON array
-		public VisitorTemplateCollection _templates;
 
-		private List<Visitor> _visitorCollection;
 
-		// List of all active visitors
-		List<VisitorBase> _visitors = new List<VisitorBase> { };
+    public float interval;
+    public float intervalMax;
+    public float intervalMin;
+    public bool stop;
+    public Vector3 spawnPoint;
+    //TODO: Object pool for destroying and creating new visitors, if it happens frequently enough
 
-		void Start()
-		{ // Call to get the templates from JSON
+    private void Start()
+    {
+      LoadVisitorPrefabs ();
+    } //Start()
+
+    private void Update()
+    {
+      interval = Random.Range(intervalMin,intervalMax);
+
+
+    }
 
 			_templates = JSONReader.ReadJSON<VisitorTemplateCollection>("Visitors/Visitors");
 
-			// Load all visitors
-			_visitorCollection = new List<Visitor>();
-			LoadVisitors();
+      Visitor newVisitor = new Visitor();
+      newVisitor.Prefab = Instantiate(visitorPrefab,position,Quaternion.identity);
+      //TODO: Implement when ai is merged
+      //newVisitor.getAIScript.StartBehaviour();
+      _activeVisitors.Add (newVisitor);
 
 		} // Start()
 
@@ -79,24 +91,24 @@ namespace Assets.Scripts.Managers
 					template.coords.z));
 			}
 
-		} // Create(LevelVisitorTemplate)
 
+    private void SpawnVisitors (Vector3 spawnPoint,int numberToSpawn)
+    {
+      for(int i = 0; i < numberToSpawn; i++)
+      {
+        CreateRandomVisitor(spawnPoint);
+        //TODO: Create specific visitor groups 
+      }
+    }
+  }
+}
 
-		private int GetVisitorIndex(string id)
-		{ // Get the index of the Visitor struct within the _visitorCollection
-
-			int visitorIndex = -1;              // Holds the template index found
-
-			for (int i = 0; i < _templates.visitorTemplates.Length; i++)
-			{ // Check if there is a match for every template in the array
-
-
-				if (_templates.visitorTemplates[i].id == id)
-				{ // Check for matching ID, if found set index and break out of loop
-					visitorIndex = i;
-					break;
-				}
-			}
+// Spawning visitors
+// If game is not paused run spawner at random time interval
+// Spawner will spawn a bus/car and will decide on the number of people
+// Once Bus/car reaches drop of point spawn x amount of people from this position
+// Each person will have their own stats and favourite animals
+// The Game saves a list of their favourite animals and determines their path through the Zoo 
 
 			return visitorIndex;
 
