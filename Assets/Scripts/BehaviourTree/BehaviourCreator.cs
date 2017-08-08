@@ -59,6 +59,20 @@ namespace Assets.Scripts.BehaviourTree
       Selector animalSelector = new Selector(animalComponents);
       _behaviours.Add("basicAnimal", new Base.Behaviour(animalSelector));
 
+      // Visitor Behaviour (basiscVisitor)
+      BehaveComponent[] visitorComponents = new BehaveComponent[4];
+      visitorComponents[0] = CreateAnimalHunger();
+      visitorComponents[1] = CreateAnimalThirst();
+      visitorComponents[2] = CreateAnimalFun();
+      visitorComponents[3] = CreateAnimalWanderRandom();
+      //TODO: Change this to create the path the visitor takes/interest it takes in nearby enclosures
+
+      // Vehic    le Behaviour (basicVehicle)
+      BehaveComponent[] vehicleComponents = new BehaveComponent[1];
+      vehicleComponents[0] = new Action(MoveToTarget);
+      Selector vehicleSelector = new Selector(vehicleComponents);
+      _behaviours.Add("basicVehicle", new Base.Behaviour (vehicleSelector));
+
     } // CreateBehaviours()
 
     #region Sequences
@@ -116,7 +130,7 @@ namespace Assets.Scripts.BehaviourTree
 
       // Set components
       animalFun[0] = new Conditional(IsBored);    // Check if animal is bored
-      animalFun[1] = new Conditional(HasFun);   // Check if enclosure has a fund source
+      animalFun[1] = new Conditional(HasFun);   // Check if enclosure has a fun source
       animalFun[2] = new Action(GetFun);          // Get the position of the fun source
       animalFun[3] = new Action(MoveToTarget);     // Move to target
       animalFun[4] = new Action(HaveFun);          // Have fun
@@ -427,4 +441,4 @@ namespace Assets.Scripts.BehaviourTree
     #endregion
 
   } // BehaviourCreator
-}
+}

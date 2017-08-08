@@ -7,6 +7,7 @@ using UnityEngine;
 using System.Collections;
 using Assets.Scripts.UI;
 using Assets.Scripts.Characters;
+using Assets.Scripts.BehaviourTree;
 
 namespace Assets.Scripts.Characters.Visitors
 {
@@ -32,7 +33,7 @@ namespace Assets.Scripts.Characters.Visitors
       Boredom = Random.Range(0,100);
       Age = Random.Range(1,100);
       // TODO: Select 3 "favourite" animals out of the game's animal list
-      Behave = behaviourCreator.Instance.GetBehaviour("basicVisitor");
+      Behave = BehaviourCreator.Instance.GetBehaviour("basicVisitor");
     }
 
     protected void Update()
