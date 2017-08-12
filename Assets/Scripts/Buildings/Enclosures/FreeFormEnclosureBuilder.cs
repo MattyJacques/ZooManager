@@ -15,7 +15,7 @@ public class FreeFormEnclosureBuilder : MonoBehaviour
     //I'm just using a single fence enclosure mesh for now, as I'm presuming that the actual type of fence will be selected through a GUI button press.
     public GameObject enclosurePieceType;
 
-    private enum stateEnum { inactive, choosingStraightOrCurveStartPosition, choosingStraightOrCurveNextEnclosurePiecePosition, establishingCurve, choosingCircleStartPosition, establishingCircle };
+    private enum stateEnum { inactive, choosingStraightOrCurveStartPosition, choosingStraightNextCorner, choosingCurvedControlPoint, establishingCurve, choosingCircleStartPosition, establishingCircle };
     private stateEnum state = stateEnum.inactive;
     private stateEnum previousState = stateEnum.inactive;
 
@@ -81,6 +81,10 @@ public class FreeFormEnclosureBuilder : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        if (enclosurePieceType.name == "FenceLow_Wood_Gate01")
+        {
+            enclosurePieceType.transform.Rotate(0, 90,0);
+        }
 
 
     }
@@ -103,7 +107,7 @@ public class FreeFormEnclosureBuilder : MonoBehaviour
     }
 
     //Fire a ray at the mouse pointer to see if the player is hovering over an enclosure piece.
-    public void enclosurePieceRayCheck()
+    public bool enclosurePieceRayCheck()
     {
         //Probably a cleaner way of doing this, but just make sure that the default material is applied, it will get highlighted again if needed anyway.
         if (lastRayCastHitObject != null && (lastRayCastHitObject.GetComponent<Collider>().tag == "EnclosurePiecePlaced" || lastRayCastHitObject.GetComponent<Collider>().tag == "EnclosurePiecePlacedCorner"))
@@ -118,19 +122,22 @@ public class FreeFormEnclosureBuilder : MonoBehaviour
         {
             currentRayCastHitObject = hit.collider.gameObject;
 
-            Debug.Log("Hovering over: " + hit.collider.gameObject.name);
+            //Debug.Log("Hovering over: " + hit.collider.gameObject.name);
 
             if (currentRayCastHitObject.GetComponent<Collider>().tag == "EnclosurePiecePlaced" || currentRayCastHitObject.GetComponent<Collider>().tag == "EnclosurePiecePlacedCorner")
             {
                 changeMaterial(hit.collider.gameObject, highlightMaterial);
                 lastRayCastHitObject = currentRayCastHitObject;
                 hoveringOverEnclosurePiece = true;
+                return true;
             }
             else
             {
                 hoveringOverEnclosurePiece = false;
+                return false;
             }
         }
+        return false;
     }
 
 
@@ -242,7 +249,7 @@ public class FreeFormEnclosureBuilder : MonoBehaviour
                 adjustedMouseMousePosition.y = 0;
                 adjustedTargetPosition.y = 0;
 
-                //Calculate the vector between the enclosure piece and set its length to 1 (normalise).
+                //Calculate the vector between the enclosure piece and normalise it.
                 Vector3 direction = (adjustedMouseMousePosition - adjustedTargetPosition).normalized;
 
                 //I'll be honest, I don't understand Maths all that well, but from what I've been reading, in order to calculate the angle between two Vector3's in perspective space, 
@@ -312,24 +319,19 @@ public class FreeFormEnclosureBuilder : MonoBehaviour
         //The next position at which an enclosure piece will be placed.
         Vector3 nextPosition = Vector3.zero;
 
-        //This is the magnitude of the curve if it was straightened out.
-        Vector3 straightenCurve = Vector3.zero;
-
-        //How many pieces of enclosure are actually required to fill the gap between the start and current end point (currentMousePosition)
+              //How many pieces of enclosure are actually required to fill the gap between the start and current end point (currentMousePosition)
         //This might need some tweaking, as the current value of 0.2f is used to determine the distance between each individual piece.  So if the piece is changed
         //this will also need changing.  I'll set it up so that it determines that actual size of the mesh in the future.
         Vector3 startOfCurve = enclosureCornerPieceList[enclosureCornerPieceList.Count - 1].transform.position;
-        int fillCount = Mathf.RoundToInt(Vector3.Distance(startOfCurve, nextPlacementLocationTarget) / 0.2f);
+        Vector3 size = enclosurePieceType.GetComponent<Renderer>().bounds.size;
+        int fillCount = Mathf.RoundToInt(Vector3.Distance(startOfCurve, nextPlacementLocationTarget) / size.x);
 
         if (curvedMode && createdCurveControlHandle && totalCurveLength >0)
         {
             //Debug.Log("Totalcurve length: " + totalCurveLength);
-            Vector3 size = enclosurePieceType.GetComponent<Renderer>().bounds.size;
-            fillCount = Mathf.RoundToInt((totalCurveLength / size.x));
-            
+            //Debug.Log("Size of thing: " + size);
+              fillCount = Mathf.RoundToInt((totalCurveLength / size.x ));            
         }
-
-        //Debug.Log("Fillcount: " + fillCount);
 
         if (fillCount > 0)
         {
@@ -373,9 +375,17 @@ public class FreeFormEnclosureBuilder : MonoBehaviour
                     }
                     buildCurveTables();
                     float curveLerp = findPositionOnCurve(lerpValue);
+                    //Debug.Log("Curvelerp: " + curveLerp);
                     nextPosition = GetBezierPoint(curveLerp, curvePoints[0], curvePoints[1], curvePoints[2]);
-                    //Debug.DrawLine(startOfCurve, curvePoint, Color.red);
+
+                    if (i == 0)
+                    {
+                        Debug.DrawLine(Vector3.zero, nextPosition, Color.red);
+                        //Debug.Log("Lerp value for zero: " + lerpValue + " curvelerp: " + curveLerp);
+                    }
                 }
+
+                
 
                 GameObject nextIntermediateEnclosurePiece;
                 intermediateEnclosurePieceList.Add(nextIntermediateEnclosurePiece = Instantiate(enclosurePieceType, nextPosition, enclosurePieceType.transform.rotation));
@@ -396,14 +406,14 @@ public class FreeFormEnclosureBuilder : MonoBehaviour
 
     private Vector3 GetBezierPoint(float t, Vector3 start, Vector3 control, Vector3 end)
     {
-        //float x = (((1 - t) * (1 - t)) * start.x) + (2 * t * (1 - t) * control.x) + ((t * t) * end.x);
-        //float y = (((1 - t) * (1 - t)) * start.y) + (2 * t * (1 - t) * control.y) + ((t * t) * end.y);
-        //float z = (((1 - t) * (1 - t)) * start.z) + (2 * t * (1 - t) * control.z) + ((t * t) * end.z);
-        //return new Vector3(x, y, z);
+        float x = (((1 - t) * (1 - t)) * start.x) + (2 * t * (1 - t) * control.x) + ((t * t) * end.x);
+        float y = (((1 - t) * (1 - t)) * start.y) + (2 * t * (1 - t) * control.y) + ((t * t) * end.y);
+        float z = (((1 - t) * (1 - t)) * start.z) + (2 * t * (1 - t) * control.z) + ((t * t) * end.z);
+        return new Vector3(x, y, z);
 
         //http://answers.unity3d.com/questions/990171/curve-between-lerps.html
-        float rt = 1 - t;
-        return rt * rt * start + 2 * rt * t * control + t * t * end;
+        //float rt = 1 - t;
+        //return rt * rt * start + 2 * rt * t * control + t * t * end;
     }
 
     private float findPositionOnCurve(float u)
@@ -414,7 +424,7 @@ public class FreeFormEnclosureBuilder : MonoBehaviour
 
         int index = 0;
         int low = 0;
-        int high = 100 - 1;
+        int high = 1000 - 1;
         float target = u * totalCurveLength;
         float found = float.NaN;
 
@@ -434,7 +444,7 @@ public class FreeFormEnclosureBuilder : MonoBehaviour
             index--;
 
         if (index < 0) return 0;
-        if (index >= 100 - 1) return 1;
+        if (index >= 1000 - 1) return 1;
 
         // Linear interpolation for index
         float min = lengthTable[index];
@@ -442,105 +452,21 @@ public class FreeFormEnclosureBuilder : MonoBehaviour
         Debug.Assert(min <= target && max >= target);
         float interp = (target - min) / (max - min);
         Debug.Assert(interp >= 0 && interp <= 1);
-        int nSamples = 100;
+        int nSamples = 1000;
         float ratio = 1f / nSamples;
         //Debug.Log("Returning: " + ((index + interp + 1) * ratio));
         return ((index + interp + 1) * ratio);
-        
-
-        /*
-        float t; //Find t for the given u
-        float targetArcLength = u * lengthTable[lengthTable.Length-1];
-
-        //Debug.Log("u is: " + u);
-
-        int index = Array.BinarySearch(lengthTable, targetArcLength);
-
-        if (u >=1)
-        {
-            return 1;
-        }
-
-        if (index < 0)
-        {
-            index = ~index - 1;
-            //No exact match found
-            float lengthBefore = lengthTable[index];
-            return (index + (targetArcLength - lengthBefore) / (lengthTable[index + 1] - lengthBefore)) / lengthTable.Length;
-        }
-        else
-        {
-            //Exact match found
-            t = index / (float)lengthTable.Length - 1;
-            //Debug.Log("Exact match, returning " + t);
-            return t;
-        }
-        */
-        
-        /*
-        var targetLength = u * lengthTable[lengthTable.Length -1];
-        var low = 0;
-        var high = lengthTable.Length;
-        var index = 0;
-        while (low < high)
-        {
-            index = low + (((high - low) / 2) | 0);
-            if (lengthTable[index] < targetLength)
-            {
-                low = index + 1;
-
-            }
-            else
-            {
-                high = index;
-            }
-        }
-        if (lengthTable[index] > targetLength)
-        {
-            index--;
-        }
-
-        var lengthBefore = lengthTable[index];
-        if (lengthBefore == targetLength)
-        {
-            return index / lengthTable.Length;
-
-        }
-        else
-        {
-            return (index + (targetLength - lengthBefore) / (lengthTable[index + 1] - lengthBefore)) /lengthTable.Length;
-        }
-        */
     }
  
     private void buildCurveTables()
     {
-        /*
-        int curveSegments = 100;
-        lengthTable = new float[curveSegments + 1];
-
-        Vector3 previousPoint = GetBezierPoint(0, curvePoints[0], curvePoints[1], curvePoints[2]);
-
-        float sum = 0;
-        lengthTable[0] = 0;
-
-        for (int i = 1; i < lengthTable.Length; i++)
-        {
-            Vector3 currentPoint = GetBezierPoint(i / (float) curvePoints.Length, curvePoints[0], curvePoints[1], curvePoints[2]);
-            sum += Vector3.Distance(previousPoint, currentPoint);
-            lengthTable[i] = sum;
-            previousPoint = currentPoint;
-        }
-
-        totalCurveLength = sum;
-        */
-
         //Debug.Log("Building curve table");
         Vector3 o = GetBezierPoint(0, curvePoints[0], curvePoints[1], curvePoints[2]);
         float ox = o.x;
+        float oy = o.y;
         float oz = o.z;
         float clen = 0;
-        int nSamples = 100;
+        int nSamples = 1000;
         float ratio = 1f / nSamples;
         lengthTable = new float[nSamples];
 
@@ -550,14 +476,18 @@ public class FreeFormEnclosureBuilder : MonoBehaviour
             Vector3 p = GetBezierPoint(t, curvePoints[0], curvePoints[1], curvePoints[2]);
             //Debug.DrawLine(o, p, Color.red);
             float dx = ox - p.x;
+            float dy = oy - p.y;
             float dz = oz - p.z;
-            clen += Mathf.Sqrt(dx * dx + dz * dz);
+            clen += Mathf.Sqrt(dx * dx + dy * dy + dz * dz);
             lengthTable[i] = clen;
             ox = p.x;
+            oy = p.y;
             oz = p.z;
         }
         //Debug.Log("Calc curvelength :" + clen);
-        totalCurveLength = clen;
+        totalCurveLength = clen; 
+        
+
         
     }
 
@@ -589,10 +519,102 @@ public class FreeFormEnclosureBuilder : MonoBehaviour
                 circleEnclosurePieceList.Add(Instantiate(enclosurePieceType, findPositionOnCircle(circleCentrePoint, radius, i, angle), enclosurePieceType.transform.rotation));
             }
         }
-
     }
 
-    Vector3 findPositionOnCircle(Vector3 c, float r, int i, float degrees)
+    private void emptyListAndDestroyAllObjects(List<GameObject> list)
+    {
+        for (int i = list.Count - 1; i >= 0; i--)
+        {
+            Destroy(list[i]);
+            list.Remove(circleEnclosurePieceList[i]);
+        }
+    }
+
+    private void destroyIntermediateEnclosurePieces()
+    {
+        foreach (GameObject intermediateEnclosurePiece in intermediateEnclosurePieceList)
+        {
+            Destroy(intermediateEnclosurePiece);
+        }
+        intermediateEnclosurePieceList.Clear();
+    }
+
+    private void rollbackToPreviousCorner()
+    {
+        Debug.Log("Rolling back to previous corner");
+        for (int i = enclosurePieceList.Count - 1; i >= 0; i--)
+        {
+            if (!enclosurePieceList[i].CompareTag("EnclosurePiecePlacedCorner"))
+            {
+                Destroy(enclosurePieceList[i]);
+                enclosurePieceList.Remove(enclosurePieceList[i]);
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+
+    private void removeEnclosurePieceFromPlacementLists(GameObject enclosurePiece)
+    {
+        enclosureCornerPieceList.Remove(enclosurePiece);
+        enclosurePieceList.Remove(enclosurePiece);
+    }
+
+    //Depending on the current state, the cancel operation will either roll back to a previous enclosure placement position, or cancel everything.
+    private void cancelBuild()
+    {
+        Debug.Log("Cancel called for current state: " + state);
+        switch (state)
+        {
+            case stateEnum.inactive:
+                //Currently inactive, nothing to do.
+                break;
+            case stateEnum.choosingCurvedControlPoint:
+            case stateEnum.choosingStraightNextCorner:
+                if (enclosurePieceList.Count == 1) //Just a single run of enclosure pieces.
+                {
+                    destroyIntermediateEnclosurePieces();
+                    Destroy(nextEnclosurePiece);
+                    Destroy(enclosurePieceList[enclosurePieceList.Count - 1]);
+                    enclosureCornerPieceList.Clear();
+                    enclosurePieceList.Clear();
+                    state = stateEnum.inactive;                 
+                }
+                else //Multiple enclosure pieces, revert back to the previous corner piece.
+                {
+                    destroyIntermediateEnclosurePieces();
+                    GameObject lastPlacedCorner = enclosureCornerPieceList[enclosureCornerPieceList.Count - 1];
+                    removeEnclosurePieceFromPlacementLists(lastPlacedCorner);
+                    Destroy(lastPlacedCorner);
+                    rollbackToPreviousCorner();
+                }
+                break;
+            case stateEnum.establishingCurve:
+                Destroy(currentCurveControlHandle);
+                createdCurveControlHandle = false;
+                state = stateEnum.choosingCurvedControlPoint;
+                break;
+            case stateEnum.establishingCircle:
+                emptyListAndDestroyAllObjects(circleEnclosurePieceList);
+                Destroy(nextEnclosurePiece);
+                state = stateEnum.inactive;
+                break;
+            case stateEnum.choosingCircleStartPosition:
+                Destroy(nextEnclosurePiece);
+                state = stateEnum.inactive;
+                break;
+            case stateEnum.choosingStraightOrCurveStartPosition:
+                Destroy(nextEnclosurePiece);
+                state = stateEnum.inactive;
+                break;
+            
+        }
+    }
+
+    //As it's name suggests, finds a position on a circle given it's size and the degree.
+    private Vector3 findPositionOnCircle(Vector3 c, float r, int i, float degrees)
     {
         return c + Quaternion.AngleAxis(degrees * i, Vector3.up) * (Vector3.forward * r);
     }
@@ -600,113 +622,19 @@ public class FreeFormEnclosureBuilder : MonoBehaviour
     //Just a simple method for flipping a boolean value, could be used elsewhere
     private bool flipBool(bool whatever)
     {
-
         return (whatever) ? false : true;
     }
 
     // Update is called once per frame
+    //All of the enclosure creation is handled here, as it all needs to be updated in real-time as the player moves the mouse around.
     void Update()
     {
-        //Debug.Log("State is: " + state);
+        //Constantly update the current mouse position on screen.
+        storeMouseLocation();
 
-        //Right clicking will cancel the current placement operation, and revert back to the last placed piece, if there is one.
-        if (Input.GetMouseButtonDown(1))
-        {
-            Debug.Log("Cancel called for current state: " + state);
-            createdCurveControlHandle = false;
-            if (state == stateEnum.inactive)
-            {
-                //Nothing to do, might think of something to do later...
-            }
-
-            //Just delete the 'nextEnclosurePiece' and revert back to the inactive state
-            if (state == stateEnum.choosingStraightOrCurveStartPosition)
-            {
-                Destroy(nextEnclosurePiece);
-                previousState = state;
-                state = stateEnum.inactive;
-            }
-
-            if (state == stateEnum.establishingCurve)
-            {
-                Destroy(currentCurveControlHandle);
-                createdCurveControlHandle = false;
-                previousState = state;
-                state = stateEnum.choosingStraightOrCurveNextEnclosurePiecePosition;
-               
-               
-            }
-
-            //A piece of enclosure has been placed, delete all the intermediate pieces and revert back to the last one put down.
-            if (state == stateEnum.choosingStraightOrCurveNextEnclosurePiecePosition)
-            {
-
-                if (enclosurePieceList.Count == 1 && previousState == stateEnum.establishingCurve)
-                {
-                    Debug.Log("Sort this");
-                }
-
-
-                else if (enclosurePieceList.Count == 1)
-                {
-                    //Only a single piece has been placed, so just delete it and tidy up the lists.
-                    foreach (GameObject o in intermediateEnclosurePieceList)
-                    {
-                        Destroy(o);
-                    }
-                    Destroy(nextEnclosurePiece);
-                    Destroy(enclosurePieceList[enclosurePieceList.Count - 1]);
-                    previousState = state;
-                    state = stateEnum.inactive;
-                    intermediateEnclosurePieceList.Clear();
-                    enclosurePieceList.Clear();
-                    Destroy(currentCurveControlHandle);
-                }
-
-                
-
-                else //There are multiple placed pieces of enclosure, delete the last two placed and allow the player to redo the operation.
-                {
-                    //Change to inactive state so that we can delete objects without upsetting things.
-                    previousState = state;
-                    state = stateEnum.inactive;
-
-
-
-                    //First off, destroy all of the intermediate enclosure pieces, and clear the list.
-                    foreach (GameObject o in intermediateEnclosurePieceList)
-                    {
-                        Destroy(o);
-                    }
-                    intermediateEnclosurePieceList.Clear();
-
-                    //Destroy the last player placed corner
-                    GameObject lastPlacedCorner = enclosurePieceList[enclosurePieceList.Count - 1];
-                    enclosurePieceList.Remove(lastPlacedCorner);
-                    enclosureCornerPieceList.Remove(lastPlacedCorner);
-                    Destroy(lastPlacedCorner);
-                    Destroy(currentCurveControlHandle);
-
-                    //Removing from a list whilst iterating through it does not a happy C# make, so you've got to iterate through it backwards.
-                    //Go through removing all of the intermediately placed enclosure pieces, until you hit a player placed corner, that will be the new lerp position.
-                    for (int i = enclosurePieceList.Count - 1; i >= 0; i--)
-                    {
-                        if (!enclosurePieceList[i].CompareTag("EnclosurePiecePlacedCorner"))
-                        {
-                            Destroy(enclosurePieceList[i]);
-                            enclosurePieceList.Remove(enclosurePieceList[i]);
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                    previousState = state;
-                    state = stateEnum.choosingStraightOrCurveNextEnclosurePiecePosition;
-                }
-            }
-
-        } //End of rightmouse click cancel operations
+        //----------------------------------------------------------------------------------------
+        //-----------------------------------KEYBOARD INPUTS--------------------------------------
+        //----------------------------------------------------------------------------------------
 
         //Restrict enclosure placement along the axis the mouse is moving in (X or Y).
         if (Input.GetKey(KeyCode.LeftShift))
@@ -725,232 +653,153 @@ public class FreeFormEnclosureBuilder : MonoBehaviour
         {
             gridLock = flipBool(gridLock);
             Debug.Log("GridLock is: " + gridLock);
-
-
         }
 
-        //Constantly update the location of the cursor in world space.
-        storeMouseLocation();
-
-        //Once the centre of a circle has been chosen.
-        if (state == stateEnum.establishingCircle)
+        //Enable/disable curve mode for straight line enclosures.
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            if (currentMousePosition != lastMousePosition) {
+            straightEnclosureCurveLock = flipBool(straightEnclosureCurveLock);
+            Debug.Log("CurveLock: " + straightEnclosureCurveLock);
+        }
+
+        //Player presses 'Return' to complete current enclosure.
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            foreach (GameObject o in intermediateEnclosurePieceList)
+            {
+                Destroy(o);
+            }
+            intermediateEnclosurePieceList.Clear();
+            Destroy(nextEnclosurePiece);
+            previousState = state;
+            state = stateEnum.inactive;
+        }
+        //----------------------------------------------------------------------------------------
+        //-----------------------------------END OF KEYBOARD INPUTS-------------------------------
+        //----------------------------------------------------------------------------------------
+
+
+        //----------------------------------------------------------------------------------------
+        //-----------------------------------STATE CONTROL----------------------------------------
+        //----------------------------------------------------------------------------------------
+        switch (state)
+        {
+            case stateEnum.inactive:
+                break;
+            case stateEnum.choosingCircleStartPosition:
+                nextEnclosurePiece.transform.position = currentMousePosition;
+                break;
+            case stateEnum.establishingCircle:
                 createCircle();
-            }
-            if (Input.GetMouseButtonDown(0))
-            {
-                Debug.Log("Finish circle!");
-                Destroy(nextEnclosurePiece);
-                state = stateEnum.inactive;
-
-                foreach (GameObject circlePiece in circleEnclosurePieceList)
-                {
-                    GameObject replace = Instantiate(enclosurePieceType, circlePiece.transform.position, enclosurePieceType.transform.rotation);
-                    replace.tag = "EnclosurePiecePlaced";
-                    enclosurePieceList.Add(replace);
-                    Destroy(circlePiece);
-                }
-
-            }
-        }
-
-        //If the player is creating a circular enclosure.
-        if (state == stateEnum.choosingCircleStartPosition)
-        {           
-            nextEnclosurePiece.transform.position = currentMousePosition;
-            lastMousePosition = currentMousePosition;
-            if (Input.GetMouseButtonDown(0))
-            {
-                if (hoveringOverEnclosurePiece)
-                {
-                    circleCentrePoint = currentRayCastHitObject.transform.position;
-                }
-                else
-                { 
-                circleCentrePoint = nextEnclosurePiece.transform.position;
-                }
-                previousState = state;
-                state = stateEnum.establishingCircle;
-            }
-        }
-
-        if (state != stateEnum.inactive)
-        {
-            //Hiting the return key completes the current enclosure placement and destroys any unplaced pieces.
-            if (Input.GetKeyDown(KeyCode.Return))
-            {
-                foreach (GameObject o in intermediateEnclosurePieceList)
-                {
-                    Destroy(o);
-                }
-                intermediateEnclosurePieceList.Clear();
-                Destroy(nextEnclosurePiece);
-                previousState = state;
-                state = stateEnum.inactive;
-            }
-
-            //Check if the player is hovering over an existing enclosure piece, as they might want to snap to it.
-            enclosurePieceRayCheck();
-
-            //Handle enclosure placement if player is hovering over an existing piece of enclosure.
-            if (hoveringOverEnclosurePiece)
-            {
-                try
-                {
-                    nextEnclosurePiece.transform.position = currentRayCastHitObject.transform.position;
-
-                    //Set to false so that any additional raycasts don't cause the new enclosure piece to get stuck at the current position.
-                    hoveringOverEnclosurePiece = false;
-
-                    //Hide the next piece of the enclosure so that it allows the existing one to be highlighted.
-                    nextEnclosurePiece.SetActive(false);
-
-                    //Need to check what we're currently ray casting to, otherwise we'll be stuck here forever!
-                    enclosurePieceRayCheck();
-                }
-                catch (MissingReferenceException destroyed)
-                {
-                    Debug.LogError("Player destoryed an enclosure piece while raycast hit it, not to worry.");
-                }
-
-
-            }
-
-            else
-            { //Again, the next piece might have been destroyed here (undo/completed), so just catch any errors thrown.
-                try
-                {
-                    nextEnclosurePiece.SetActive(true);
-                }
-                catch (MissingReferenceException)
-                {
-
-                }
-            }
-
-        }
-
-
-
-
-
-        //The player has clicked on 'Build new (straight/curved) freeform enclosure' on the GUI, but hasn't placed down the first piece of the enclosure.
-        if (state == stateEnum.choosingStraightOrCurveStartPosition)
-        {
-            if (lastMousePosition != currentMousePosition)
-            {
-                if (gridLock)
-                {
-                    nextEnclosurePiece.transform.position = ClampToTileSize(currentMousePosition);
-                }
-                else
-                {
-                    nextEnclosurePiece.transform.position = currentMousePosition;
-                }
-                lastMousePosition = currentMousePosition;
-            }
-
-            //Player clicks to begin the enclosure.
-            if (Input.GetMouseButtonDown(0))
-            {
-                Debug.Log("Beginning new enclosure");
-                enclosureStartPoint = currentMousePosition;
-                previousState = state;
-                state = stateEnum.choosingStraightOrCurveNextEnclosurePiecePosition;
-                //When a piece is placed by the player, tag is with 'EnclosurePiecePlacedCorner' to ensure that it can be identified as a piece the player placed,
-                //rather than a tag of 'EnclosurePiecePlaced' which was placed during the 'fillEnclosureGap' method.
-                nextEnclosurePiece.tag = "EnclosurePiecePlacedCorner";
-                enclosurePieceList.Add(nextEnclosurePiece);
-                enclosureCornerPieceList.Add(nextEnclosurePiece);
-                createdEndEnclosurePiece = false;
-            }
-        }
-
-
-        //The first piece of the enclosure has been placed, generate the end enclosure piece, and fill in the gap between them.
-        if (state == stateEnum.choosingStraightOrCurveNextEnclosurePiecePosition || state == stateEnum.establishingCurve)
-        {
-            //Enable/disable curve mode for straight line enclosures.
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                straightEnclosureCurveLock = flipBool(straightEnclosureCurveLock);
-                Debug.Log("CurveLock: " + straightEnclosureCurveLock);
-            }
-
-            //If both gridlock and anglelock are on, hide the next enclosure piece otherwise it will show up where the mouse cursor is, regardless of where the lerping is taking place.
-            if (gridLock && angleLock)
-            {
-                nextEnclosurePiece.SetActive(false);
-            }
-
-            if (!createdEndEnclosurePiece)
-            {
-                nextEnclosurePiece = Instantiate(enclosurePieceType);
-                nextEnclosurePiece.tag = "EnclosurePieceUnplaced";
-                createdEndEnclosurePiece = true;
-            }
-            if (lastMousePosition != currentMousePosition)
-            {
-                if (gridLock)
-                {
-                    nextEnclosurePiece.transform.position = ClampToTileSize(currentMousePosition);
-                }
-                //Check if gridlock isn't active here incase the player turns it on, and then turns it off again, as the next location will need to be updated.
-                else
-                {
-                    nextEnclosurePiece.transform.position = nextPlacementLocationTarget;
-                }
-
+                break;
+            case stateEnum.choosingStraightOrCurveStartPosition:
+                nextEnclosurePiece.transform.position = (gridLock) ? ClampToTileSize(currentMousePosition) : currentMousePosition;
+                break;
+            case stateEnum.choosingCurvedControlPoint:
+            case stateEnum.choosingStraightNextCorner:
+            case stateEnum.establishingCurve:
                 lastMousePosition = currentMousePosition;
                 fillEnclosureGap();
-            }
-
-
-            //Once the player has placed down a curved section, destroy the old control point and allow the player to create a new one.
-            if (Input.GetMouseButtonDown(0) && currentCurveControlHandle != null)
-            {
-                Debug.Log("Curved section placed, destroy old curve control handle");
-                Destroy(currentCurveControlHandle);
-                createdCurveControlHandle = false;
-                copyIntermediateEnclosurePiecesToEnclosurePieceList();
-
-            }
-
-            //If the player clicks whilst establishing the curve of the current enclosure run.
-            if (Input.GetMouseButtonDown(0) && currentCurveControlHandle && state == stateEnum.establishingCurve)
-            {
-                previousState = state;
-                state = stateEnum.choosingStraightOrCurveNextEnclosurePiecePosition;
-            }
-
-                //Player clicks to complete the section of enclosure, or to place down the control point for a curved section of enclosure.
-                //Due to 'Input.GetMouseButtonDown' returning true for several frames, check here that some of the intermediate pieces have been created, 
-                //and this isn't just the first click from the previous 'choosingStartPosition' state.
-                if (Input.GetMouseButtonDown(0) && intermediateEnclosurePieceList.Count > 0)
-            {
-                Debug.Log("Clicked to complete enclosure section, curved is: " + curvedMode);
-
-                if (curvedMode && !createdCurveControlHandle)
+                //Check if the player is hovering over an existing enclosure piece, as they might want to snap to it.
+                enclosurePieceRayCheck();
+                if (hoveringOverEnclosurePiece)
                 {
-                    Debug.Log("Beginning curved enclosure section");
+                    try
+                    {
+                        nextEnclosurePiece.transform.position = currentRayCastHitObject.transform.position;
+
+                        //Set to false so that any additional raycasts don't cause the new enclosure piece to get stuck at the current position.
+                        hoveringOverEnclosurePiece = false;
+
+                        //Hide the next piece of the enclosure so that it allows the existing one to be highlighted.
+                        nextEnclosurePiece.SetActive(false);
+
+                        //Need to check what we're currently ray casting to, otherwise we'll be stuck here forever!
+                        enclosurePieceRayCheck();
+                    }
+                    catch (MissingReferenceException destroyed)
+                    {
+                        Debug.LogError("Player destoryed an enclosure piece while raycast hit it, not to worry.");
+                    }
+
+
+                }
+                break;
+            
+                
+        }
+
+        //----------------------------------------------------------------------------------------
+        //-----------------------------------END OF STATE CONTROl---------------------------------
+        //----------------------------------------------------------------------------------------
+
+
+        //----------------------------------------------------------------------------------------
+        //-----------------------------------MOUSE CLICK CONTROL----------------------------------
+        //----------------------------------------------------------------------------------------
+
+        //Handle all left click operations.
+        if (Input.GetMouseButtonDown(0))
+        {
+            switch (state)
+            {
+                case stateEnum.inactive:
+                    break;
+                case stateEnum.choosingCircleStartPosition:
+                    circleCentrePoint =  (hoveringOverEnclosurePiece) ? currentRayCastHitObject.transform.position : currentMousePosition;
+                    state = stateEnum.establishingCircle;
+                    break;
+                case stateEnum.establishingCircle:
+                    Destroy(nextEnclosurePiece);
+                    foreach (GameObject circlePiece in circleEnclosurePieceList)
+                    {
+                        GameObject replace = Instantiate(enclosurePieceType, circlePiece.transform.position, enclosurePieceType.transform.rotation);
+                        replace.tag = "EnclosurePiecePlaced";
+                        enclosurePieceList.Add(replace);
+                        Destroy(circlePiece);
+                    }
+                    state = stateEnum.inactive;
+                    break;
+                case stateEnum.choosingStraightOrCurveStartPosition:
+                    enclosureStartPoint = currentMousePosition;
+                    state = (curvedMode) ? stateEnum.choosingCurvedControlPoint : stateEnum.choosingStraightNextCorner;
+                    nextEnclosurePiece.tag = "EnclosurePiecePlacedCorner";
+                    enclosurePieceList.Add(nextEnclosurePiece);
+                    enclosureCornerPieceList.Add(nextEnclosurePiece);
+                    nextEnclosurePiece = Instantiate(enclosurePieceType);
+                    nextEnclosurePiece.tag = "EnclosurePieceUnplaced";
+                    break;
+                case stateEnum.choosingStraightNextCorner:
+                    if (intermediateEnclosurePieceList.Count > 0)
+                    {
+                        copyIntermediateEnclosurePiecesToEnclosurePieceList();
+                    }
+                    break;
+                case stateEnum.choosingCurvedControlPoint:
                     createdCurveControlHandle = true;
                     currentCurveControlHandle = Instantiate(enclosurePieceType);
                     currentCurveControlHandle.transform.position = currentMousePosition;
                     currentCurveControlHandle.tag = "EnclosurePieceCurveControlPoint";
-                    previousState = state;
                     state = stateEnum.establishingCurve;
-
-                }
-                else
-                {
+                    break;
+                case stateEnum.establishingCurve:
                     copyIntermediateEnclosurePiecesToEnclosurePieceList();
-                }
-
+                    createdCurveControlHandle = false;
+                    Destroy(currentCurveControlHandle);
+                    state = stateEnum.choosingCurvedControlPoint;
+                    break;
             }
-
-
-
         }
-    }
+
+        //If the player right clicks at anytime, cancel any current enclosure building operations.
+        if (Input.GetMouseButtonDown(1))
+        {
+            cancelBuild();
+        }
+
+        //----------------------------------------------------------------------------------------
+        //-----------------------------------END OF MOUSE CLICK CONTROL---------------------------
+        //----------------------------------------------------------------------------------------
+
+    } //Update()
 }
