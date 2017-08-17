@@ -25,8 +25,8 @@ namespace Assets.Scripts.Managers
     };
 
     // Storage for animal data
-    private List<Animal> _animalCollection = new List<Animal>();  // Animal templates
-    private List<AnimalBase> _animals = new List<AnimalBase>();   // Active animals
+    public List<Animal> _animalCollection = new List<Animal>();  // Animal templates
+    public List<AnimalBase> _animals = new List<AnimalBase>();   // Active animals
     BehaviourCreator _behaviours;                                 // Creates behaviours
     EnclosureUtilities _EnclosureCollection;                      // Holds all the enclsoures
 

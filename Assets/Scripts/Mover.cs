@@ -22,18 +22,20 @@ public class Mover : MonoBehaviour
     public bool CanSearch = false;
     public bool CanMove = false;
     public float WaypointDistance = 1f;
+    public float NeighbourDist = 10f; 
 
     void Start()
     { // Initializes all needed parts for pathfinding
 
-        Pathfinder = GetComponent<Seeker>();
-        Controller = GetComponent<RVOController>();
+      Pathfinder = GetComponent<Seeker>();
+      Controller = GetComponent<RVOController>();
 
-        Controller.maxSpeed = Speed;
+      Controller.maxSpeed = Speed;
+      Controller.neighbourDist = NeighbourDist;
 
-    HasArrived = false;
-    CanSearch = false;
-    CanMove = false;
+      HasArrived = false;
+      CanSearch = false;
+      CanMove = false;
 
     } // InitPathfinding()
 

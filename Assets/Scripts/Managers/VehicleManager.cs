@@ -35,7 +35,14 @@ namespace Assets.Scripts.Managers
     public float intervalMin;
     public bool stop;
     public Vector3 spawnPoint;
-    
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Monobehaviours
+    //
+    /////////////////////////////////////////////////////////////////////////////////////////
+    #region Monobehaviours
+
     void Start()
     {
       LoadVehiclePrefabs();
@@ -46,10 +53,22 @@ namespace Assets.Scripts.Managers
     void Update()
     {
       //interval = Random.Range(intervalMin,intervalMax);
+      foreach (VehicleBase vehicle in _vehicles)
+      {
+        vehicle.Update();
+      }
     }
     
-    
-    public void CreateVehicle(Vector3 position, GameObject vehiclePrefab)
+    #endregion
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Creating Vehicles
+    //
+    /////////////////////////////////////////////////////////////////////////////////////////
+    #region Create Vehicles
+
+    public void CreateVehicle(Vector3 position, GameObject vehiclePrefab, string vehicleType, int occupancy)
     { //Creates a new vehicle based on specific parameters
       
       Vehicle newVehicle = new Vehicle();
@@ -57,19 +76,40 @@ namespace Assets.Scripts.Managers
       newVehicle.Template = new VehicleTemplate();
 
       VehicleBase newVehicleBase = new VehicleBase(newVehicle);
+      newVehicleBase.Init(occupancy,vehicleType);
 
-      newVehicleBase.Init();
-      //TODO: Implement when ai is merged
-      //newVisitor.getAIScript.StartBehaviour();
       _activeVehicles.Add (newVehicle);
       _vehicles.Add(newVehicleBase);
       
     } //CreateVehicle()
+
+    public int CreatePassengers(string vehicleType)
+    {
+      int occupancy;
+      switch (vehicleType)
+      {
+        case "Bus":
+          occupancy = Random.Range(1, 1);
+          break;
+        case "Car":
+          occupancy = Random.Range(1, 5);
+          break;
+        case "Van":
+          occupancy = Random.Range(1, 7);
+          break;
+        default:
+          occupancy = 0;
+          Debug.Log("This Vehicletype does not exist");
+          break;
+      }
+
+      return occupancy;
+    }
  
     public void CreateTest()
     { // Create an animal that will follow the mouse
 
-      Vector3 position = new Vector3(0, 10, 0);
+      Vector3 position = new Vector3(10, 10, 10);
       CreateRandomVehicle(position);
     } // Create(string)
       
@@ -78,8 +118,11 @@ namespace Assets.Scripts.Managers
     { //Creates a random vehicle
       
       int random = Random.Range (0, VehiclePrefabs.Length);
+      //TODO: Change to pick random Vehicle Type
+      string vehicleType = "Bus";
+      int occupancy = CreatePassengers(vehicleType);
       Debug.Log(VehiclePrefabs.Length);
-      CreateVehicle (position, VehiclePrefabs[random]);
+      CreateVehicle (position, VehiclePrefabs[random], vehicleType, occupancy);
       
     } //CreateRandomVehicle()
     
@@ -92,7 +135,26 @@ namespace Assets.Scripts.Managers
       //TODO: Destroy gameObject
       
     } //DestroyVehicle()
-    
+
+    IEnumerator VehicleSpawner()
+    {
+      yield return new WaitForSeconds (1);
+
+      while (!stop)
+      {
+        CreateRandomVehicle(spawnPoint);
+
+        yield return new WaitForSeconds(interval);
+      }
+    }
+
+    #endregion
+    /////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Loading Vehicles
+    //
+    /////////////////////////////////////////////////////////////////////////////////////////
+    #region Load Vehicles
     
     private void LoadVehiclePrefabs()
     { //Loads the prefab visitor vehicles from the vehicle folder
@@ -100,17 +162,10 @@ namespace Assets.Scripts.Managers
       VehiclePrefabs = Resources.LoadAll<GameObject> ("Vehicles/Prefabs");
       
     }//LoadVehiclePrefabs
-    
-    IEnumerator VehicleSpawner()
-    {
-      yield return new WaitForSeconds (1);
       
-      while (!stop)
-      {
-        CreateRandomVehicle(spawnPoint);
-        
-        yield return new WaitForSeconds(interval);
-      }
-    }
+    #endregion
   }
+
+
+
 }

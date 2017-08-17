@@ -2,8 +2,12 @@
 // Date         : 11.02.2017
 
 using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using System.Collections.Generic;         // Lists
+using System.IO;                          // Directory Infos
+using UnityEngine;                        // Monobehaviour
+using Assets.Scripts.Characters.Visitors;  // AnimalBAse
+using Assets.Scripts.BehaviourTree;       // Behaviours
+using Assets.Scripts.Helpers;             // JSONReader
 
 
 namespace Assets.Scripts.Managers
@@ -23,6 +27,7 @@ namespace Assets.Scripts.Managers
     //Call the StartBehaviour method after creation/placement, Call the StopBehaviour method before destroying
 
     public List<Visitor> _activeVisitors = new List<Visitor> ();
+    public List<VisitorBase> _visitors = new List<VisitorBase> ();
     private GameObject[] VisitorPrefabs;
     //TODO: Object pool for destroying and creating new visitors, if it happens frequently enough
 
@@ -35,9 +40,15 @@ namespace Assets.Scripts.Managers
     { //Creates a new visitor based on specific parameters
 
       Visitor newVisitor = new Visitor ();
+      newVisitor.Prefab = Instantiate(visitorPrefab,position,Quaternion.identity);
+      newVisitor.Template = new VisitorTemplate();
+
+      VisitorBase newVisitorBase = new VisitorBase(newVisitor);
+      newVisitorBase.init();
       //TODO: Implement when ai is merged
       //newVisitor.getAIScript.StartBehaviour();
       _activeVisitors.Add (newVisitor);
+      _visitors.Add(newVisitorBase);
 
     } //CreateVisitor()
 

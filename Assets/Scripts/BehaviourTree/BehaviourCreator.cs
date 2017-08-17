@@ -5,6 +5,8 @@ using Assets.Scripts.BehaviourTree.Base;
 using Assets.Scripts.Characters;
 using Assets.Scripts.Managers;
 using Assets.Scripts.Characters.Animals;
+using Assets.Scripts.Characters.Vehicles;
+using Assets.Scripts.Characters.Visitors;
 
 
 namespace Assets.Scripts.BehaviourTree
@@ -64,18 +66,35 @@ namespace Assets.Scripts.BehaviourTree
       visitorComponents[0] = CreateAnimalHunger();
       visitorComponents[1] = CreateAnimalThirst();
       visitorComponents[2] = CreateAnimalFun();
-      visitorComponents[3] = CreateAnimalWanderRandom();
+      visitorComponents[3] = CreateVisitorMovement();
+      Selector visitorSelector = new Selector(visitorComponents);
+      _behaviours.Add("basicVisitor", new Base.Behaviour(visitorSelector));
       //TODO: Change this to create the path the visitor takes/interest it takes in nearby enclosures
 
-      // Vehic    le Behaviour (basicVehicle)
-      BehaveComponent[] vehicleComponents = new BehaveComponent[1];
+      // Vehicle Behaviour (basicVehicle)
+      BehaveComponent[] vehicleComponents = new BehaveComponent[3];
       vehicleComponents[0] = new Action(MoveToTarget);
+      vehicleComponents[1] = new Action(WaitAtBusstop);
+      vehicleComponents[2] = new Action(MoveToTarget);
       Selector vehicleSelector = new Selector(vehicleComponents);
+      _behaviours.Add("car", new Base.Behaviour (vehicleSelector));
+      _behaviours.Add("bus", new Base.Behaviour (vehicleSelector));
       _behaviours.Add("basicVehicle", new Base.Behaviour (vehicleSelector));
 
     } // CreateBehaviours()
 
     #region Sequences
+
+    private Sequence CreateVisitorMovement()
+    {
+      BehaveComponent[] visitorMovement = new BehaveComponent[2];
+
+      visitorMovement[0] = new Conditional(HasTicketBooth);
+      visitorMovement[1] = new Action(MoveToTarget);
+
+      return new Sequence(visitorMovement);
+      //TODO:
+    }
 
     private Sequence CreateAnimalHunger()
     { // Creates a sequence that will allow an animal object to check
@@ -166,6 +185,7 @@ namespace Assets.Scripts.BehaviourTree
       return new Sequence(animalWander);
 
     } // CreateAnimalWanderRandom()
+      
 
     #endregion
 
@@ -260,7 +280,7 @@ namespace Assets.Scripts.BehaviourTree
 
       yield break;      
     } // GetFun()
-
+      
     #endregion
 
     #region Conditionals
@@ -371,6 +391,24 @@ namespace Assets.Scripts.BehaviourTree
       yield break;
     } // HasFun()
 
+    private IEnumerator HasTicketBooth(AIBase theBase, System.Action<bool> conditionResult)
+    {
+      Transform item = GameObject.Find("TicketBooth").transform;
+
+      if (item != null)
+      {
+        Debug.Log("HasTicketbooth(), returning true");
+        conditionResult(true);
+      }
+      else
+      {
+        Debug.Log("HasTicketBooth(), returning false");
+        conditionResult(false);
+      }
+
+      yield break;
+    }
+
     #endregion
 
     #region GeneralActions
@@ -389,7 +427,7 @@ namespace Assets.Scripts.BehaviourTree
 
         theBase.pathfinder.CanMove = false; // Prevent further movement
         theBase.pathfinder.CanSearch = false;
-        theBase.pathfinder.HasArrived = false;
+//        theBase.pathfinder.HasArrived = false;
 
         Debug.Log("MoveToTarget(), returning success");
         
@@ -420,6 +458,23 @@ namespace Assets.Scripts.BehaviourTree
       returnCode(ReturnCode.Success);
       yield break;
     } // GetRandomInterestPoint()
+
+    #endregion
+
+    #region GeneralVehicleActions
+
+    private IEnumerator DriveToTarget(AIBase theBase, System.Action<ReturnCode> returnCode)
+    {
+      //TODO: Do the Pathfinding stuff to get to the busstop 
+      yield break;
+    }
+
+    private IEnumerator WaitAtBusstop(AIBase theBase, System.Action<ReturnCode> returnCode)
+    {
+      Debug.Log("WaitAtBusstop, returning success");
+      returnCode(ReturnCode.Success);
+      yield return new WaitForSeconds(5f);
+    } // WaitAtBusstop()
 
     #endregion
 

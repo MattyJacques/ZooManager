@@ -8,6 +8,7 @@ using System.Collections;
 using Assets.Scripts.UI;
 using Assets.Scripts.Characters;
 using Assets.Scripts.BehaviourTree;
+using Assets.Scripts.Managers;
 
 namespace Assets.Scripts.Characters.Visitors
 {
@@ -17,14 +18,22 @@ namespace Assets.Scripts.Characters.Visitors
     // Template values never get set, they represent the visitor's permanent properties (name, type, etc)
     public VisitorTemplate Template { get; set; }
 
+    public string favouriteAnimal { get; set; }
+
     [SerializeField]
     GameClock gameClock;
 
     public VisitorBase(VisitorTemplate template,  GameObject model)
     { // Constructor to set up the template and behaviour tree
       Template = template;
-	  Model = model;
+	    Model = model;
     } // VisitorBase()
+
+    public VisitorBase(Assets.Scripts.Managers.VisitorManager.Visitor visitor)
+    {
+      Template = visitor.Template;
+      Model = visitor.Prefab;
+    }
 
     public void init()
     {
@@ -32,8 +41,29 @@ namespace Assets.Scripts.Characters.Visitors
       Thirst = Random.Range(0,100);
       Boredom = Random.Range(0,100);
       Age = Random.Range(1,100);
+
+      AnimalManager animalManager = GameObject.Find("Managers").GetComponent<AnimalManager>();
+
+      int random = Random.Range(0,animalManager._animalCollection.Count);
+      favouriteAnimal = animalManager._animalCollection[random].ID;
       // TODO: Select 3 "favourite" animals out of the game's animal list
+
+      pathfinder = Model.AddComponent<Mover>();
+      pathfinder.NeighbourDist = 2f;
+
+      if (GameObject.Find("TicketBooth"))
+      {
+        Transform ticketBooth = GameObject.Find("TicketBooth").transform;
+        pathfinder.Target = ticketBooth.position + 3*ticketBooth.forward;
+      }
+      else
+      {
+        pathfinder.Target = new Vector3(80, 10, 80);//GameObject.Find("Busstop").transform.position;
+      }
+
       Behave = BehaviourCreator.Instance.GetBehaviour("basicVisitor");
+
+      CoroutineSys.Instance.StartCoroutine(Behave.Behave(this));
     }
 
     protected void Update()
@@ -64,6 +94,8 @@ namespace Assets.Scripts.Characters.Visitors
         //Do dying stuff
       }
     } // Update()
+
+
 
     
 
