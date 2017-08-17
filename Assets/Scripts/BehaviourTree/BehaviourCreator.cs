@@ -76,6 +76,7 @@ namespace Assets.Scripts.BehaviourTree
       vehicleComponents[0] = new Action(MoveToTarget);
       vehicleComponents[1] = new Action(WaitAtBusstop);
       vehicleComponents[2] = new Action(MoveToTarget);
+      vehicleComponents[3] = new Action(Destroy);
       Selector vehicleSelector = new Selector(vehicleComponents);
       _behaviours.Add("car", new Base.Behaviour (vehicleSelector));
       _behaviours.Add("bus", new Base.Behaviour (vehicleSelector));

@@ -125,21 +125,32 @@ namespace Assets.Scripts.Characters.Vehicles
       }
     }
 
-    public void Update()
+    public void Update(int index)
     { // Process the needs of the base then process the behaviour for AI
       //TODO: maybe check an area around this? This basically checks whether the vehicle has arrived at the destination
       //      in order to unload the passgeners. Can't really use pathfinder.HasArrvied since that get's set to false
       //      when it arrives
-      if (pathfinder.HasArrived == true && state == "Arriving")
+      if (pathfinder.HasArrived == true)
       {
-        Debug.Log("Bus arrived, spawning visitors");
-        SpawnVisitors();
-        state = "Leaving";
-        Debug.Log("Finding new destination");
-        FindDestination();
-        pathfinder.Target = Destination;
+        switch (state)
+        {
+          case "Arriving":
+            Debug.Log("Bus arrived, spawning visitors");
+            SpawnVisitors();
+            state = "Leaving";
+            Debug.Log("Finding new destination");
+            FindDestination();
+            pathfinder.Target = Destination;
+            pathfinder.HasArrived = false;
+            break;
+          case "Leaving":
+            Debug.Log("Vehicle left, destroying vehicle");
+            GameObject managers = GameObject.Find("Managers");
+            managers.GetComponent<VehicleManager>().DestroyVehicle(index);
+            break;
+
+        }
       }
     }
   } // Update()
- 
 }

@@ -53,9 +53,9 @@ namespace Assets.Scripts.Managers
     void Update()
     {
       //interval = Random.Range(intervalMin,intervalMax);
-      foreach (VehicleBase vehicle in _vehicles)
+      for (int i = 0; i < _vehicles.Count; i++)
       {
-        vehicle.Update();
+        _vehicles[i].Update(i);
       }
     }
     
@@ -89,7 +89,7 @@ namespace Assets.Scripts.Managers
       switch (vehicleType)
       {
         case "Bus":
-          occupancy = Random.Range(1, 1);
+          occupancy = Random.Range(1, 10);
           break;
         case "Car":
           occupancy = Random.Range(1, 5);
@@ -136,6 +136,14 @@ namespace Assets.Scripts.Managers
       
     } //DestroyVehicle()
 
+    public void DestroyVehicle(int index)
+    {
+      Destroy(_activeVehicles[index].Prefab);
+
+      _activeVehicles.RemoveAt(index);
+      _vehicles.RemoveAt(index);
+    }
+
     IEnumerator VehicleSpawner()
     {
       yield return new WaitForSeconds (1);
@@ -169,3 +177,4 @@ namespace Assets.Scripts.Managers
 
 
 }
+
