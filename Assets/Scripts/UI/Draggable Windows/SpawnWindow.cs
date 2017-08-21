@@ -6,7 +6,10 @@ using UnityEngine;
 // Author       : aimmmmmmmmm
 // Date         : 26/01/2017
 public class SpawnWindow : MonoBehaviour {
+  
   public GameObject windowPrefab;
+  public string type;
+
   private GameObject window;
   private GameObject UI;
   private Vector3 localScale;
@@ -22,6 +25,12 @@ public class SpawnWindow : MonoBehaviour {
       window.transform.SetParent(GameObject.Find("SideButtons").transform);
       window.transform.localScale = localScale;
       window.transform.localPosition = windowPrefab.transform.position;
+
+      if (type != null)
+      {
+        window.GetComponent<BuildingWindow>().buildingType = type;
+      }
+    
     } 
     else { Destroy (window); }
   }

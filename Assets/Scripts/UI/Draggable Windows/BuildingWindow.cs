@@ -14,7 +14,8 @@ public class BuildingWindow : MonoBehaviour
 
   public GameObject buttonPrefab;                             // The prefab used for the button
   public GameObject dragScrollBar;                          // Allows for scrolling in the GUI menu
- 
+  public string buildingType;
+
   private string buildingID;
   private Sprite buttonSprite;
   private List<GameObject> buttons;                         //                      
@@ -38,33 +39,40 @@ public class BuildingWindow : MonoBehaviour
 
       for (int i = 0; i < jsonInfo["buildingTemplates"].Count; i++) 
       {
-        buildingID = jsonInfo["buildingTemplates"][i]["id"];
-        buttonSprite = Resources.Load<Sprite>("Buildings/Previews/" + buildingID);
+        if (string.Compare(jsonInfo["buildingTemplates"][i]["type"],buildingType) == 0)
+        {
+          buildingID = jsonInfo["buildingTemplates"][i]["id"];
+          buttonSprite = Resources.Load<Sprite>("Buildings/Previews/" + buildingID);
 
-         if (jsonInfo["buildingTemplates"][i]["type"] != null)
-         {
-           buildingID = jsonInfo["buildingTemplates"][i]["type"] + "/" + buildingID;
-         }
+          buildingID = jsonInfo["buildingTemplates"][i]["type"] + "/" + buildingID;
     
-         button = (GameObject)Instantiate (buttonPrefab,this.transform.position, Quaternion.identity);
-         button.GetComponent<BuildingFromGUI>().buildingName = buildingID;
+          button = (GameObject)Instantiate(buttonPrefab, this.transform.position, Quaternion.identity);
+          button.GetComponent<BuildingFromGUI>().buildingName = buildingID;
 
-        if (buttonSprite != null) {
-          button.GetComponent<Image>().sprite = buttonSprite;
-        }
-        else {
-          button.GetComponentInChildren<Text>().text = jsonInfo["buildingTemplates"][i]["buildingname"];
-        }
+          if (buttonSprite != null)
+          {
+            button.GetComponent<Image>().sprite = buttonSprite;
+          }
+          else
+          {
+            button.GetComponentInChildren<Text>().text = jsonInfo["buildingTemplates"][i]["buildingname"];
+          }
 
-         button.transform.SetParent(this.transform);
-         x = (int) this.GetComponent<RectTransform>().rect.width / 80 - 1;
-         button.GetComponent<RectTransform> ().localPosition = new Vector3 (-160 + (count % x * 80), - 40 - ((Mathf.Floor(count/x - 1)) * 80), 0);
-         button.GetComponent<RectTransform> ().localScale = new Vector3 (1, 1, 1);
-         buttons.Add(button);
-         count++;
+          button.transform.SetParent(this.transform);
+          x = (int)this.GetComponent<RectTransform>().rect.width / 80 - 1;
+          button.GetComponent<RectTransform>().localPosition = new Vector3(-160 + (count % x * 80), -40 - ((Mathf.Floor(count / x - 1)) * 80), 0);
+          button.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+          buttons.Add(button);
+          count++;
+        }
+        else
+        {
+          Debug.Log(jsonInfo["buildingTemplates"][i]["type"]);
+          Debug.Log(buildingType);
         }
       }
-    } // Start()
+    }
+  } // Start()
 
  void Update () 
   {

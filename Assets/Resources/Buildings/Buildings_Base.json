@@ -6,7 +6,7 @@
       "price": 10,
       "features": [ "Drinks" ],
       "tags": [ "Shop" ],
-      "type": "Stands",
+      "type": "Facilities",
       "upkeep": 1
     },
     {
@@ -15,7 +15,7 @@
       "price": 10,
       "features": [ "Pizza" ],
       "tags": [ "Shop" ],
-      "type": "Stands",
+      "type": "Facilities",
       "upkeep": 1
     },
     {
@@ -23,28 +23,28 @@
       "buildingname": "Toilet",
       "price": 10,
       "features": [ "toilet" ],
-      "type": "Stands",
+      "type": "Facilities",
       "upkeep": 1
     },
     {
       "id": "WoodBench01",
       "buildingname": "Wood Bench 1",
       "price": 10,
-      "type": "Benches",
+      "type": "Decoration",
       "upkeep": 1
     },
     {
       "id": "WoodBench02",
       "buildingname": "Wood Bench 2",
       "price": 10,
-      "type": "Benches",
+      "type": "Decoration",
       "upkeep": 1
     },
     {
       "id": "WoodBenchBasic",
       "buildingname": "Wood Bench 3",
       "price": 10,
-      "type": "Benches",
+      "type": "Decoration",
       "upkeep": 1
     },
     {
@@ -60,6 +60,7 @@
       "price": 10,
       "features": [ "Tickets" ],
       "tags": [ "Shop" ],
+      "type": "Facilities",s
       "upkeep": 1
     },
 
