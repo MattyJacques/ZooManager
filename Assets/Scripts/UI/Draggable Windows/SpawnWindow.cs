@@ -8,9 +8,21 @@ using UnityEngine;
 public class SpawnWindow : MonoBehaviour {
   public GameObject windowPrefab;
   private GameObject window;
+  private GameObject UI;
+  private Vector3 localScale;
+
+
   public void OnClick()
   {
-    if (window == null) { window = (GameObject)Instantiate (windowPrefab, new Vector3 (0, 0, 0), Quaternion.identity); } 
+    if (window == null) 
+    { 
+      UI = GameObject.Find("SideButtons");
+      localScale = UI.transform.localScale;
+      window = (GameObject)Instantiate (windowPrefab); 
+      window.transform.SetParent(GameObject.Find("SideButtons").transform);
+      window.transform.localScale = localScale;
+      window.transform.localPosition = windowPrefab.transform.position;
+    } 
     else { Destroy (window); }
   }
 }

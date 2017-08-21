@@ -53,8 +53,8 @@ public class AnimalWindow : MonoBehaviour
 
         button.transform.SetParent(this.transform);
         x = (int) this.GetComponent<RectTransform>().rect.width / 40 - 1;
-        button.GetComponent<RectTransform> ().localPosition = new Vector3 (-120 + (count % x * 40), -10 - ((Mathf.Floor(count/x - 1)) * 40), 0);
-        button.GetComponent<RectTransform> ().localScale = new Vector3 (.4F, .4F, 1);
+        button.GetComponent<RectTransform> ().localPosition = new Vector3 (-40 + (count % x * 40), -10 - ((Mathf.Floor(count/x - 1)) * 40), 0);
+        button.GetComponent<RectTransform> ().localScale = new Vector3 (1, 1, 1);
         buttons.Add(button);
         count++;
       }

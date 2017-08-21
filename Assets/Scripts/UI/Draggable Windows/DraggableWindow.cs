@@ -12,18 +12,18 @@ public class DraggableWindow : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-    if(windowHeld){ this.GetComponent<RectTransform>().position = new Vector3 (Input.mousePosition.x + offset.x, Input.mousePosition.y + offset.y, 0); }
+//    if(windowHeld){ this.GetComponent<RectTransform>().position = new Vector3 (Input.mousePosition.x + offset.x, Input.mousePosition.y + offset.y, 0); }
 	}
 
-	public void OnWindowClick()
-	{
-    if (windowHeld) { windowHeld = false; }
-    else 
-    { 
-      windowHeld = true;
-      offset = this.GetComponent<RectTransform> ().position - Input.mousePosition;
-    }
-	}
+//	public void OnWindowClick()
+//	{
+//    if (windowHeld) { windowHeld = false; }
+//    else 
+//    { 
+//      windowHeld = true;
+//      offset = this.GetComponent<RectTransform> ().position - Input.mousePosition;
+//    }
+//	}
 
   public void CloseWindow()
   {

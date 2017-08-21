@@ -57,9 +57,9 @@ public class BuildingWindow : MonoBehaviour
         }
 
          button.transform.SetParent(this.transform);
-         x = (int) this.GetComponent<RectTransform>().rect.width / 40 - 1;
-         button.GetComponent<RectTransform> ().localPosition = new Vector3 (-120 + (count % x * 40), -10 - ((Mathf.Floor(count/x - 1)) * 40), 0);
-         button.GetComponent<RectTransform> ().localScale = new Vector3 (.4F, .4F, 1);
+         x = (int) this.GetComponent<RectTransform>().rect.width / 80 - 1;
+         button.GetComponent<RectTransform> ().localPosition = new Vector3 (-160 + (count % x * 80), - 40 - ((Mathf.Floor(count/x - 1)) * 80), 0);
+         button.GetComponent<RectTransform> ().localScale = new Vector3 (1, 1, 1);
          buttons.Add(button);
          count++;
         }
@@ -76,7 +76,7 @@ public class BuildingWindow : MonoBehaviour
   public void OnScrollChange()
   {
     for (int i = 0; i < buttons.Count; i++) {
-      buttons[i].GetComponent<RectTransform>().localPosition = new Vector3(buttons[i].GetComponent<RectTransform>().localPosition.x, -10 - ((Mathf.Floor(i/x - 1)) * 40) + dragScrollBar.GetComponent<UnityEngine.UI.Scrollbar>().value * (Mathf.Floor(buttons.Count/3) * 40), 0);
+      buttons[i].GetComponent<RectTransform>().localPosition = new Vector3(buttons[i].GetComponent<RectTransform>().localPosition.x, -40 - ((Mathf.Floor(i/x - 1)) * 80) + dragScrollBar.GetComponent<UnityEngine.UI.Scrollbar>().value * (Mathf.Floor(buttons.Count/3) * 80), 0);
     }
   } // OnScrollChange()
 
