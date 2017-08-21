@@ -186,7 +186,7 @@ namespace Assets.Scripts.Managers
 
       // Read animal JSON data
       AnimalTemplateCollection _templates;
-      _templates = JSONReader.ReadJSON<AnimalTemplateCollection>("AnimalData");
+      _templates = JSONReader.ReadJSON<AnimalTemplateCollection>("Animals/Animals_Base");
 
       foreach (DirectoryInfo dir in subDirectories)
       { // Loop through all directorys looking for animals
