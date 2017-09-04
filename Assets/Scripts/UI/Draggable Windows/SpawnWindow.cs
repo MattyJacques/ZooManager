@@ -18,29 +18,6 @@ public class SpawnWindow : MonoBehaviour {
 
   private Toggle[] toggles;
 
-//  void Update()
-//  {
-//    if (window != null)
-//    {
-//      switch (type)
-//      {
-//        case "TerrainTab":
-//          toggles = window.GetComponentsInChildren<Toggle>();
-//          foreach (Toggle toggle in toggles)
-//          {
-//            if (toggle.isOn)
-//            {
-//
-//            }
-//          }
-//        default:
-//          GameObject.Find("TerrainEngine").GetComponent<TestTerrainTools>().enabled = false;
-//
-//      }
-//    }
-//  }
-//
-
 
   public void OnClick()
   {
@@ -52,6 +29,10 @@ public class SpawnWindow : MonoBehaviour {
       window.transform.SetParent(GameObject.Find("SideButtons").transform);
       window.transform.localScale = localScale;
       window.transform.localPosition = windowPrefab.transform.position;
+
+      Color color = window.GetComponent<Image>().color;
+      color.a = .8f;
+      window.GetComponent<Image>().color = color;
 
       switch ( type )
       {
@@ -69,9 +50,10 @@ public class SpawnWindow : MonoBehaviour {
 
         case null:
           break;
-         
+                   
         default:
           window.GetComponent<BuildingWindow>().buildingType = type;
+          window.transform.SetParent(GameObject.Find("BuildTab(Clone)").transform);
           break;
       }    
     } 

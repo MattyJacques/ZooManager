@@ -12,17 +12,17 @@ using UnityEngine.UI;
 public class BuildingWindow : MonoBehaviour 
 {
 
-  public GameObject buttonPrefab;                             // The prefab used for the button
+  public GameObject buttonPrefab;                           // The prefab used for the button
   public GameObject dragScrollBar;                          // Allows for scrolling in the GUI menu
-  public string buildingType;
+  public string buildingType;                               // Type of building: decoration, facilities etc.
 
-  private string buildingID;
-  private Sprite buttonSprite;
-  private List<GameObject> buttons;                         //                      
-  private GameObject window;                                     // The GUI window in which the buttons are placed
-  private JSONNode jsonInfo;                                      // Used to load the buildingData Json file
+  private string buildingID;                                // The ID of the building to be placed
+  private Sprite buttonSprite;                              // Sprite to use for the button
+  private List<GameObject> buttons;                         // List of buttons, one for each building                     
+  private GameObject window;                                // The GUI window in which the buttons are placed
+  private JSONNode jsonInfo;                                // Used to load the buildingData Json file
   private TextAsset[] jsonTexts;
-  private int x;                                                                      // number of colums of building buttons
+  private int x;                                            // number of colums of building buttons
   private int count;
 
   void Start()

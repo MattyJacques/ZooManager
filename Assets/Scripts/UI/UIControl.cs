@@ -58,22 +58,22 @@ public class UIControl : MonoBehaviour
   public void ZoomIn()
   {
     zoomIn = true;
-  }
+  } // ZoomIn()
 
   public void ZoomOut()
   {
     zoomOut = true;
-  }
+  } // ZoomOut()
 
   public void RotateLeft()
   {
     rotateLeft = true;
-  }
+  } // RotateLeft()
 
   public void RotateRight()
   {
     rotateRight = true;
-  }
+  } // RotateRight()
 
   public void Stop()
   {
@@ -81,7 +81,7 @@ public class UIControl : MonoBehaviour
     zoomOut = false;
     rotateLeft = false;
     rotateRight = false;
-  }
+  } // Stop()
 }
 
 

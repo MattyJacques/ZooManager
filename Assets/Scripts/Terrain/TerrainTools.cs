@@ -144,13 +144,13 @@ public class TerrainTools : MonoBehaviour {
 
 	public void BuildTerrain(){
     _terrainMode = 0;
-//    _ghostTile.SetActive (false);
+    _ghostTile.SetActive (false);
     _changingTerrain = false;
 	}
 
 	public void RemoveTerrain(){
     _terrainMode = 1;
-//    _ghostTile.SetActive (false);
+    _ghostTile.SetActive (false);
     _changingTerrain = false;
 	}
 

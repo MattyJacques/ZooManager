@@ -1,13 +1,15 @@
-﻿using System.Collections;
+﻿// Title        : SpawnButtons.cs
+// Purpose      : Creates Buttons On Building Windows + Manages Them
+// Author       : aimmmmmmmmm
+// Date         : 26/01/2017
+
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SimpleJSON;
 using UnityEngine.UI;
 
-// Title        : SpawnButtons.cs
-// Purpose      : Creates Buttons On Building Windows + Manages Them
-// Author       : aimmmmmmmmm
-// Date         : 26/01/2017
 public class SpawnButtons : MonoBehaviour {
   public GameObject dragScrollBar;
   public GameObject buttonPrefab;
@@ -32,17 +34,17 @@ public class SpawnButtons : MonoBehaviour {
       TMPButton.GetComponent<Button>().onClick.AddListener(() => {Camera.main.gameObject.GetComponent<Assets.Scripts.Managers.AnimalManager>().CreateFollowMouse(jsonInfo["animalTemplates"][i]["id"]);});
       buttons [i] = TMPButton;
     }
-  }
+  } // Start()
 
-  void Update () 
+  void Update() 
   {
 
-  }
+  } // Update()
 
   public void OnScrollChange()
   {
     for (int i = 0; i < buttons.Length; i++) {
       buttons[i].GetComponent<RectTransform>().localPosition = new Vector3(buttons[i].GetComponent<RectTransform>().localPosition.x, -55 - ((Mathf.Floor(i/x - 1)) * 80) + dragScrollBar.GetComponent<UnityEngine.UI.Scrollbar>().value * (Mathf.Floor(jsonInfo["animalTemplates"].Count/3) * 80), 0);
     }
-  }
+  } //OnScrollChange()
 }
