@@ -1,162 +1,79 @@
-﻿// Title        : VisitorManager.cs
-// Purpose      : Initiates templates, manages instances of visitors
-// Author       : Christos Alatzidis
-// Date         : 03/12/2016
+// Author       : Eivind Andreassen
+// Date         : 11.02.2017
 
-using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using Assets.Scripts.Characters.Visitors;
-using Assets.Scripts.Helpers;
-using Assets.Scripts.BehaviourTree;
+using System.Collections.Generic;         // Lists
+using System.IO;                          // Directory Infos
+using UnityEngine;                        // Monobehaviour
+using Assets.Scripts.Characters.Visitors;  // AnimalBAse
+using Assets.Scripts.BehaviourTree;       // Behaviours
+using Assets.Scripts.Helpers;             // JSONReader
 
 
 namespace Assets.Scripts.Managers
 {
+  public class VisitorManager : MonoBehaviour
+  {
 
-	public class VisitorManager : MonoBehaviour
-	{
+    public struct Visitor
+    { // Struct to hold all the information on a visitor, this includes the ID,
+      // the template and the prefab
+      public string ID { get; set; }
+      public VisitorTemplate Template { get; set; }
+      public GameObject Prefab { get; set; }
+    };
+    //Notes:
+    //About visitor AI
+    //Call the StartBehaviour method after creation/placement, Call the StopBehaviour method before destroying
 
-		struct Visitor
-		{ // Struct to hold all the information on a visitor, this includes the ID,
-			// the template and the prefab
-			public string ID { get; set; }
-			public VisitorTemplate Template { get; set; }
-			public GameObject Prefab { get; set; }
-		};
+    public List<Visitor> _activeVisitors = new List<Visitor> ();
+    public List<VisitorBase> _visitors = new List<VisitorBase> ();
+    private GameObject[] VisitorPrefabs;
+    //TODO: Object pool for destroying and creating new visitors, if it happens frequently enough
 
-		// Holds all visitor templates read from JSON array
-		public VisitorTemplateCollection _templates;
+    private void Start()
+    {
+      LoadVisitorPrefabs ();
+    } //Start()
 
-		private List<Visitor> _visitorCollection;
+    public void CreateVisitor(Vector3 position, GameObject visitorPrefab)
+    { //Creates a new visitor based on specific parameters
 
-		// List of all active visitors
-		List<VisitorBase> _visitors = new List<VisitorBase> { };
+      Visitor newVisitor = new Visitor ();
+      newVisitor.Prefab = Instantiate(visitorPrefab,position,Quaternion.identity);
+      newVisitor.Template = new VisitorTemplate();
 
-		void Start()
-		{ // Call to get the templates from JSON
+      VisitorBase newVisitorBase = new VisitorBase(newVisitor);
+      newVisitorBase.init();
+      //TODO: Implement when ai is merged
+      //newVisitor.getAIScript.StartBehaviour();
+      _activeVisitors.Add (newVisitor);
+      _visitors.Add(newVisitorBase);
 
-			_templates = JSONReader.ReadJSON<VisitorTemplateCollection>("Visitors/Visitors");
+    } //CreateVisitor()
 
-			// Load all visitors
-			_visitorCollection = new List<Visitor>();
-			LoadVisitors();
+    public void CreateRandomVisitor(Vector3 position)
+    { //Creates a random visitor
 
-		} // Start()
+      int random = Random.Range (0, VisitorPrefabs.Length);
+      CreateVisitor (position, VisitorPrefabs[random]);
 
-		void Update()
-		{
-			foreach (VisitorBase visitor in _visitors)
-			{
-			}
-		}
+    } //CreateRandomVisitor()
 
-		public void Create(string id, int amount, Vector3 location)
-		{ // Create an visitor instance using the ID field of the templates
+    public void DestroyVisitor(Visitor visitor)
+    { //Destroys a specific visitor
 
-			// Find index in array
-			int index = GetVisitorIndex(id);
+      //TODO: implement when AI is merged
+      //visitor.getAIScript.StopBehaviour();
+      _activeVisitors.Remove (visitor);
+      //TODO: Destroy gameObject
 
-			if (index >= 0)
-			{ // Make sure template was found before creating the visitor
-				CreateVisitor(index, amount, location);
-			}
+    } //DestroyVisitor()
 
-		} // Create(id)
+    private void LoadVisitorPrefabs()
+    { //Loads the prefab visitors from the visitor prefabs folder
 
-		public void Create(LevelVisitorTemplate template)
-		{ // Create a visitor instance using the template loaded from the level
-			// loader
-
-			// Find index in array
-			int index = GetVisitorIndex(template.id);
-
-			if (index >= 0)
-			{ // Make sure template was found before creating the visitor
-				CreateVisitor(index, 1, new Vector3(template.coords.x,
-					template.coords.y,
-					template.coords.z));
-			}
-
-		} // Create(LevelVisitorTemplate)
-
-
-		private int GetVisitorIndex(string id)
-		{ // Get the index of the Visitor struct within the _visitorCollection
-
-			int visitorIndex = -1;              // Holds the template index found
-
-			for (int i = 0; i < _templates.visitorTemplates.Length; i++)
-			{ // Check if there is a match for every template in the array
-
-
-				if (_templates.visitorTemplates[i].id == id)
-				{ // Check for matching ID, if found set index and break out of loop
-					visitorIndex = i;
-					break;
-				}
-			}
-
-			return visitorIndex;
-
-		} // GetTemplateIndex()
-
-
-		private void CreateVisitor(int index, int amount, Vector3 location)
-		{ // Create and store the visitor using the template index, amount of visitors
-			// and the current location of the visitor
-
-			for (int i = 0; i < amount; i++)
-			{ // Create as many visitors as needed
-
-				// Create new visitor with found template
-				VisitorBase newBase = new VisitorBase(_visitorCollection[index].Template,
-					_visitorCollection[index].Prefab);
-
-				// Update location of object
-				newBase.Model.transform.position = location;
-
-				// Add visitor to instances list
-				_visitors.Add(newBase);
-			}
-
-		} // Create()
-
-		private void LoadVisitors()
-		{ // Load visitors from Assets/Resources
-
-			DirectoryInfo directoryInfo = new DirectoryInfo("Assets/Resources/Visitors");
-			DirectoryInfo[] subDirectories = directoryInfo.GetDirectories();
-
-			foreach (DirectoryInfo dir in subDirectories)
-			{
-				Debug.Log("Searching directory: " + dir.Name);
-
-				foreach (FileInfo file in dir.GetFiles())
-				{
-					if (file.Name.EndsWith("prefab"))
-					{ // Create a new Visitor struct with the ID, prefab and template of
-						// the visitor found
-						Visitor newVisitor = new Visitor();
-						newVisitor.ID = Path.GetFileNameWithoutExtension(file.Name);
-						newVisitor.Prefab = (GameObject)Resources.Load(dir.Name + "/" + file.Name);
-
-						foreach (VisitorTemplate template in _templates.visitorTemplates)
-						{
-							if (template.id == newVisitor.ID)
-							{
-								newVisitor.Template = template;
-								break;
-							}
-						}
-
-						Debug.Log("Loaded " + dir.Name + "/" + file.Name);
-					}
-				}
-			}
-		} // LoadVisitors()
-
-	} // VisitorManager
-
-} // Namespace
+      VisitorPrefabs = Resources.LoadAll<GameObject> ("Visitors/Prefabs");
+    } //LoadVisitorPrefabs()
+  }
+}

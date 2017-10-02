@@ -11,4 +11,5 @@ public class VisitorTemplate
   public float hungerRate;
   public float thirstRate;
   public float lifespan;
+  public string favouriteAnimal;
 }

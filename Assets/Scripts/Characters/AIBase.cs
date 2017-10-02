@@ -42,7 +42,7 @@ namespace Assets.Scripts.Characters
     public virtual void AddFun(int amount)
     { // Increase the fun meter
       Boredom += amount;
-    } // AddFun()
+    } // AddFun() 
 
     public virtual void Kill()
     { // Kill the character
@@ -53,4 +53,4 @@ namespace Assets.Scripts.Characters
 
   } // AIBase
 } // namespace
-    
+    
