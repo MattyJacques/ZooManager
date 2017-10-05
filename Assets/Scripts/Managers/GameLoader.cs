@@ -17,8 +17,6 @@ namespace Assets.Scripts.Managers
     {
         private AnimalManager _animalManager;   //Refer to AnimalManager script in scene
         private bool loaded;                    //Check if the AnimalManager has been loaded, then move on to BuildingManager loading
-        public string test = "Animals";         //DESTROY IF SCRIPT IS CORRECT AND CHANGE LoadPrefabDirectory("Assets/Resources/" + test) 
-                                                //INTO LoadPrefabDirectory("Assets/Resources/Animals");
 
         private void Start()
         {
@@ -32,7 +30,7 @@ namespace Assets.Scripts.Managers
         private IEnumerator LoadingOrder()  //This function makes sure the buildings are loaded after the animals have been loaded.
         {
             Debug.Log("------------Loading Animal Assets...-----------");
-            LoadPrefabDirectory("Assets/Resources/" + test);
+            LoadPrefabDirectory("Assets/Resources/Animals");
             yield return new WaitUntil(() => loaded = true);
             Debug.Log("------------Loading Building Assets...------------");
             LoadPrefabDirectory("Assets/Resources/Buildings");
