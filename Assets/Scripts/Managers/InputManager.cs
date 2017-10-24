@@ -1,11 +1,9 @@
-﻿// Title        : CameraController.cs
+﻿// Title        : InputManager.cs
 // Purpose      : Allows player to control the game camera
 // Author       : exoticCentipede
 // Date         : 18/08/2016
 
 using UnityEngine;
-using System.Collections;
-using System;
 
 namespace Assets.Scripts.Managers
 {

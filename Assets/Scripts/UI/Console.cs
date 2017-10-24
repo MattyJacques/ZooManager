@@ -7,14 +7,10 @@
 // Date         : 21/08/2016
 
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
 using System;
 using System.IO;
-using System.Collections;
 using System.Collections.Generic;
-using Assets.Scripts.Helpers;
 
 namespace Assets.Scripts.UI
 {
@@ -22,7 +18,6 @@ namespace Assets.Scripts.UI
   {
     private string _inputString = "";
 
-    private GameObject _player;
     public AStar _aStar;
     private Component _buildMgr;
     private Component _animalMgr;
@@ -49,7 +44,6 @@ namespace Assets.Scripts.UI
     private void Start()
     {
       //Find gameobjects etc.
-      _player = GameObject.FindWithTag("Player");
       _buildMgr = GetComponent("BuildingManager");
       _animalMgr = GetComponent("AnimalManager");
       _fundsMgr = GetComponent("LogBookManager");
