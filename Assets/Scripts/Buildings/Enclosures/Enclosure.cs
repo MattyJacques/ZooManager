@@ -184,7 +184,7 @@ public class Enclosure : MonoBehaviour
       _name = name;
       if (_canvas != null)
       {
-        _canvas.transform.FindChild("Text_EnclosureName").GetComponent<Text>().text = _name;
+        _canvas.transform.Find("Text_EnclosureName").GetComponent<Text>().text = _name;
       }
       return true;
     }
