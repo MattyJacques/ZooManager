@@ -43,7 +43,6 @@ namespace Assets.Scripts.Managers
     
     public bool _isPave = false;            //Are you placing pavement or building
     public PaveScript _pave;                //Assistance in placing script
-    private  AStar _aStar;
 
     void Start()
     { // Load the buildings from Resources
@@ -57,7 +56,6 @@ namespace Assets.Scripts.Managers
       //Set values
       _pave = gameObject.AddComponent<PaveScript>() as PaveScript;
       _pave.Start();
-      _aStar = gameObject.GetComponent<AStar>() as AStar;
 
       _terrainLayer = LayerMask.GetMask("Ground");
 
@@ -207,8 +205,6 @@ namespace Assets.Scripts.Managers
       // stop mouse position updating building position
 
       _buildings.Add(_currentBuild.gameObject);
-            //Eivind: I don't even know what this does but I'm assuming I can get the objects position after this?
-      _aStar._map = _aStar.PlaceWall ((int) _currentBuild.position.x / _aStar._scale, (int) _currentBuild.position.z / _aStar._scale, _aStar._map);
 
             //Check to see if we're adding something to an enclosure
             Vector3 aboveObjectPos = _currentBuild.position;
