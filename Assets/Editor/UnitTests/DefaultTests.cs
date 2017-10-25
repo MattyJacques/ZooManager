@@ -8,9 +8,9 @@ namespace Assets.Editor.UnitTests
     public class DefaultTestFixture
     {
         [Test]
-        public void WhenTestFails_FailsBuild()
+        public void DefaultTest_Passes_BuildSucceeds()
         {
-            Assert.IsTrue(false);
+            Assert.IsTrue(true);
         }
     }
 
