@@ -39,19 +39,19 @@ public class EnclosureGUIController : MonoBehaviour
     ChangeState (UIState.MainMenu); //Assume we're always starting in the main state
 
     //Attach the actions to the buttons
-    _canvas.transform.FindChild ("Button_Exit").GetComponent<Button> ()
+    _canvas.transform.Find ("Button_Exit").GetComponent<Button> ()
     .onClick.AddListener (delegate
     {
       HideCanvas ();
     });
     //TODO: update the enclosures name in the UI
-    _canvas.transform.FindChild ("InitialButtons/Button_Rename").GetComponent<Button> ()
+    _canvas.transform.Find ("InitialButtons/Button_Rename").GetComponent<Button> ()
     .onClick.AddListener (delegate
     {
       ChangeState (UIState.EditEnclosureName);
     });
 
-    InputField inputField = _canvas.transform.FindChild ("InputField").GetComponent<InputField> ();
+    InputField inputField = _canvas.transform.Find ("InputField").GetComponent<InputField> ();
     inputField.onEndEdit.AddListener (delegate 
     {
       _enclosure.Rename (inputField.text);
@@ -77,20 +77,20 @@ public class EnclosureGUIController : MonoBehaviour
     
 
     //Reset everything
-    _canvas.transform.FindChild("InitialButtons").gameObject.SetActive(false);
-    _canvas.transform.FindChild("InputField").gameObject.SetActive(false);
+    _canvas.transform.Find("InitialButtons").gameObject.SetActive(false);
+    _canvas.transform.Find("InputField").gameObject.SetActive(false);
 
     //Activate whatever UI object we need for this state
     switch (newState)
     {
       //Main state, displays navigation buttons
       case UIState.MainMenu:
-        _canvas.transform.FindChild("InitialButtons").gameObject.SetActive(true);
+        _canvas.transform.Find("InitialButtons").gameObject.SetActive(true);
         break;
 
       case UIState.EditEnclosureName:
-        _canvas.transform.FindChild("InputField").gameObject.SetActive(true);
-        _canvas.transform.FindChild("InputField").GetComponent<InputField>().text = "";
+        _canvas.transform.Find("InputField").gameObject.SetActive(true);
+        _canvas.transform.Find("InputField").GetComponent<InputField>().text = "";
         break;
     }
 

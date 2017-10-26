@@ -1,21 +1,8 @@
 ********************************************************************************
 *                             Initializing Cubiquity                           *
 ********************************************************************************
-[10:46:42, Info   ]: Creating voxel database from 'D:/Projekte/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/2CC1BE91.vdb'
-[10:47:04, Info   ]: Creating voxel database from 'D:/Projekte/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/2CC1BE91.vdb'
-[10:47:45, Info   ]: Creating voxel database from 'D:/Projekte/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/2CC1BE91.vdb'
-[10:50:42, Info   ]: Creating voxel database from 'D:/Projekte/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/2CC1BE91.vdb'
-[10:50:57, Info   ]: Creating voxel database from 'D:/Projekte/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/2CC1BE91.vdb'
-[10:53:32, Info   ]: Creating voxel database from 'D:/Projekte/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/2CC1BE91.vdb'
-[10:53:47, Info   ]: Creating voxel database from 'D:/Projekte/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/2CC1BE91.vdb'
-[10:53:48, Info   ]: Creating voxel database from 'D:/Projekte/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/2CC1BE91.vdb'
-[10:54:15, Info   ]: Creating voxel database from 'D:/Projekte/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/2CC1BE91.vdb'
-[10:57:49, Info   ]: Creating voxel database from 'D:/Projekte/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/2CC1BE91.vdb'
-[11:08:00, Info   ]: Resizing compressed data buffer to 288486bytes. This should only happen once
-[11:08:00, Info   ]: Creating voxel database from 'D:/Projekte/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/2CC1BE91.vdb'
-[18:30:48, Info   ]: Creating voxel database from 'D:/Projekte/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/2CC1BE91.vdb'
-[18:31:02, Info   ]: Creating voxel database from 'D:/Projekte/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/2CC1BE91.vdb'
-********************************************************************************
-*                             Shutting down Cubiquity                          *
-********************************************************************************
-
+[15:58:04, Info   ]: Creating voxel database from 'F:/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/2CC1BE91.vdb'
+[15:58:08, Info   ]: Creating voxel database from 'F:/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/2CC1BE91.vdb'
+[15:58:28, Info   ]: Creating voxel database from 'F:/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/2CC1BE91.vdb'
+[15:58:30, Info   ]: Creating voxel database from 'F:/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/2CC1BE91.vdb'
+[15:58:35, Info   ]: Creating voxel database from 'F:/ZooManager/Assets/StreamingAssets/Cubiquity/VoxelDatabases/2CC1BE91.vdb'
