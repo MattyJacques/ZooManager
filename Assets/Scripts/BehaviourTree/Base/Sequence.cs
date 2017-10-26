@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-using System;
+﻿using System.Collections;
 using Assets.Scripts.Characters;
 
 namespace Assets.Scripts.BehaviourTree.Base
@@ -17,8 +15,6 @@ namespace Assets.Scripts.BehaviourTree.Base
 
     public override IEnumerator Behave(AIBase theBase, System.Action<ReturnCode> returnCode)
     { // Process the given behaviour, returning to return code
-
-      bool isRunning = false;
 
       for (int i = 0; i < _behaviours.Length; i++)
       { // Process all of the behaviours in the array for this sequence

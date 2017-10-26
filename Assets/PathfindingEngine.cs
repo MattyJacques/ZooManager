@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Pathfinding;
 using Cubiquity;
 
@@ -12,7 +10,7 @@ public class PathfindingEngine : MonoBehaviour {
     private float lastRescan = 0f;
     private float rescanRate = 5f;
 
-    private bool changesMade = false;
+    // private bool changesMade = false;
 
 	// Use this for initialization
 	void Start () {
@@ -66,7 +64,7 @@ public class PathfindingEngine : MonoBehaviour {
 
     void TerrainComplete()
     {
-        changesMade = true;
+        // changesMade = true;
     }
 
 }

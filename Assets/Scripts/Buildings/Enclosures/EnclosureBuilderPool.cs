@@ -31,11 +31,13 @@ public class EnclosureBuilderPool
     _wallMatTranslucent = wallTranslucent;
     _cornerMatTranslucent = cornerTranslucent;
 
+#if UNITY_EDITOR
     //Init objects and set materials
     if (UnityEditor.PrefabUtility.GetPrefabType(wall) != UnityEditor.PrefabType.None)
     {
       wall = Object.Instantiate(wall);
     }
+
     wall.GetComponent<Renderer>().material = _wallMatTranslucent;
     wall.transform.position = _hiddenPos;
     _wallReference = wall;
@@ -45,6 +47,8 @@ public class EnclosureBuilderPool
     {
       corner = Object.Instantiate(corner);
     }
+#endif // UNITY_EDITOR
+
     corner.GetComponent<Renderer>().material = _cornerMatTranslucent;
     corner.transform.position = _hiddenPos;
     _cornerReference = corner;

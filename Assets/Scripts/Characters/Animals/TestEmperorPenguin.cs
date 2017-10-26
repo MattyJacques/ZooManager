@@ -3,16 +3,13 @@
 // Author       : Chii
 // Date         : 02/06/2017
 
-using Assets.Scripts.Characters.Animals;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TestEmperorPenguin : MonoBehaviour
 {
   private Animator anim;  //for accessing the GameObject's animator
   private Rigidbody rbody;  //for accessing the GameObject's rigidbidy
-  private int radius = 47;  //radius of the circle the animals can wander...this will be removed and replaced
   private float minWalk = 2;  //minimum amount of time taken walking
   private float maxWalk = 5;  //maximum amount of time taken walking
   private float minWait = 3;  //minimum amount of time taken idling
