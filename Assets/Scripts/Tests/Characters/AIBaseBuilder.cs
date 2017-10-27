@@ -3,7 +3,7 @@
 using Assets.Scripts.Characters;
 using UnityEngine;
 
-namespace Assets.Editor.UnitTests.Characters
+namespace Assets.Scripts.Tests.Characters
 {
     public class AIBaseBuilder
     {

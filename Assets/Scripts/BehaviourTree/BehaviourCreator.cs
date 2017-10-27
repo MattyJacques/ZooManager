@@ -72,9 +72,9 @@ namespace Assets.Scripts.BehaviourTree
       // Set components
       animalHunger[0] = new Conditional(IsHungry);    // Check if animal is hungry
       animalHunger[1] = new Conditional(HasMyFood);   // Check if enclosure has animals preferred food
-      animalHunger[2] = new Action(GetFood);          // Get the position of the food
-      animalHunger[3] = new Action(MoveToTarget);     // Move to target
-      animalHunger[4] = new Action(EatFood);          // Eat food
+      animalHunger[2] = new BehaviourAction(GetFood);          // Get the position of the food
+      animalHunger[3] = new BehaviourAction(MoveToTarget);     // Move to target
+      animalHunger[4] = new BehaviourAction(EatFood);          // Eat food
       animalHunger[5] = new ForceFailure();           // Force Sequence to fail, thus Selector will run next branch
 
       // Create and return the finished hunger sequence
@@ -94,9 +94,9 @@ namespace Assets.Scripts.BehaviourTree
       // Set components
       animalThirst[0] = new Conditional(IsThirsty);    // Check if animal is thirsty
       animalThirst[1] = new Conditional(HasWater);   // Check if enclosure has a water source
-      animalThirst[2] = new Action(GetWater);          // Get the position of the water source
-      animalThirst[3] = new Action(MoveToTarget);     // Move to target
-      animalThirst[4] = new Action(DrinkWater);          // Drink water
+      animalThirst[2] = new BehaviourAction(GetWater);          // Get the position of the water source
+      animalThirst[3] = new BehaviourAction(MoveToTarget);     // Move to target
+      animalThirst[4] = new BehaviourAction(DrinkWater);          // Drink water
       animalThirst[5] = new ForceFailure();           // Force Sequence to fail, thus Selector will run next branch
 
       // Create and return the finished thirst sequence
@@ -115,9 +115,9 @@ namespace Assets.Scripts.BehaviourTree
       // Set components
       animalFun[0] = new Conditional(IsBored);    // Check if animal is bored
       animalFun[1] = new Conditional(HasFun);   // Check if enclosure has a fund source
-      animalFun[2] = new Action(GetFun);          // Get the position of the fun source
-      animalFun[3] = new Action(MoveToTarget);     // Move to target
-      animalFun[4] = new Action(HaveFun);          // Have fun
+      animalFun[2] = new BehaviourAction(GetFun);          // Get the position of the fun source
+      animalFun[3] = new BehaviourAction(MoveToTarget);     // Move to target
+      animalFun[4] = new BehaviourAction(HaveFun);          // Have fun
       animalFun[5] = new ForceFailure();           // Force Sequence to fail, thus Selector will run next branch
 
       // Create and return the finished thirst sequence
@@ -131,8 +131,8 @@ namespace Assets.Scripts.BehaviourTree
 
       BehaviourBase[] animalWander = new BehaviourBase[2];
 
-      animalWander[0] = new Action(GetRandomInterestPoint);
-      animalWander[1] = new Action(MoveToTarget);
+      animalWander[0] = new BehaviourAction(GetRandomInterestPoint);
+      animalWander[1] = new BehaviourAction(MoveToTarget);
 
       return new Sequence(animalWander);
       
@@ -144,8 +144,8 @@ namespace Assets.Scripts.BehaviourTree
 
       BehaviourBase[] animalWander = new BehaviourBase[2];
 
-      animalWander[0] = new Action(GetRandomPointInsideEnclosure);
-      animalWander[1] = new Action(MoveToTarget);
+      animalWander[0] = new BehaviourAction(GetRandomPointInsideEnclosure);
+      animalWander[1] = new BehaviourAction(MoveToTarget);
 
       return new Sequence(animalWander);
 

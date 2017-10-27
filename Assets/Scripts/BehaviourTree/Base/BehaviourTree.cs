@@ -15,9 +15,9 @@ namespace Assets.Scripts.BehaviourTree.Base
 
     public class BehaviourTree
     {
-        private readonly Selector _root;            
+        public static float UpdateDelay = 5f;
 
-        public ReturnCode returnCode { get; set; }
+        private readonly Selector _root;
 
         public BehaviourTree(Selector root)
         { 
@@ -25,16 +25,15 @@ namespace Assets.Scripts.BehaviourTree.Base
         } 
 
         public IEnumerator Behave(AIBase theBase)
-        { // Process the behaviour of the current selector
-
-            while (true) // Do it forever since we are in a thread
+        { 
+            while (true) // Do it forever as the operations will be performed asynchronously
             {
                 yield return null;
                 ReturnCode result;
                 Debug.Log("Start BT");
                 yield return CoroutineSys.Instance.StartCoroutine(_root.Behave(theBase, val => result = val));
                 Debug.Log("End BT");
-                yield return new WaitForSeconds(5f);
+                yield return new WaitForSeconds(UpdateDelay);
             }
         } 
     } 

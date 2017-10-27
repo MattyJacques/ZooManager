@@ -16,10 +16,10 @@ namespace Assets.Scripts.BehaviourTree.Base
 
         public override IEnumerator Behave(AIBase theBase, System.Action<ReturnCode> returnCode)
         {
-            for (int i = 0; i < _behaviours.Length; i++)
-            { 
-                ReturnCode result = ReturnCode.Failure;
-                yield return CoroutineSys.Instance.StartCoroutine(_behaviours[i].Behave(theBase, val => result = val));
+            foreach (var behaviour in _behaviours)
+            {
+                var result = ReturnCode.Failure;
+                yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(theBase, val => result = val));
 
                 switch (result)
                 {
