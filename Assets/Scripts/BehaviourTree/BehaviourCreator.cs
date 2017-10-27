@@ -70,8 +70,8 @@ namespace Assets.Scripts.BehaviourTree
       BehaviourBase[] animalHunger = new BehaviourBase[6];
 
       // Set components
-      animalHunger[0] = new Conditional(IsHungry);    // Check if animal is hungry
-      animalHunger[1] = new Conditional(HasMyFood);   // Check if enclosure has animals preferred food
+      animalHunger[0] = new BehaviourConditional(IsHungry);    // Check if animal is hungry
+      animalHunger[1] = new BehaviourConditional(HasMyFood);   // Check if enclosure has animals preferred food
       animalHunger[2] = new BehaviourAction(GetFood);          // Get the position of the food
       animalHunger[3] = new BehaviourAction(MoveToTarget);     // Move to target
       animalHunger[4] = new BehaviourAction(EatFood);          // Eat food
@@ -92,8 +92,8 @@ namespace Assets.Scripts.BehaviourTree
       BehaviourBase[] animalThirst = new BehaviourBase[6];
 
       // Set components
-      animalThirst[0] = new Conditional(IsThirsty);    // Check if animal is thirsty
-      animalThirst[1] = new Conditional(HasWater);   // Check if enclosure has a water source
+      animalThirst[0] = new BehaviourConditional(IsThirsty);    // Check if animal is thirsty
+      animalThirst[1] = new BehaviourConditional(HasWater);   // Check if enclosure has a water source
       animalThirst[2] = new BehaviourAction(GetWater);          // Get the position of the water source
       animalThirst[3] = new BehaviourAction(MoveToTarget);     // Move to target
       animalThirst[4] = new BehaviourAction(DrinkWater);          // Drink water
@@ -113,8 +113,8 @@ namespace Assets.Scripts.BehaviourTree
       BehaviourBase[] animalFun = new BehaviourBase[6];
 
       // Set components
-      animalFun[0] = new Conditional(IsBored);    // Check if animal is bored
-      animalFun[1] = new Conditional(HasFun);   // Check if enclosure has a fund source
+      animalFun[0] = new BehaviourConditional(IsBored);    // Check if animal is bored
+      animalFun[1] = new BehaviourConditional(HasFun);   // Check if enclosure has a fund source
       animalFun[2] = new BehaviourAction(GetFun);          // Get the position of the fun source
       animalFun[3] = new BehaviourAction(MoveToTarget);     // Move to target
       animalFun[4] = new BehaviourAction(HaveFun);          // Have fun
