@@ -1,44 +1,40 @@
-﻿using UnityEngine;
+﻿// Sifaka Game Studios (C) 2017
+
 using System.Collections;
-using System;
 using Assets.Scripts.Characters;
 
 namespace Assets.Scripts.BehaviourTree.Base
 {
-  public class Selector : BehaviourBase
-  {
-    private BehaviourBase[] _behaviours;
-
-    public Selector(BehaviourBase[] behaviours)
-    { // Constructor to set up the behaviour array
-      _behaviours = behaviours;
-    } // Selector()
-
-
-    public override IEnumerator Behave(AIBase theBase, System.Action<ReturnCode> returnCode)
+    public class Selector : BehaviourBase
     {
-      for (int i = 0; i < _behaviours.Length; i++)
-      { // Loop through and process all behaviours in the the array
-        
-        ReturnCode result = ReturnCode.Failure;
-        yield return CoroutineSys.Instance.StartCoroutine(_behaviours[i].Behave(theBase, val => result = val)); // run the current behaviour as coroutine
+        private readonly BehaviourBase[] _behaviours;
 
-        switch (result)
-        { // Process current behaviour, checking return code
-        case ReturnCode.Failure:
-            continue;
-        case ReturnCode.Success:
-            returnCode(ReturnCode.Success); // set returncode
-            yield break; // exit coroutine
-        case ReturnCode.Running:
-            returnCode(ReturnCode.Failure);
-            yield break;
-        default:
-            continue;
+        public Selector(BehaviourBase[] behaviours)
+        {
+            _behaviours = behaviours;
         }
-      } // for i < _behaviours.Length
 
-    } // Behave()
+        public override IEnumerator Behave(AIBase theBase, System.Action<ReturnCode> returnCode)
+        {
+            foreach (var behaviour in _behaviours)
+            {
+                var result = ReturnCode.Failure;
+                yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(theBase, val => result = val));
 
-  } // Selector
+                switch (result)
+                {
+                    case ReturnCode.Failure:
+                        continue;
+                    case ReturnCode.Success:
+                        returnCode(ReturnCode.Success);
+                        yield break;
+                    case ReturnCode.Running:
+                        returnCode(ReturnCode.Failure);
+                        yield break;
+                    default:
+                        continue;
+                }
+            }
+        }
+    }
 }

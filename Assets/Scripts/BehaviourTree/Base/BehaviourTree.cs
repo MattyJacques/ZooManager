@@ -16,7 +16,6 @@ namespace Assets.Scripts.BehaviourTree.Base
     public class BehaviourTree
     {
         private readonly Selector _root;            
-        private ReturnCode _returnCode;
 
         public ReturnCode returnCode { get; set; }
 
@@ -33,11 +32,10 @@ namespace Assets.Scripts.BehaviourTree.Base
                 yield return null;
                 ReturnCode result;
                 Debug.Log("Start BT");
-                yield return CoroutineSys.Instance.StartCoroutine(_root.Behave(theBase, val => result = val)); // Start the root selector as coroutine
+                yield return CoroutineSys.Instance.StartCoroutine(_root.Behave(theBase, val => result = val));
                 Debug.Log("End BT");
                 yield return new WaitForSeconds(5f);
             }
-
         } 
     } 
 }

@@ -1,46 +1,41 @@
-﻿using System.Collections;
+﻿// Sifaka Game Studios (C) 2017
+
+using System.Collections;
 using Assets.Scripts.Characters;
 
 namespace Assets.Scripts.BehaviourTree.Base
 {
-  public class Sequence : BehaviourBase
-  {
-    private BehaviourBase[] _behaviours;
+    public class Sequence : BehaviourBase
+    {
+        private readonly BehaviourBase[] _behaviours;
 
-    public Sequence(BehaviourBase[] behaviours)
-    { // Constructor to set up behaviours of the sequence
-      _behaviours = behaviours;
-    } // Sequence
-
-
-    public override IEnumerator Behave(AIBase theBase, System.Action<ReturnCode> returnCode)
-    { // Process the given behaviour, returning to return code
-
-      for (int i = 0; i < _behaviours.Length; i++)
-      { // Process all of the behaviours in the array for this sequence
-        
-        ReturnCode result = ReturnCode.Failure;
-        yield return CoroutineSys.Instance.StartCoroutine(_behaviours[i].Behave(theBase, val => result = val)); // run the current behaviour as coroutine
-
-        switch (result)
-        { // Process current behaviour, checking return code
-        case ReturnCode.Failure:
-            returnCode(ReturnCode.Failure);
-            yield break;
-        case ReturnCode.Success:
-            continue;
-        case ReturnCode.Running:
-            continue;
-        default:
-            returnCode(ReturnCode.Success); // set returncode
-            yield break; // exit coroutine
+        public Sequence(BehaviourBase[] behaviours)
+        {
+            _behaviours = behaviours;
         }
-                    
-      } // for i < _behaviours.Length
 
-      returnCode(ReturnCode.Success);
-      yield break;
-    } // Behave()
+        public override IEnumerator Behave(AIBase theBase, System.Action<ReturnCode> returnCode)
+        {
+            for (int i = 0; i < _behaviours.Length; i++)
+            { 
+                ReturnCode result = ReturnCode.Failure;
+                yield return CoroutineSys.Instance.StartCoroutine(_behaviours[i].Behave(theBase, val => result = val));
 
-  } // Sequence
+                switch (result)
+                {
+                    case ReturnCode.Failure:
+                        returnCode(ReturnCode.Failure);
+                        yield break;
+                    case ReturnCode.Success:
+                        continue;
+                    case ReturnCode.Running:
+                        continue;
+                    default:
+                        returnCode(ReturnCode.Success);
+                        yield break;
+                }
+            }
+            returnCode(ReturnCode.Success);
+        }
+    }
 }
