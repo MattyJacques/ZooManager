@@ -1,14 +1,13 @@
-﻿using UnityEngine;
-using System.Collections;
-using System;
-using Assets.Scripts.Characters;
+﻿// Sifaka Game Studios (C) 2017
 
+using System.Collections;
+using Assets.Scripts.Characters;
 
 namespace Assets.Scripts.BehaviourTree.Base
 {
   public delegate IEnumerator ActionDelegate(AIBase theBase, System.Action<ReturnCode> returnCode);   // The action of the behaviour
 
-  public class Action : BehaveComponent
+  public class Action : BehaviourBase
   {
     private ActionDelegate _action;              // The action of the behaviour
 

@@ -5,11 +5,11 @@ using Assets.Scripts.Characters;
 
 namespace Assets.Scripts.BehaviourTree.Base
 {
-  public class Selector : BehaveComponent
+  public class Selector : BehaviourBase
   {
-    private BehaveComponent[] _behaviours;
+    private BehaviourBase[] _behaviours;
 
-    public Selector(BehaveComponent[] behaviours)
+    public Selector(BehaviourBase[] behaviours)
     { // Constructor to set up the behaviour array
       _behaviours = behaviours;
     } // Selector()

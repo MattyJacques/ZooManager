@@ -1,8 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Threading;
-using Assets.Scripts.Managers;
-using Pathfinding;
 
 namespace Assets.Scripts.Characters
 {
@@ -25,7 +21,7 @@ namespace Assets.Scripts.Characters
     public Enclosure Enclosure { get; set; }
 
     // Behaviour object for AI
-    public BehaviourTree.Base.Behaviour Behave { get; set; }
+    public BehaviourTree.Base.BehaviourTree Behave { get; set; }
 
     public virtual void Feed(FeedType type, int amount)
     { // Increase the hunger or thirst meter, depending on type
@@ -53,4 +49,4 @@ namespace Assets.Scripts.Characters
 
   } // AIBase
 } // namespace
-    
+    

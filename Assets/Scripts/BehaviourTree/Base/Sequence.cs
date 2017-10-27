@@ -3,11 +3,11 @@ using Assets.Scripts.Characters;
 
 namespace Assets.Scripts.BehaviourTree.Base
 {
-  public class Sequence : BehaveComponent
+  public class Sequence : BehaviourBase
   {
-    private BehaveComponent[] _behaviours;
+    private BehaviourBase[] _behaviours;
 
-    public Sequence(BehaveComponent[] behaviours)
+    public Sequence(BehaviourBase[] behaviours)
     { // Constructor to set up behaviours of the sequence
       _behaviours = behaviours;
     } // Sequence

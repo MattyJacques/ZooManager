@@ -3,15 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.BehaviourTree.Base;
 using Assets.Scripts.Characters;
-using Assets.Scripts.Managers;
-using Assets.Scripts.Characters.Animals;
 
 
 namespace Assets.Scripts.BehaviourTree
 {
   public class BehaviourCreator
   {
-    private Dictionary<string, Base.Behaviour> _behaviours;
+    private Dictionary<string, Base.BehaviourTree> _behaviours;
 
     private static BehaviourCreator _instance;
 
@@ -29,7 +27,7 @@ namespace Assets.Scripts.BehaviourTree
       }
     }
 
-    public Base.Behaviour GetBehaviour(string name)
+    public Base.BehaviourTree GetBehaviour(string name)
     { // Return the behaviour with the given name
 
       if(_behaviours.ContainsKey(name))
@@ -48,16 +46,16 @@ namespace Assets.Scripts.BehaviourTree
     private void CreateBehaviours()
     { // Create all of the behaviours needed, storing them in the list
 
-      _behaviours = new Dictionary<string, Base.Behaviour>();
+      _behaviours = new Dictionary<string, Base.BehaviourTree>();
       
       // Animal Behaviour (basicAnimal)
-      BehaveComponent[] animalComponents = new BehaveComponent[4];
+      BehaviourBase[] animalComponents = new BehaviourBase[4];
       animalComponents[0] = CreateAnimalHunger();
       animalComponents[1] = CreateAnimalThirst();
       animalComponents[2] = CreateAnimalFun();
       animalComponents[3] = CreateAnimalWanderRandom();
       Selector animalSelector = new Selector(animalComponents);
-      _behaviours.Add("basicAnimal", new Base.Behaviour(animalSelector));
+      _behaviours.Add("basicAnimal", new Base.BehaviourTree(animalSelector));
 
     } // CreateBehaviours()
 
@@ -69,7 +67,7 @@ namespace Assets.Scripts.BehaviourTree
       // and go eat it
 
       // Create Array to hold sequence components
-      BehaveComponent[] animalHunger = new BehaveComponent[6];
+      BehaviourBase[] animalHunger = new BehaviourBase[6];
 
       // Set components
       animalHunger[0] = new Conditional(IsHungry);    // Check if animal is hungry
@@ -91,7 +89,7 @@ namespace Assets.Scripts.BehaviourTree
       // and go drink out of it
 
       // Create Array to hold sequence components
-      BehaveComponent[] animalThirst = new BehaveComponent[6];
+      BehaviourBase[] animalThirst = new BehaviourBase[6];
 
       // Set components
       animalThirst[0] = new Conditional(IsThirsty);    // Check if animal is thirsty
@@ -112,7 +110,7 @@ namespace Assets.Scripts.BehaviourTree
       // and go play with it
 
       // Create Array to hold sequence components
-      BehaveComponent[] animalFun = new BehaveComponent[6];
+      BehaviourBase[] animalFun = new BehaviourBase[6];
 
       // Set components
       animalFun[0] = new Conditional(IsBored);    // Check if animal is bored
@@ -131,7 +129,7 @@ namespace Assets.Scripts.BehaviourTree
     { // Creates a sequence that will allow an animal to wander to
       // a random interest point in his enclosure
 
-      BehaveComponent[] animalWander = new BehaveComponent[2];
+      BehaviourBase[] animalWander = new BehaviourBase[2];
 
       animalWander[0] = new Action(GetRandomInterestPoint);
       animalWander[1] = new Action(MoveToTarget);
@@ -144,7 +142,7 @@ namespace Assets.Scripts.BehaviourTree
     { // Creates a sequence that will allow an animal to wander to a random point inside
       // his enclosure
 
-      BehaveComponent[] animalWander = new BehaveComponent[2];
+      BehaviourBase[] animalWander = new BehaviourBase[2];
 
       animalWander[0] = new Action(GetRandomPointInsideEnclosure);
       animalWander[1] = new Action(MoveToTarget);
@@ -427,4 +425,4 @@ namespace Assets.Scripts.BehaviourTree
     #endregion
 
   } // BehaviourCreator
-}
+}

@@ -7,9 +7,8 @@ namespace Assets.Scripts.BehaviourTree.Base
 {
     public delegate bool ForceFailureDelegate(AIBase theBase);
 
-    public class ForceFailure : BehaveComponent
+    public class ForceFailure : BehaviourBase
     {
-
         public ForceFailure() { }
 
         public override IEnumerator Behave(AIBase theBase, System.Action<ReturnCode> returnCode)
