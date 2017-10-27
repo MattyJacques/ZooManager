@@ -8,12 +8,12 @@ namespace Assets.Scripts.BehaviourTree.Base
 {
     public delegate bool ForceFailureDelegate(AIBase theBase);
 
-    public class ForceFailure : BehaviourBase
-    { 
+    public class BehaviourForceFailure : BehaviourBase
+    {
         public override IEnumerator Behave(AIBase theBase, Action<ReturnCode> returnCode)
-        { 
-            returnCode(ReturnCode.Failure); 
-            yield break; 
+        {
+            returnCode(ReturnCode.Failure);
+            yield break;
         }
     }
 }

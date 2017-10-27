@@ -54,7 +54,7 @@ namespace Assets.Scripts.BehaviourTree
       animalComponents[1] = CreateAnimalThirst();
       animalComponents[2] = CreateAnimalFun();
       animalComponents[3] = CreateAnimalWanderRandom();
-      Selector animalSelector = new Selector(animalComponents);
+      BehaviourSelector animalSelector = new BehaviourSelector(animalComponents);
       _behaviours.Add("basicAnimal", new Base.BehaviourTree(animalSelector));
 
     } // CreateBehaviours()
@@ -75,7 +75,7 @@ namespace Assets.Scripts.BehaviourTree
       animalHunger[2] = new BehaviourAction(GetFood);          // Get the position of the food
       animalHunger[3] = new BehaviourAction(MoveToTarget);     // Move to target
       animalHunger[4] = new BehaviourAction(EatFood);          // Eat food
-      animalHunger[5] = new ForceFailure();           // Force Sequence to fail, thus Selector will run next branch
+      animalHunger[5] = new BehaviourForceFailure();           // Force Sequence to fail, thus Selector will run next branch
 
       // Create and return the finished hunger sequence
       return new Sequence(animalHunger);
@@ -97,7 +97,7 @@ namespace Assets.Scripts.BehaviourTree
       animalThirst[2] = new BehaviourAction(GetWater);          // Get the position of the water source
       animalThirst[3] = new BehaviourAction(MoveToTarget);     // Move to target
       animalThirst[4] = new BehaviourAction(DrinkWater);          // Drink water
-      animalThirst[5] = new ForceFailure();           // Force Sequence to fail, thus Selector will run next branch
+      animalThirst[5] = new BehaviourForceFailure();           // Force Sequence to fail, thus Selector will run next branch
 
       // Create and return the finished thirst sequence
       return new Sequence(animalThirst);
@@ -118,7 +118,7 @@ namespace Assets.Scripts.BehaviourTree
       animalFun[2] = new BehaviourAction(GetFun);          // Get the position of the fun source
       animalFun[3] = new BehaviourAction(MoveToTarget);     // Move to target
       animalFun[4] = new BehaviourAction(HaveFun);          // Have fun
-      animalFun[5] = new ForceFailure();           // Force Sequence to fail, thus Selector will run next branch
+      animalFun[5] = new BehaviourForceFailure();           // Force Sequence to fail, thus Selector will run next branch
 
       // Create and return the finished thirst sequence
       return new Sequence(animalFun);

@@ -11,14 +11,17 @@ namespace Assets.Scripts.Tests.BehaviourTree.Base
         : BehaviourBase
     {
         public ReturnCode ReturnCodeResult { get; set; }
+        public bool BehaveCalled { get; private set; }
 
         public TestBehaviour(ReturnCode inReturnCodeResult)
         {
+            BehaveCalled = false;
             ReturnCodeResult = inReturnCodeResult;
         }
 
         public override IEnumerator Behave(AIBase theBase, Action<ReturnCode> returnCode)
         {
+            BehaveCalled = true;
             returnCode(ReturnCodeResult);
             yield break;
         }

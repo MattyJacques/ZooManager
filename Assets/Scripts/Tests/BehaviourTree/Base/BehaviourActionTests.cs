@@ -31,11 +31,11 @@ namespace Assets.Scripts.Tests.BehaviourTree.Base
         [UnityTest]
         public IEnumerator ActionDelegateDoesNotAlterResult_ReturnsFailure()
         {
-            var action = new BehaviourAction(new ActionDelegate(EmptyAction));
+            var behaviour = new BehaviourAction(EmptyAction);
 
             var returnCode = ReturnCode.Success;
 
-            yield return CoroutineSys.Instance.StartCoroutine(action.Behave(_aiBase, val => { returnCode = val; }));
+            yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(_aiBase, val => { returnCode = val; }));
 
             Assert.AreEqual(ReturnCode.Failure, returnCode);
         }
@@ -43,11 +43,11 @@ namespace Assets.Scripts.Tests.BehaviourTree.Base
         [UnityTest]
         public IEnumerator ActionDelegateAltersResult_ReturnsAlteredResult()
         {
-            var action = new BehaviourAction(new ActionDelegate(AlteringAction));
+            var behaviour = new BehaviourAction(AlteringAction);
 
             var returnCode = ReturnCode.Success;
 
-            yield return CoroutineSys.Instance.StartCoroutine(action.Behave(_aiBase, val => { returnCode = val; }));
+            yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(_aiBase, val => { returnCode = val; }));
 
             Assert.AreEqual(ExpectedReturnCode, returnCode);
         }
