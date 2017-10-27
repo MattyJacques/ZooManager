@@ -17,9 +17,9 @@ namespace Assets.Scripts.BehaviourTree.Base
     {
         public static float UpdateDelay = 5f;
 
-        private readonly BehaviourSelector _root;
+        private readonly BehaviourBase _root;
 
-        public BehaviourTree(BehaviourSelector root)
+        public BehaviourTree(BehaviourBase root)
         { 
             _root = root;
         } 
