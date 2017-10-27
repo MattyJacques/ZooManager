@@ -53,6 +53,14 @@ namespace Assets.Scripts.Tests.BehaviourTree.Base
             Assert.AreEqual(ReturnCode.Success, returnCode);
         }
 
+        [UnityTest]
+        public IEnumerator FailingTest()
+        {
+            yield return null;
+
+            Assert.IsTrue(false);
+        }
+
         private static IEnumerator EmptyConditional(AIBase inAiBase, Action<bool> success)
         {
             yield return null;
