@@ -61,7 +61,7 @@ namespace Assets.Scripts.BehaviourTree
 
     #region Sequences
 
-    private Sequence CreateAnimalHunger()
+    private BehaviourSequence CreateAnimalHunger()
     { // Creates a sequence that will allow an animal object to check
       // if hungry, if so will find the nearest suitable food object
       // and go eat it
@@ -78,12 +78,12 @@ namespace Assets.Scripts.BehaviourTree
       animalHunger[5] = new BehaviourForceFailure();           // Force Sequence to fail, thus Selector will run next branch
 
       // Create and return the finished hunger sequence
-      return new Sequence(animalHunger);
+      return new BehaviourSequence(animalHunger);
         
     } // CreateAnimalHunger()
 
 
-    private Sequence CreateAnimalThirst()
+    private BehaviourSequence CreateAnimalThirst()
     { // Creates a sequence that will allow an animal object to check
       // if thirsty, if so will find the nearest water source
       // and go drink out of it
@@ -100,11 +100,11 @@ namespace Assets.Scripts.BehaviourTree
       animalThirst[5] = new BehaviourForceFailure();           // Force Sequence to fail, thus Selector will run next branch
 
       // Create and return the finished thirst sequence
-      return new Sequence(animalThirst);
+      return new BehaviourSequence(animalThirst);
 
     } // CreateAnimalThirst()
 
-    private Sequence CreateAnimalFun()
+    private BehaviourSequence CreateAnimalFun()
     { // Creates a sequence that will allow an animal object to check
       // if bored, if so will find the nearest fun source
       // and go play with it
@@ -121,11 +121,11 @@ namespace Assets.Scripts.BehaviourTree
       animalFun[5] = new BehaviourForceFailure();           // Force Sequence to fail, thus Selector will run next branch
 
       // Create and return the finished thirst sequence
-      return new Sequence(animalFun);
+      return new BehaviourSequence(animalFun);
 
     } // CreateAnimalThirst()
 
-    private Sequence CreateAnimalWander() // UNFINISHED AND FOR TESTING PURPOSES ONLY
+    private BehaviourSequence CreateAnimalWander() // UNFINISHED AND FOR TESTING PURPOSES ONLY
     { // Creates a sequence that will allow an animal to wander to
       // a random interest point in his enclosure
 
@@ -134,11 +134,11 @@ namespace Assets.Scripts.BehaviourTree
       animalWander[0] = new BehaviourAction(GetRandomInterestPoint);
       animalWander[1] = new BehaviourAction(MoveToTarget);
 
-      return new Sequence(animalWander);
+      return new BehaviourSequence(animalWander);
       
     } // CreateAnimalWander()
 
-    private Sequence CreateAnimalWanderRandom()
+    private BehaviourSequence CreateAnimalWanderRandom()
     { // Creates a sequence that will allow an animal to wander to a random point inside
       // his enclosure
 
@@ -147,7 +147,7 @@ namespace Assets.Scripts.BehaviourTree
       animalWander[0] = new BehaviourAction(GetRandomPointInsideEnclosure);
       animalWander[1] = new BehaviourAction(MoveToTarget);
 
-      return new Sequence(animalWander);
+      return new BehaviourSequence(animalWander);
 
     } // CreateAnimalWanderRandom()
 

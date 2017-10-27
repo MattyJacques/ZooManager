@@ -10,7 +10,7 @@ using UnityEngine.TestTools;
 namespace Assets.Scripts.Tests.BehaviourTree.Base
 {
     [TestFixture]
-    public class BehaviourSelectorTests
+    public class BehaviourSequenceTests
     {
         private AIBase _aiBase;
 
@@ -27,47 +27,32 @@ namespace Assets.Scripts.Tests.BehaviourTree.Base
         }
 
         [UnityTest]
-        public IEnumerator FirstBehaviourSucceeds_NoFurtherBehavioursExecuted()
+        public IEnumerator FirstBehaviourSucceeds_ExecutesUntilFailure()
         {
-            var behaviours = new TestBehaviour[2];
+            var behaviours = new TestBehaviour[3];
             behaviours[0] = new TestBehaviour(ReturnCode.Success);
-            behaviours[1] = new TestBehaviour(ReturnCode.Success);
+            behaviours[1] = new TestBehaviour(ReturnCode.Failure);
+            behaviours[2] = new TestBehaviour(ReturnCode.Success);
 
-            var behaviour = new BehaviourSelector(behaviours);
+            var behaviour = new BehaviourSequence(behaviours);
 
             yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(_aiBase, code => { }));
 
             Assert.IsTrue(behaviours[0].BehaveCalled);
-            Assert.IsFalse(behaviours[1].BehaveCalled);
+            Assert.IsTrue(behaviours[1].BehaveCalled);
+            Assert.IsFalse(behaviours[2].BehaveCalled);
         }
 
         [UnityTest]
-        public IEnumerator FirstBehaviourSucceeds_ReturnsSuccess()
+        public IEnumerator FirstBehaviourSucceeds_ReturnsFailureIfOtherFails()
         {
-            var behaviours = new TestBehaviour[1];
+            var behaviours = new TestBehaviour[2];
             behaviours[0] = new TestBehaviour(ReturnCode.Success);
-
-            var actualReturnCode = ReturnCode.Failure;
-
-            var behaviour = new BehaviourSelector(behaviours);
-
-            yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(_aiBase, code =>
-                {
-                    actualReturnCode = code;
-                }));
-
-            Assert.AreEqual(ReturnCode.Success, actualReturnCode);
-        }
-
-        [UnityTest]
-        public IEnumerator FinalBehaviourFails_ReturnsFailure()
-        {
-            var behaviours = new TestBehaviour[1];
-            behaviours[0] = new TestBehaviour(ReturnCode.Failure);
+            behaviours[1] = new TestBehaviour(ReturnCode.Failure);
 
             var actualReturnCode = ReturnCode.Success;
 
-            var behaviour = new BehaviourSelector(behaviours);
+            var behaviour = new BehaviourSequence(behaviours);
 
             yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(_aiBase, code =>
             {
@@ -78,14 +63,14 @@ namespace Assets.Scripts.Tests.BehaviourTree.Base
         }
 
         [UnityTest]
-        public IEnumerator FirstBehaviourFails_ExecutesUntilSuccess()
+        public IEnumerator AllBehavioursSucceed_ExecutesAllBehaviours()
         {
             var behaviours = new TestBehaviour[3];
-            behaviours[0] = new TestBehaviour(ReturnCode.Failure);
-            behaviours[1] = new TestBehaviour(ReturnCode.Failure);
+            behaviours[0] = new TestBehaviour(ReturnCode.Success);
+            behaviours[1] = new TestBehaviour(ReturnCode.Success);
             behaviours[2] = new TestBehaviour(ReturnCode.Success);
 
-            var behaviour = new BehaviourSelector(behaviours);
+            var behaviour = new BehaviourSequence(behaviours);
 
             yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(_aiBase, code => { }));
 
@@ -95,15 +80,16 @@ namespace Assets.Scripts.Tests.BehaviourTree.Base
         }
 
         [UnityTest]
-        public IEnumerator FirstBehaviourFails_ReturnsSuccessIfLaterBehaviourSucceeds()
+        public IEnumerator AllBehavioursSucceed_ReturnsSuccess()
         {
-            var behaviours = new TestBehaviour[2];
-            behaviours[0] = new TestBehaviour(ReturnCode.Failure);
+            var behaviours = new TestBehaviour[3];
+            behaviours[0] = new TestBehaviour(ReturnCode.Success);
             behaviours[1] = new TestBehaviour(ReturnCode.Success);
+            behaviours[2] = new TestBehaviour(ReturnCode.Success);
 
             var actualReturnCode = ReturnCode.Failure;
 
-            var behaviour = new BehaviourSelector(behaviours);
+            var behaviour = new BehaviourSequence(behaviours);
 
             yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(_aiBase, code =>
             {
@@ -116,13 +102,12 @@ namespace Assets.Scripts.Tests.BehaviourTree.Base
         [UnityTest]
         public IEnumerator BehaviourRunning_Fails()
         {
-            var behaviours = new TestBehaviour[2];
+            var behaviours = new TestBehaviour[1];
             behaviours[0] = new TestBehaviour(ReturnCode.Running);
-            behaviours[1] = new TestBehaviour(ReturnCode.Success);
 
             var actualReturnCode = ReturnCode.Success;
 
-            var behaviour = new BehaviourSelector(behaviours);
+            var behaviour = new BehaviourSequence(behaviours);
 
             yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(_aiBase, code =>
             {
@@ -133,15 +118,15 @@ namespace Assets.Scripts.Tests.BehaviourTree.Base
         }
 
         [UnityTest]
-        public IEnumerator BehaviourRunning_EarlyExit()
+        public IEnumerator BehaviourRunning_EarlyOuts()
         {
             var behaviours = new TestBehaviour[2];
             behaviours[0] = new TestBehaviour(ReturnCode.Running);
             behaviours[1] = new TestBehaviour(ReturnCode.Success);
 
-            var behaviour = new BehaviourSelector(behaviours);
+            var behaviour = new BehaviourSequence(behaviours);
 
-            yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(_aiBase, code => { })); ;
+            yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(_aiBase, code => { }));
 
             Assert.IsTrue(behaviours[0].BehaveCalled);
             Assert.IsFalse(behaviours[1].BehaveCalled);
