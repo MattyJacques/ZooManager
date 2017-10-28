@@ -21,7 +21,7 @@ namespace Assets.Scripts.Characters
     public Enclosure Enclosure { get; set; }
 
     // Behaviour object for AI
-    public BehaviourTree.Base.BehaviourTree Behave { get; set; }
+    public Behaviours.Base.BehaviourTree Behave { get; set; }
 
     public virtual void Feed(FeedType type, int amount)
     { // Increase the hunger or thirst meter, depending on type

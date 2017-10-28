@@ -4,13 +4,10 @@
 // Date         : 03/12/2016
 
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Assets.Scripts.Characters.Visitors;
 using Assets.Scripts.Helpers;
-using Assets.Scripts.BehaviourTree;
-
 
 namespace Assets.Scripts.Managers
 {
