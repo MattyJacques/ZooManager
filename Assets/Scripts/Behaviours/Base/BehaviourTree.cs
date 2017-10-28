@@ -25,15 +25,17 @@ namespace Assets.Scripts.Behaviours.Base
         } 
 
         public IEnumerator Behave(AIBase theBase)
-        { 
-            while (true) // Do it forever as the operations will be performed asynchronously
+        {
+            if (theBase != null)
             {
-                yield return null;
-                ReturnCode result;
-                Debug.Log("Start BT");
-                yield return CoroutineSys.Instance.StartCoroutine(_root.Behave(theBase, val => result = val));
-                Debug.Log("End BT");
-                yield return new WaitForSeconds(UpdateDelay);
+                while (true) // Do it forever as the operations will be performed asynchronously
+                {
+                    yield return null;
+                    Debug.Log("Start BT");
+                    yield return CoroutineSys.Instance.StartCoroutine(_root.Behave(theBase, val => {}));
+                    Debug.Log("End BT");
+                    yield return new WaitForSeconds(UpdateDelay);
+                }
             }
         } 
     } 
