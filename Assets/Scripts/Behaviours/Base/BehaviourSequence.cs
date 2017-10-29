@@ -17,6 +17,8 @@ namespace Assets.Scripts.Behaviours.Base
         public override IEnumerator Behave(AIBase theBase, System.Action<ReturnCode> returnCode)
         {
             var result = ReturnCode.Failure;
+            returnCode(result);
+
             foreach (var behaviour in _behaviours)
             {
                 yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(theBase, val => result = val));
@@ -27,6 +29,7 @@ namespace Assets.Scripts.Behaviours.Base
                         returnCode(ReturnCode.Failure);
                         yield break;
                     case ReturnCode.Success:
+                        returnCode(ReturnCode.Success);
                         continue;
                     case ReturnCode.Running:
                         returnCode(ReturnCode.Failure);
@@ -35,15 +38,6 @@ namespace Assets.Scripts.Behaviours.Base
                         returnCode(ReturnCode.Success);
                         yield break;
                 }
-            }
-
-            if (result != ReturnCode.Success)
-            {
-                returnCode(ReturnCode.Failure);
-            }
-            else
-            {
-                returnCode(result);
             }
         }
     }
