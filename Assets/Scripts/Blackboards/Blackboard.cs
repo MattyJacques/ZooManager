@@ -6,7 +6,12 @@ namespace Assets.Scripts.Blackboards
 {
     public class Blackboard
     {
-        public static BlackboardContainer GlobalBlackboard { get; set; }
+        public static BlackboardContainer GlobalBlackboard = new BlackboardContainer();
         public BlackboardContainer InstanceBlackboard { get; set; }
+
+        public Blackboard()
+        {
+            InstanceBlackboard = new BlackboardContainer();
+        }
     }
 }
