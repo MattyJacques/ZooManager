@@ -3,12 +3,12 @@
 // Author       : Matthew Jacques
 // Date         : 27/01/2017
 
-using System.Collections.Generic;         // Lists
-using System.IO;                          // Directory Infos
-using UnityEngine;                        // Monobehaviour
-using Assets.Scripts.Characters.Animals;  // AnimalBAse
-using Assets.Scripts.BehaviourTree;       // Behaviours
-using Assets.Scripts.Helpers;             // JSONReader
+using System.Collections.Generic;         
+using System.IO;
+using Assets.Scripts.Behaviours;
+using UnityEngine;                        
+using Assets.Scripts.Characters.Animals;      
+using Assets.Scripts.Helpers;             
 
 namespace Assets.Scripts.Managers
 {
