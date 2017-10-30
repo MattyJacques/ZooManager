@@ -72,7 +72,7 @@ namespace Assets.Scripts.Behaviours
         // Sequence must be the root or have selector as a parent
         public BehaviourTreeBuilder AddSequence()
         {
-            return AddCompositeBehaviour(BehaviourType.Sequence, () => IntermediateBehaviours.Count != 0 &&
+            return AddCompositeBehaviour(BehaviourType.Sequence, () => IntermediateBehaviours.Count != 0 && 
                                                                 IntermediateBehaviours.First().HeadBehaviourType != BehaviourType.Selector);
         }
 
@@ -86,7 +86,7 @@ namespace Assets.Scripts.Behaviours
 
             if (inDelegate())
             {
-                Debug.LogError("Composite behaviour could not be constructed!");
+                Debug.LogError("Composite behaviour could not be added!");
                 return this;
             }
 
@@ -115,13 +115,21 @@ namespace Assets.Scripts.Behaviours
         {
             if (IntermediateBehaviours.Count == 0)
             {
-                Root = inPrimitive;
+                if (Root == null)
+                {
+                    Root = inPrimitive;
+                }
+                else
+                {
+                    Debug.LogError("Primitive already added as root!");
+                }
+
                 return this;
             }
 
             if (IntermediateBehaviours.Last().HeadBehaviourType != BehaviourType.Sequence)
             {
-                Debug.LogError("Conditional needs a sequence as a parent.");
+                Debug.LogError("Primitive needs a sequence as a parent.");
                 return this;
             }
 
