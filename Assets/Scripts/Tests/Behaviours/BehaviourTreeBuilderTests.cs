@@ -159,6 +159,24 @@ namespace Assets.Scripts.Tests.Behaviours
             Assert.IsTrue(_otherActionCompleted);
         }
 
+        [UnityTest]
+        public IEnumerator AddSequence_ParentIsSelector_OrderIsCorrect()
+        {
+            var tree =
+                new BehaviourTreeBuilder().
+                    AddSelector()
+                    .AddSequence()
+                        .AddAction(AssertFirstTestDelegate)
+                        .AddForceFailure()
+                    .AddSequence()
+                        .AddAction(ActivateTestDelegate)
+                    .Build();
+
+            yield return CoroutineSys.Instance.StartCoroutine(tree.Root.Behave(_aiBase, code => { }));
+
+            Assert.IsTrue(_actionCompleted);
+        }
+
         private IEnumerator ActivateTestDelegate(AIBase inAIBase, Action<ReturnCode> returnFunc )
         {
             _actionCompleted = true;
@@ -169,6 +187,14 @@ namespace Assets.Scripts.Tests.Behaviours
         private IEnumerator OtherActivateTestDelegate(AIBase inAIBase, Action<ReturnCode> returnFunc)
         {
             _otherActionCompleted = true;
+            returnFunc(ReturnCode.Success);
+            yield return null;
+        }
+
+        private IEnumerator AssertFirstTestDelegate(AIBase inAIBase, Action<ReturnCode> returnFunc)
+        {
+            Assert.IsFalse(_otherActionCompleted);
+            Assert.IsFalse(_actionCompleted);
             returnFunc(ReturnCode.Success);
             yield return null;
         }

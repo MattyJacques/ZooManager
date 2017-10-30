@@ -157,9 +157,10 @@ namespace Assets.Scripts.Behaviours
                 }
                 else if (IntermediateBehaviours.Count == 1)
                 {
-                    foreach (var assembledBehaviour in assembledBehaviours)
+                    // Make sure tree is built in order described
+                    for (int i = assembledBehaviours.Count - 1; i >= 0; --i)
                     {
-                        IntermediateBehaviours.First().AddBehaviour(assembledBehaviour);
+                        IntermediateBehaviours.First().AddBehaviour(assembledBehaviours[i]);
                     }
 
                     Root = IntermediateBehaviours.First().AssembleCompositeBehaviour();
