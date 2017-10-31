@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿// Sifaka Game Studios (C) 2017
+
+using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.Behaviours.Base;
 using Assets.Scripts.Characters;
@@ -45,112 +47,36 @@ namespace Assets.Scripts.Behaviours
     private void CreateBehaviours()
     { // Create all of the behaviours needed, storing them in the list
 
-      _behaviours = new Dictionary<string, Base.BehaviourTree>();
+      _behaviours = new Dictionary<string, BehaviourTree>();
       
-      // Animal Behaviour (basicAnimal)
-      BehaviourBase[] animalComponents = new BehaviourBase[4];
-      animalComponents[0] = CreateAnimalHunger();
-      animalComponents[1] = CreateAnimalThirst();
-      animalComponents[2] = CreateAnimalFun();
-      animalComponents[3] = CreateAnimalWanderRandom();
-      BehaviourSelector animalSelector = new BehaviourSelector(animalComponents);
-      _behaviours.Add("basicAnimal", new Base.BehaviourTree(animalSelector));
+      var tree = new BehaviourTreeBuilder()
+                .AddSelector()
+                    .AddSequence()
+                        .AddConditional(IsHungry)
+                        .AddConditional(HasMyFood)
+                        .AddAction(GetFood)
+                        .AddAction(MoveToTarget)
+                        .AddAction(EatFood)
+                    .AddSequence()
+                        .AddConditional(IsThirsty)
+                        .AddConditional(HasWater)
+                        .AddAction(GetWater)
+                        .AddAction(MoveToTarget)
+                        .AddAction(DrinkWater)
+                    .AddSequence()
+                        .AddConditional(IsBored)
+                        .AddConditional(HasFun)
+                        .AddAction(GetFun)
+                        .AddAction(MoveToTarget)
+                        .AddAction(HaveFun)
+                    .AddSequence()
+                        .AddAction(GetRandomInterestPoint)
+                        .AddAction(MoveToTarget)
+                .Build();
+
+      _behaviours.Add("basicAnimal", tree);
 
     } // CreateBehaviours()
-
-    #region Sequences
-
-    private BehaviourSequence CreateAnimalHunger()
-    { // Creates a sequence that will allow an animal object to check
-      // if hungry, if so will find the nearest suitable food object
-      // and go eat it
-
-      // Create Array to hold sequence components
-      BehaviourBase[] animalHunger = new BehaviourBase[6];
-
-      // Set components
-      animalHunger[0] = new BehaviourConditional(IsHungry);    // Check if animal is hungry
-      animalHunger[1] = new BehaviourConditional(HasMyFood);   // Check if enclosure has animals preferred food
-      animalHunger[2] = new BehaviourAction(GetFood);          // Get the position of the food
-      animalHunger[3] = new BehaviourAction(MoveToTarget);     // Move to target
-      animalHunger[4] = new BehaviourAction(EatFood);          // Eat food
-      animalHunger[5] = new BehaviourForceFailure();           // Force Sequence to fail, thus Selector will run next branch
-
-      // Create and return the finished hunger sequence
-      return new BehaviourSequence(animalHunger);
-        
-    } // CreateAnimalHunger()
-
-
-    private BehaviourSequence CreateAnimalThirst()
-    { // Creates a sequence that will allow an animal object to check
-      // if thirsty, if so will find the nearest water source
-      // and go drink out of it
-
-      // Create Array to hold sequence components
-      BehaviourBase[] animalThirst = new BehaviourBase[6];
-
-      // Set components
-      animalThirst[0] = new BehaviourConditional(IsThirsty);    // Check if animal is thirsty
-      animalThirst[1] = new BehaviourConditional(HasWater);   // Check if enclosure has a water source
-      animalThirst[2] = new BehaviourAction(GetWater);          // Get the position of the water source
-      animalThirst[3] = new BehaviourAction(MoveToTarget);     // Move to target
-      animalThirst[4] = new BehaviourAction(DrinkWater);          // Drink water
-      animalThirst[5] = new BehaviourForceFailure();           // Force Sequence to fail, thus Selector will run next branch
-
-      // Create and return the finished thirst sequence
-      return new BehaviourSequence(animalThirst);
-
-    } // CreateAnimalThirst()
-
-    private BehaviourSequence CreateAnimalFun()
-    { // Creates a sequence that will allow an animal object to check
-      // if bored, if so will find the nearest fun source
-      // and go play with it
-
-      // Create Array to hold sequence components
-      BehaviourBase[] animalFun = new BehaviourBase[6];
-
-      // Set components
-      animalFun[0] = new BehaviourConditional(IsBored);    // Check if animal is bored
-      animalFun[1] = new BehaviourConditional(HasFun);   // Check if enclosure has a fund source
-      animalFun[2] = new BehaviourAction(GetFun);          // Get the position of the fun source
-      animalFun[3] = new BehaviourAction(MoveToTarget);     // Move to target
-      animalFun[4] = new BehaviourAction(HaveFun);          // Have fun
-      animalFun[5] = new BehaviourForceFailure();           // Force Sequence to fail, thus Selector will run next branch
-
-      // Create and return the finished thirst sequence
-      return new BehaviourSequence(animalFun);
-
-    } // CreateAnimalThirst()
-
-    private BehaviourSequence CreateAnimalWander() // UNFINISHED AND FOR TESTING PURPOSES ONLY
-    { // Creates a sequence that will allow an animal to wander to
-      // a random interest point in his enclosure
-
-      BehaviourBase[] animalWander = new BehaviourBase[2];
-
-      animalWander[0] = new BehaviourAction(GetRandomInterestPoint);
-      animalWander[1] = new BehaviourAction(MoveToTarget);
-
-      return new BehaviourSequence(animalWander);
-      
-    } // CreateAnimalWander()
-
-    private BehaviourSequence CreateAnimalWanderRandom()
-    { // Creates a sequence that will allow an animal to wander to a random point inside
-      // his enclosure
-
-      BehaviourBase[] animalWander = new BehaviourBase[2];
-
-      animalWander[0] = new BehaviourAction(GetRandomPointInsideEnclosure);
-      animalWander[1] = new BehaviourAction(MoveToTarget);
-
-      return new BehaviourSequence(animalWander);
-
-    } // CreateAnimalWanderRandom()
-
-    #endregion
 
     #region Actions
 

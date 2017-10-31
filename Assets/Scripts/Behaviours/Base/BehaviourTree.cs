@@ -17,26 +17,32 @@ namespace Assets.Scripts.Behaviours.Base
     {
         public static float UpdateDelay = 5f;
 
-        private readonly BehaviourBase _root;
+        public readonly BehaviourBase Root;
 
         public BehaviourTree(BehaviourBase root)
         { 
-            _root = root;
+            Root = root;
         } 
 
         public IEnumerator Behave(AIBase theBase)
         {
-            if (theBase != null)
+            if (Root == null)
+            {
+                Debug.LogError("Root is null!");
+            }
+            else
             {
                 while (true) // Do it forever as the operations will be performed asynchronously
                 {
                     yield return null;
                     Debug.Log("Start BT");
-                    yield return CoroutineSys.Instance.StartCoroutine(_root.Behave(theBase, val => {}));
+                    yield return CoroutineSys.Instance.StartCoroutine(Root.Behave(theBase, val => { }));
                     Debug.Log("End BT");
                     yield return new WaitForSeconds(UpdateDelay);
                 }
             }
+
+            yield return null;
         } 
     } 
 }
