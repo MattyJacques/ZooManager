@@ -2,8 +2,7 @@
 
 using System.Collections;
 using Assets.Scripts.Behaviours.Base;
-using Assets.Scripts.Characters;
-using Assets.Scripts.Tests.Characters;
+using Assets.Scripts.Blackboards;
 using NUnit.Framework;
 using UnityEngine.TestTools;
 
@@ -12,18 +11,18 @@ namespace Assets.Scripts.Tests.Behaviours.Base
     [TestFixture]
     public class BehaviourForceFailureTests
     {
-        private AIBase _aiBase;
+        private Blackboard _blackboard;
 
         [SetUp]
         public void BeforeTest()
         {
-            _aiBase = new AIBaseBuilder().Build();
+            _blackboard = new Blackboard();
         }
 
         [TearDown]
         public void AfterTest()
         {
-            _aiBase = null;
+            _blackboard = null;
         }
 
         [UnityTest]
@@ -33,7 +32,7 @@ namespace Assets.Scripts.Tests.Behaviours.Base
 
             var returnCode = ReturnCode.Success;
 
-            yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(_aiBase, val => { returnCode = val; }));
+            yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(_blackboard, val => { returnCode = val; }));
 
             Assert.AreEqual(ReturnCode.Failure, returnCode);
         }

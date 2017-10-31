@@ -3,6 +3,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.Behaviours.Base;
+using Assets.Scripts.Blackboards;
 using Assets.Scripts.Characters;
 using UnityEngine;
 
@@ -10,7 +11,7 @@ namespace Assets.Scripts.Behaviours
 {
   public class BehaviourCreator
   {
-    private Dictionary<string, Base.BehaviourTree> _behaviours;
+    private Dictionary<string, BehaviourTree> _behaviours;
 
     private static BehaviourCreator _instance;
 
@@ -42,7 +43,7 @@ namespace Assets.Scripts.Behaviours
           return null;
       }
 
-    } // GetBehaviour()
+    }
 
     private void CreateBehaviours()
     { // Create all of the behaviours needed, storing them in the list
@@ -76,33 +77,35 @@ namespace Assets.Scripts.Behaviours
 
       _behaviours.Add("basicAnimal", tree);
 
-    } // CreateBehaviours()
+    } 
 
     #region Actions
 
-    private IEnumerator EatFood(AIBase theBase, System.Action<ReturnCode> returnCode)
-    { // Handle the eating of food
+    private IEnumerator EatFood(Blackboard inBlackboard, System.Action<ReturnCode> returnCode)
+    { 
       Debug.Log("EatFood(), returning success");
 
-      Transform item = theBase.Enclosure.GetClosestInteriorItemTransform(theBase.Model.transform.position, EnclosureInteriorItem.InteriorItemType.Food);
+      var aiBase = inBlackboard.InstanceBlackboard[BehaviourTree.AIBaseKey].GetCurrentItem<AIBase>();
+      var itemFound = aiBase.Enclosure.GetClosestInteriorItemTransform(aiBase.Model.transform.position, EnclosureInteriorItem.InteriorItemType.Food).gameObject;
 
-      theBase.Enclosure.RemoveInteriorItem(item.gameObject);
-      MonoBehaviour.Destroy(item.gameObject);
+      aiBase.Enclosure.RemoveInteriorItem(itemFound);
+      MonoBehaviour.Destroy(itemFound);
 
-      theBase.Feed(AIBase.FeedType.Food, 100);
+      aiBase.Feed(AIBase.FeedType.Food, 100);
       returnCode(ReturnCode.Success);
       yield break;
-    } // EatFood()
+    } 
 
-    private IEnumerator GetFood(AIBase theBase, System.Action<ReturnCode> returnCode)
+    private IEnumerator GetFood(Blackboard inBlackboard, System.Action<ReturnCode> returnCode)
     { // Get food target
 
-      Transform item = theBase.Enclosure.GetClosestInteriorItemTransform(theBase.Model.transform.position, EnclosureInteriorItem.InteriorItemType.Food);
+      var aiBase = inBlackboard.InstanceBlackboard[BehaviourTree.AIBaseKey].GetCurrentItem<AIBase>();
+      var itemTransform = aiBase.Enclosure.GetClosestInteriorItemTransform(aiBase.Model.transform.position, EnclosureInteriorItem.InteriorItemType.Food);
 
-      if (item != null)
+      if (itemTransform != null)
       {
         Debug.Log("GetFood(), returning success");
-        theBase.pathfinder.Target = item.position;
+        aiBase.pathfinder.Target = itemTransform.position;
         returnCode(ReturnCode.Success);
       }
       else
@@ -112,25 +115,27 @@ namespace Assets.Scripts.Behaviours
       }
 
       yield break;
-    } // GetFood()
+    } 
 
-    private IEnumerator DrinkWater(AIBase theBase, System.Action<ReturnCode> returnCode)
-    { // Handle the drinking of water
+    private IEnumerator DrinkWater(Blackboard inBlackboard, System.Action<ReturnCode> returnCode)
+    { 
         Debug.Log("DrinkWater(), returning success");
-        theBase.Feed(AIBase.FeedType.Water, 100);
+        var aiBase = inBlackboard.InstanceBlackboard[BehaviourTree.AIBaseKey].GetCurrentItem<AIBase>();
+        aiBase.Feed(AIBase.FeedType.Water, 100);
         returnCode(ReturnCode.Success);
         yield break;
-    } // DrinkWater()
+    } 
 
-    private IEnumerator GetWater(AIBase theBase, System.Action<ReturnCode> returnCode)
+    private IEnumerator GetWater(Blackboard inBlackboard, System.Action<ReturnCode> returnCode)
     { // Get water target
 
-      Transform item = theBase.Enclosure.GetClosestInteriorItemTransform(theBase.Model.transform.position, EnclosureInteriorItem.InteriorItemType.Water);
+      var aiBase = inBlackboard.InstanceBlackboard[BehaviourTree.AIBaseKey].GetCurrentItem<AIBase>();
+      var itemTransform = aiBase.Enclosure.GetClosestInteriorItemTransform(aiBase.Model.transform.position, EnclosureInteriorItem.InteriorItemType.Water);
 
-      if (item != null)
+      if (itemTransform != null)
       {
         Debug.Log("GetWater(), returning success");
-        theBase.pathfinder.Target = item.position;
+        aiBase.pathfinder.Target = itemTransform.position;
         returnCode(ReturnCode.Success);
       }
       else
@@ -142,23 +147,25 @@ namespace Assets.Scripts.Behaviours
       yield break;      
     }
 
-    private IEnumerator HaveFun(AIBase theBase, System.Action<ReturnCode> returnCode)
+    private IEnumerator HaveFun(Blackboard inBlackboard, System.Action<ReturnCode> returnCode)
     { // Handle the playing with fun object
       Debug.Log("HaveFun(), returning success");
-      theBase.AddFun(100);
+      var aiBase = inBlackboard.InstanceBlackboard[BehaviourTree.AIBaseKey].GetCurrentItem<AIBase>();
+      aiBase.AddFun(100);
       returnCode(ReturnCode.Success);
       yield break;      
-    } // HaveFun()
+    } 
 
-    private IEnumerator GetFun(AIBase theBase, System.Action<ReturnCode> returnCode)
+    private IEnumerator GetFun(Blackboard inBlackboard, System.Action<ReturnCode> returnCode)
     { // Get Fun target
 
-      Transform item = theBase.Enclosure.GetClosestInteriorItemTransform(theBase.Model.transform.position, EnclosureInteriorItem.InteriorItemType.Fun);
+      var aiBase = inBlackboard.InstanceBlackboard[BehaviourTree.AIBaseKey].GetCurrentItem<AIBase>();
+      var itemTransform = aiBase.Enclosure.GetClosestInteriorItemTransform(aiBase.Model.transform.position, EnclosureInteriorItem.InteriorItemType.Fun);
 
-      if (item != null)
+      if (itemTransform != null)
       {
         Debug.Log("GetFun(), returning success");
-        theBase.pathfinder.Target = item.position;
+        aiBase.pathfinder.Target = itemTransform.position;
         returnCode(ReturnCode.Success);
       }
       else
@@ -168,67 +175,73 @@ namespace Assets.Scripts.Behaviours
       }
 
       yield break;      
-    } // GetFun()
+    } 
 
     #endregion
 
     #region Conditionals
 
-    private IEnumerator IsHungry(AIBase theBase, System.Action<bool> conditionResult)
+    private IEnumerator IsHungry(Blackboard inBlackboard, System.Action<bool> conditionResult)
     { // Check if the animal base's hunger is at a level we class as hungry
       // If so set the next target of the base to suitable food and return true
 
-      Debug.Log("IsHungry(), returning " + (theBase.Hunger < 50));
+      var aiBase = inBlackboard.InstanceBlackboard[BehaviourTree.AIBaseKey].GetCurrentItem<AIBase>();
+      Debug.Log("IsHungry(), returning " + (aiBase.Hunger < 50));
 
-      bool isHunger = theBase.Hunger < 50;
+      var hungry = aiBase.Hunger < 50;
 
-      if(isHunger)
+      if(hungry)
       {
-        theBase.NextTarget = EnclosureInteriorItem.InteriorItemType.Food;
+        aiBase.NextTarget = EnclosureInteriorItem.InteriorItemType.Food;
       }
 
-      conditionResult(isHunger);
+      conditionResult(hungry);
       yield break;
-    } // IsHungry()
+    }
 
-    private IEnumerator IsThirsty(AIBase theBase, System.Action<bool> conditionResult)
+    private IEnumerator IsThirsty(Blackboard inBlackboard, System.Action<bool> conditionResult)
     { // Check if the animal base's thirst is at a level we class as thirsty
       // If so set the next target of the base to water and return true
-      Debug.Log("IsThirsty(), returning " + (theBase.Thirst < 50));
 
-      bool isThirst = theBase.Thirst < 50;
+      var aiBase = inBlackboard.InstanceBlackboard[BehaviourTree.AIBaseKey].GetCurrentItem<AIBase>();
+      Debug.Log("IsThirsty(), returning " + (aiBase.Thirst < 50));
 
-      if(isThirst)
+      var thirsty = aiBase.Thirst < 50;
+
+      if(thirsty)
       {
-        theBase.NextTarget = EnclosureInteriorItem.InteriorItemType.Water;
+        aiBase.NextTarget = EnclosureInteriorItem.InteriorItemType.Water;
       }
 
-      conditionResult(isThirst);
+      conditionResult(thirsty);
       yield break;
-    } // IsThirsty()
+    }
 
-    private IEnumerator IsBored(AIBase theBase, System.Action<bool> conditionResult)
+    private IEnumerator IsBored(Blackboard inBlackboard, System.Action<bool> conditionResult)
     { // Check if the animal base's boredom is at a level we class as bored
       // If so set the next target of the base to fun and return true
-      Debug.Log("IsBored(), returning " + (theBase.Boredom < 50));
 
-      bool isBore = theBase.Boredom < 50;
+      var aiBase = inBlackboard.InstanceBlackboard[BehaviourTree.AIBaseKey].GetCurrentItem<AIBase>();
+      Debug.Log("IsBored(), returning " + (aiBase.Boredom < 50));
 
-      if(isBore)
+      var bored = aiBase.Boredom < 50;
+
+      if(bored)
       {
-        theBase.NextTarget = EnclosureInteriorItem.InteriorItemType.Fun;
+        aiBase.NextTarget = EnclosureInteriorItem.InteriorItemType.Fun;
       }
 
-      conditionResult(isBore);
+      conditionResult(bored);
       yield break;      
-    } // IsBored()
+    } 
 
-    private IEnumerator HasMyFood(AIBase theBase, System.Action<bool> conditionResult)
+    private IEnumerator HasMyFood(Blackboard inBlackboard, System.Action<bool> conditionResult)
     { // Check if the enclosure has the preffered food type
-      
-      Transform item = theBase.Enclosure.GetClosestInteriorItemTransform(theBase.Model.transform.position, EnclosureInteriorItem.InteriorItemType.Food);
 
-      if (item != null)
+      var aiBase = inBlackboard.InstanceBlackboard[BehaviourTree.AIBaseKey].GetCurrentItem<AIBase>();
+      var itemTransform = aiBase.Enclosure.GetClosestInteriorItemTransform(aiBase.Model.transform.position, EnclosureInteriorItem.InteriorItemType.Food);
+
+      if (itemTransform != null)
       {
         Debug.Log("HasMyFood(), returning true");
         conditionResult(true);
@@ -240,14 +253,15 @@ namespace Assets.Scripts.Behaviours
       }
 
       yield break;
-    } // HasMyFood()
+    } 
 
-    private IEnumerator HasWater(AIBase theBase, System.Action<bool> conditionResult)
+    private IEnumerator HasWater(Blackboard inBlackboard, System.Action<bool> conditionResult)
     { // Check if the enclosure has a water source
 
-      Transform item = theBase.Enclosure.GetClosestInteriorItemTransform(theBase.Model.transform.position, EnclosureInteriorItem.InteriorItemType.Water);
+      var aiBase = inBlackboard.InstanceBlackboard[BehaviourTree.AIBaseKey].GetCurrentItem<AIBase>();
+      var itemTransform = aiBase.Enclosure.GetClosestInteriorItemTransform(aiBase.Model.transform.position, EnclosureInteriorItem.InteriorItemType.Water);
 
-      if (item != null)
+      if (itemTransform != null)
       {
         Debug.Log("HasWater(), returning true");
         conditionResult(true);
@@ -259,14 +273,15 @@ namespace Assets.Scripts.Behaviours
       }
 
       yield break;
-    } // HasWater()
+    } 
 
-    private IEnumerator HasFun(AIBase theBase, System.Action<bool> conditionResult)
+    private IEnumerator HasFun(Blackboard inBlackboard, System.Action<bool> conditionResult)
     { // Check if the enclosure has a fun source
 
-      Transform item = theBase.Enclosure.GetClosestInteriorItemTransform(theBase.Model.transform.position, EnclosureInteriorItem.InteriorItemType.Fun);
+      var aiBase = inBlackboard.InstanceBlackboard[BehaviourTree.AIBaseKey].GetCurrentItem<AIBase>();
+      var itemTransform = aiBase.Enclosure.GetClosestInteriorItemTransform(aiBase.Model.transform.position, EnclosureInteriorItem.InteriorItemType.Fun);
 
-      if (item != null)
+      if (itemTransform != null)
       {
         Debug.Log("HasFun(), returning true");
         conditionResult(true);
@@ -278,44 +293,49 @@ namespace Assets.Scripts.Behaviours
       }
 
       yield break;
-    } // HasFun()
+    }
 
     #endregion
 
     #region GeneralActions
 
-    private IEnumerator MoveToTarget(AIBase theBase, System.Action<ReturnCode> returnCode)
+    private IEnumerator MoveToTarget(Blackboard inBlackboard, System.Action<ReturnCode> returnCode)
     { // Move to the target
 
       Debug.Log("Starting MoveToTarget()");
 
-        theBase.pathfinder.HasArrived = false;
-        theBase.pathfinder.CanMove = true;  // Start movement
-        theBase.pathfinder.CanSearch = true;
+      var aiBase = inBlackboard.InstanceBlackboard[BehaviourTree.AIBaseKey].GetCurrentItem<AIBase>();
 
-        while(theBase.pathfinder.HasArrived == false)  // Wait for reaching target
-            yield return null; // yield coroutine
+      aiBase.pathfinder.HasArrived = false;
+      aiBase.pathfinder.CanMove = true;  // Start movement
+      aiBase.pathfinder.CanSearch = true;
 
-        theBase.pathfinder.CanMove = false; // Prevent further movement
-        theBase.pathfinder.CanSearch = false;
-        theBase.pathfinder.HasArrived = false;
+      while (aiBase.pathfinder.HasArrived == false)
+      {
+        yield return null;
+      }
 
-        Debug.Log("MoveToTarget(), returning success");
+      aiBase.pathfinder.CanMove = false; // Prevent further movement
+      aiBase.pathfinder.CanSearch = false;
+      aiBase.pathfinder.HasArrived = false;
+
+      Debug.Log("MoveToTarget(), returning success");
         
-        returnCode(ReturnCode.Success);
-        yield break;
-    } // MoveToTarget()
+      returnCode(ReturnCode.Success);
+    }
 
     #endregion
 
     #region GeneralVisitorActions
 
-    private IEnumerator GetRandomInterestPoint(AIBase theBase, System.Action<ReturnCode> returnCode)
+    private IEnumerator GetRandomInterestPoint(Blackboard inBlackboard, System.Action<ReturnCode> returnCode)
     { // Set's the AIBase pathfinder target to a random interest
       // point gotten from the IPManager
       Debug.Log("Getting random Interest Point");
 
-      Vector3 ipvec = IPManager.Instance.GetRandomIP();
+      var aiBase = inBlackboard.InstanceBlackboard[BehaviourTree.AIBaseKey].GetCurrentItem<AIBase>();
+
+      var ipvec = IPManager.Instance.GetRandomIP();
 
       if(ipvec == Vector3.zero)
       { // no interest points
@@ -323,24 +343,25 @@ namespace Assets.Scripts.Behaviours
         yield break;
       }
 
-      theBase.pathfinder.Target = ipvec;
-      theBase.pathfinder.CanSearch = true;
+      aiBase.pathfinder.Target = ipvec;
+      aiBase.pathfinder.CanSearch = true;
 
       returnCode(ReturnCode.Success);
-      yield break;
-    } // GetRandomInterestPoint()
+    } 
 
     #endregion
 
     #region GeneralAnimalActions
 
-    private IEnumerator GetRandomPointInsideEnclosure(AIBase theBase, System.Action<ReturnCode> returnCode)
+    private IEnumerator GetRandomPointInsideEnclosure(Blackboard inBlackboard, System.Action<ReturnCode> returnCode)
     { // Set's the AIBase pathfinder target to a random point
       // inside the enclosure
 
       Debug.Log("Getting random point inside Enclosure");
 
-      theBase.pathfinder.Target = theBase.Enclosure.GetRandomPointOnTheGround();
+      var aiBase = inBlackboard.InstanceBlackboard[BehaviourTree.AIBaseKey].GetCurrentItem<AIBase>();
+
+      aiBase.pathfinder.Target = aiBase.Enclosure.GetRandomPointOnTheGround();
 
       returnCode(ReturnCode.Success);
       yield break;

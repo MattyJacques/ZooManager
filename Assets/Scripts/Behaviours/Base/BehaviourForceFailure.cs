@@ -2,15 +2,13 @@
 
 using System;
 using System.Collections;
-using Assets.Scripts.Characters;
+using Assets.Scripts.Blackboards;
 
 namespace Assets.Scripts.Behaviours.Base
 {
-    public delegate bool ForceFailureDelegate(AIBase theBase);
-
     public class BehaviourForceFailure : BehaviourBase
     {
-        public override IEnumerator Behave(AIBase theBase, Action<ReturnCode> returnCode)
+        public override IEnumerator Behave(Blackboard inBlackboard, Action<ReturnCode> returnCode)
         {
             returnCode(ReturnCode.Failure);
             yield break;

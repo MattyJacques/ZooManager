@@ -2,11 +2,11 @@
 
 using System;
 using System.Collections;
-using Assets.Scripts.Characters;
+using Assets.Scripts.Blackboards;
 
 namespace Assets.Scripts.Behaviours.Base
 {
-    public delegate IEnumerator ActionDelegate(AIBase theBase, Action<ReturnCode> returnCode);
+    public delegate IEnumerator ActionDelegate(Blackboard inBlackboard, Action<ReturnCode> returnCode);
 
     public class BehaviourAction : BehaviourBase
     {
@@ -17,10 +17,10 @@ namespace Assets.Scripts.Behaviours.Base
             _action = action;
         }
 
-        public override IEnumerator Behave(AIBase theBase, Action<ReturnCode> returnCode)
+        public override IEnumerator Behave(Blackboard inBlackboard, Action<ReturnCode> returnCode)
         {
             var result = ReturnCode.Failure;
-            yield return CoroutineSys.Instance.StartCoroutine(_action(theBase, val => result = val));
+            yield return CoroutineSys.Instance.StartCoroutine(_action(inBlackboard, val => result = val));
             returnCode(result);
         }
     }

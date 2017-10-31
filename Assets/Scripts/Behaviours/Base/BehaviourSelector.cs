@@ -1,7 +1,7 @@
 ﻿// Sifaka Game Studios (C) 2017
 
 using System.Collections;
-using Assets.Scripts.Characters;
+using Assets.Scripts.Blackboards;
 
 namespace Assets.Scripts.Behaviours.Base
 {
@@ -14,12 +14,12 @@ namespace Assets.Scripts.Behaviours.Base
             _behaviours = behaviours;
         }
 
-        public override IEnumerator Behave(AIBase theBase, System.Action<ReturnCode> returnCode)
+        public override IEnumerator Behave(Blackboard inBlackboard, System.Action<ReturnCode> returnCode)
         {
             var result = ReturnCode.Failure;
             foreach (var behaviour in _behaviours)
             {
-                yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(theBase, val => result = val));
+                yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(inBlackboard, val => result = val));
 
                 switch (result)
                 {

@@ -2,8 +2,7 @@
 
 using System.Collections;
 using Assets.Scripts.Behaviours.Base;
-using Assets.Scripts.Characters;
-using Assets.Scripts.Tests.Characters;
+using Assets.Scripts.Blackboards;
 using NUnit.Framework;
 using UnityEngine.TestTools;
 
@@ -12,18 +11,18 @@ namespace Assets.Scripts.Tests.Behaviours.Base
     [TestFixture]
     public class BehaviourSequenceTests
     {
-        private AIBase _aiBase;
+        private Blackboard _blackboard;
 
         [SetUp]
         public void BeforeTest()
         {
-            _aiBase = new AIBaseBuilder().Build();
+            _blackboard = new Blackboard();
         }
 
         [TearDown]
         public void AfterTest()
         {
-            _aiBase = null;
+            _blackboard = null;
         }
 
         [UnityTest]
@@ -36,7 +35,7 @@ namespace Assets.Scripts.Tests.Behaviours.Base
 
             var behaviour = new BehaviourSequence(behaviours);
 
-            yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(_aiBase, code => { }));
+            yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(_blackboard, code => { }));
 
             Assert.IsTrue(behaviours[0].BehaveCalled);
             Assert.IsTrue(behaviours[1].BehaveCalled);
@@ -54,7 +53,7 @@ namespace Assets.Scripts.Tests.Behaviours.Base
 
             var behaviour = new BehaviourSequence(behaviours);
 
-            yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(_aiBase, code =>
+            yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(_blackboard, code =>
             {
                 actualReturnCode = code;
             }));
@@ -72,7 +71,7 @@ namespace Assets.Scripts.Tests.Behaviours.Base
 
             var behaviour = new BehaviourSequence(behaviours);
 
-            yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(_aiBase, code => { }));
+            yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(_blackboard, code => { }));
 
             Assert.IsTrue(behaviours[0].BehaveCalled);
             Assert.IsTrue(behaviours[1].BehaveCalled);
@@ -91,7 +90,7 @@ namespace Assets.Scripts.Tests.Behaviours.Base
 
             var behaviour = new BehaviourSequence(behaviours);
 
-            yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(_aiBase, code =>
+            yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(_blackboard, code =>
             {
                 actualReturnCode = code;
             }));
@@ -109,7 +108,7 @@ namespace Assets.Scripts.Tests.Behaviours.Base
 
             var behaviour = new BehaviourSequence(behaviours);
 
-            yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(_aiBase, code =>
+            yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(_blackboard, code =>
             {
                 actualReturnCode = code;
             }));
@@ -126,7 +125,7 @@ namespace Assets.Scripts.Tests.Behaviours.Base
 
             var behaviour = new BehaviourSequence(behaviours);
 
-            yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(_aiBase, code => { }));
+            yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(_blackboard, code => { }));
 
             Assert.IsTrue(behaviours[0].BehaveCalled);
             Assert.IsFalse(behaviours[1].BehaveCalled);
@@ -141,7 +140,7 @@ namespace Assets.Scripts.Tests.Behaviours.Base
 
             var behaviour = new BehaviourSelector(behaviours);
 
-            yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(_aiBase, code =>
+            yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(_blackboard, code =>
             {
                 actualReturnCode = code;
             }));

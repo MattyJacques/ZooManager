@@ -4,7 +4,7 @@ using System;
 using System.Collections;
 using Assets.Scripts.Behaviours;
 using Assets.Scripts.Behaviours.Base;
-using Assets.Scripts.Characters;
+using Assets.Scripts.Blackboards;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -15,12 +15,12 @@ namespace Assets.Scripts.Tests.Behaviours
     {
         private bool _actionCompleted;
         private bool _otherActionCompleted;
-        private AIBase _aiBase;
+        private Blackboard _blackboard;
 
         [SetUp]
         public void BeforeTest()
         {
-            _aiBase = new AIBase();
+            _blackboard = new Blackboard();
             _actionCompleted = false;
             _otherActionCompleted = false;
         }
@@ -28,7 +28,7 @@ namespace Assets.Scripts.Tests.Behaviours
         [TearDown]
         public void AfterTest()
         {
-            _aiBase = null;
+            _blackboard = null;
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace Assets.Scripts.Tests.Behaviours
         public IEnumerator AddPrimitiveBehaviour_RootIsAction()
         {
             var tree = new BehaviourTreeBuilder().AddAction(ActivateTestDelegate).Build();
-            yield return CoroutineSys.Instance.StartCoroutine(tree.Root.Behave(_aiBase, code => { }));
+            yield return CoroutineSys.Instance.StartCoroutine(tree.Root.Behave(_blackboard, code => { }));
 
             Assert.IsTrue(_actionCompleted);
         }
@@ -53,7 +53,7 @@ namespace Assets.Scripts.Tests.Behaviours
         {
             LogAssert.Expect(LogType.Error, "Primitive already added as root!");
             var tree = new BehaviourTreeBuilder().AddAction(ActivateTestDelegate).AddAction(OtherActivateTestDelegate).Build();
-            yield return CoroutineSys.Instance.StartCoroutine(tree.Root.Behave(_aiBase, code => { }));
+            yield return CoroutineSys.Instance.StartCoroutine(tree.Root.Behave(_blackboard, code => { }));
 
             Assert.IsTrue(_actionCompleted);
             Assert.IsFalse(_otherActionCompleted);
@@ -64,7 +64,7 @@ namespace Assets.Scripts.Tests.Behaviours
         {
             LogAssert.Expect(LogType.Error, "Primitive needs a sequence as a parent.");
             var tree = new BehaviourTreeBuilder().AddSelector().AddAction(ActivateTestDelegate).Build();
-            yield return CoroutineSys.Instance.StartCoroutine(tree.Root.Behave(_aiBase, code => { }));
+            yield return CoroutineSys.Instance.StartCoroutine(tree.Root.Behave(_blackboard, code => { }));
 
             Assert.IsFalse(_actionCompleted);
         }
@@ -73,7 +73,7 @@ namespace Assets.Scripts.Tests.Behaviours
         public IEnumerator AddPrimitiveBehaviour_ParentIsSequence_AddedAsPartOfSequence()
         {
             var tree = new BehaviourTreeBuilder().AddSequence().AddAction(ActivateTestDelegate).Build();
-            yield return CoroutineSys.Instance.StartCoroutine(tree.Root.Behave(_aiBase, code => { }));
+            yield return CoroutineSys.Instance.StartCoroutine(tree.Root.Behave(_blackboard, code => { }));
 
             Assert.IsTrue(_actionCompleted);
         }
@@ -100,7 +100,7 @@ namespace Assets.Scripts.Tests.Behaviours
             LogAssert.Expect(LogType.Error, "Primitive behaviour already root!");
 
             var tree = new BehaviourTreeBuilder().AddAction(ActivateTestDelegate).AddSequence().Build();
-            yield return CoroutineSys.Instance.StartCoroutine(tree.Root.Behave(_aiBase, code => { }));
+            yield return CoroutineSys.Instance.StartCoroutine(tree.Root.Behave(_blackboard, code => { }));
 
             Assert.IsTrue(_actionCompleted);
         }
@@ -111,7 +111,7 @@ namespace Assets.Scripts.Tests.Behaviours
             LogAssert.Expect(LogType.Error, "Primitive behaviour already root!");
 
             var tree = new BehaviourTreeBuilder().AddAction(ActivateTestDelegate).AddSelector().Build();
-            yield return CoroutineSys.Instance.StartCoroutine(tree.Root.Behave(_aiBase, code => { }));
+            yield return CoroutineSys.Instance.StartCoroutine(tree.Root.Behave(_blackboard, code => { }));
 
             Assert.IsTrue(_actionCompleted);
         }
@@ -134,7 +134,7 @@ namespace Assets.Scripts.Tests.Behaviours
                         .AddAction(OtherActivateTestDelegate)
                     .Build();
 
-            yield return CoroutineSys.Instance.StartCoroutine(tree.Root.Behave(_aiBase, code => { }));
+            yield return CoroutineSys.Instance.StartCoroutine(tree.Root.Behave(_blackboard, code => { }));
 
             Assert.IsTrue(_actionCompleted);
             Assert.IsTrue(_otherActionCompleted);
@@ -153,7 +153,7 @@ namespace Assets.Scripts.Tests.Behaviours
                             .AddAction(OtherActivateTestDelegate)
                     .Build();
 
-            yield return CoroutineSys.Instance.StartCoroutine(tree.Root.Behave(_aiBase, code => { }));
+            yield return CoroutineSys.Instance.StartCoroutine(tree.Root.Behave(_blackboard, code => { }));
 
             Assert.IsFalse(_actionCompleted);
             Assert.IsTrue(_otherActionCompleted);
@@ -172,26 +172,26 @@ namespace Assets.Scripts.Tests.Behaviours
                         .AddAction(ActivateTestDelegate)
                     .Build();
 
-            yield return CoroutineSys.Instance.StartCoroutine(tree.Root.Behave(_aiBase, code => { }));
+            yield return CoroutineSys.Instance.StartCoroutine(tree.Root.Behave(_blackboard, code => { }));
 
             Assert.IsTrue(_actionCompleted);
         }
 
-        private IEnumerator ActivateTestDelegate(AIBase inAIBase, Action<ReturnCode> returnFunc )
+        private IEnumerator ActivateTestDelegate(Blackboard inBlackboard, Action<ReturnCode> returnFunc )
         {
             _actionCompleted = true;
             returnFunc(ReturnCode.Success);
             yield return null;
         }
 
-        private IEnumerator OtherActivateTestDelegate(AIBase inAIBase, Action<ReturnCode> returnFunc)
+        private IEnumerator OtherActivateTestDelegate(Blackboard inBlackboard, Action<ReturnCode> returnFunc)
         {
             _otherActionCompleted = true;
             returnFunc(ReturnCode.Success);
             yield return null;
         }
 
-        private IEnumerator AssertFirstTestDelegate(AIBase inAIBase, Action<ReturnCode> returnFunc)
+        private IEnumerator AssertFirstTestDelegate(Blackboard inBlackboard, Action<ReturnCode> returnFunc)
         {
             Assert.IsFalse(_otherActionCompleted);
             Assert.IsFalse(_actionCompleted);
@@ -199,7 +199,7 @@ namespace Assets.Scripts.Tests.Behaviours
             yield return null;
         }
 
-        private IEnumerator FailConditional(AIBase inAIBase, Action<bool> returnFunc)
+        private IEnumerator FailConditional(Blackboard inBlackboard, Action<bool> returnFunc)
         {
             returnFunc(false);
             yield return null;

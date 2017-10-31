@@ -1,12 +1,12 @@
 ﻿// Sifaka Game Studios (C) 2017
 
 using System.Collections;
-using Assets.Scripts.Characters;
+using Assets.Scripts.Blackboards;
 
 namespace Assets.Scripts.Behaviours.Base
 {
     public abstract class BehaviourBase
     { 
-        public abstract IEnumerator Behave(AIBase theBase, System.Action<ReturnCode> returnCode);
+        public abstract IEnumerator Behave(Blackboard inBlackboard, System.Action<ReturnCode> returnCode);
     }
 }

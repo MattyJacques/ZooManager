@@ -3,7 +3,7 @@
 using System;
 using System.Collections;
 using Assets.Scripts.Behaviours.Base;
-using Assets.Scripts.Characters;
+using Assets.Scripts.Blackboards;
 
 namespace Assets.Scripts.Tests.Behaviours.Base
 {
@@ -19,7 +19,7 @@ namespace Assets.Scripts.Tests.Behaviours.Base
             ReturnCodeResult = inReturnCodeResult;
         }
 
-        public override IEnumerator Behave(AIBase theBase, Action<ReturnCode> returnCode)
+        public override IEnumerator Behave(Blackboard inBlackboard, Action<ReturnCode> returnCode)
         {
             BehaveCalled = true;
             returnCode(ReturnCodeResult);

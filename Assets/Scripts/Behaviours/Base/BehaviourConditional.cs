@@ -1,11 +1,11 @@
 ﻿// Sifaka Game Studios (C) 2017
 
 using System.Collections;
-using Assets.Scripts.Characters;
+using Assets.Scripts.Blackboards;
 
 namespace Assets.Scripts.Behaviours.Base
 {
-    public delegate IEnumerator ConditionalDelegate(AIBase theBase, System.Action<bool> conditionResult);
+    public delegate IEnumerator ConditionalDelegate(Blackboard inBlackboard, System.Action<bool> conditionResult);
 
     public class BehaviourConditional : BehaviourBase
     {
@@ -16,10 +16,10 @@ namespace Assets.Scripts.Behaviours.Base
             _testCondition = testCondition;
         }
 
-        public override IEnumerator Behave(AIBase theBase, System.Action<ReturnCode> returnCode)
+        public override IEnumerator Behave(Blackboard inBlackboard, System.Action<ReturnCode> returnCode)
         {
             var result = false;
-            yield return CoroutineSys.Instance.StartCoroutine(_testCondition(theBase, val => result = val)); // Run the test condition (also coroutine for future proofing)
+            yield return CoroutineSys.Instance.StartCoroutine(_testCondition(inBlackboard, val => result = val)); // Run the test condition (also coroutine for future proofing)
 
             if (result)
             {

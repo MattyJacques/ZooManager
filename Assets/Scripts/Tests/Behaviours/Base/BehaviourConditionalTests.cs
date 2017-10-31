@@ -3,8 +3,7 @@
 using System;
 using System.Collections;
 using Assets.Scripts.Behaviours.Base;
-using Assets.Scripts.Characters;
-using Assets.Scripts.Tests.Characters;
+using Assets.Scripts.Blackboards;
 using NUnit.Framework;
 using UnityEngine.TestTools;
 
@@ -13,19 +12,19 @@ namespace Assets.Scripts.Tests.Behaviours.Base
     [TestFixture]
     public class BehaviourConditionalTests
     {
-        private AIBase _aiBase;
-        private bool ExpectedSuccess = true;
+        private Blackboard _blackboard;
+        private bool _expectedSuccess = true;
 
         [SetUp]
         public void BeforeTest()
         {
-            _aiBase = new AIBaseBuilder().Build();
+            _blackboard = new Blackboard();
         }
 
         [TearDown]
         public void AfterTest()
         {
-            _aiBase = null;
+            _blackboard = null;
         }
 
         [UnityTest]
@@ -35,7 +34,7 @@ namespace Assets.Scripts.Tests.Behaviours.Base
 
             var returnCode = ReturnCode.Success;
 
-            yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(_aiBase, val => { returnCode = val; }));
+            yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(_blackboard, val => { returnCode = val; }));
 
             Assert.AreEqual(ReturnCode.Failure, returnCode);
         }
@@ -45,22 +44,22 @@ namespace Assets.Scripts.Tests.Behaviours.Base
         {
             var behaviour = new BehaviourConditional(AlteringConditional);
 
-            ExpectedSuccess = true;
+            _expectedSuccess = true;
             var returnCode = ReturnCode.Failure;
 
-            yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(_aiBase, val => { returnCode = val; }));
+            yield return CoroutineSys.Instance.StartCoroutine(behaviour.Behave(_blackboard, val => { returnCode = val; }));
 
             Assert.AreEqual(ReturnCode.Success, returnCode);
         }
 
-        private static IEnumerator EmptyConditional(AIBase inAiBase, Action<bool> success)
+        private static IEnumerator EmptyConditional(Blackboard inBlackboard, Action<bool> success)
         {
             yield return null;
         }
 
-        private IEnumerator AlteringConditional(AIBase inAiBase, Action<bool> success)
+        private IEnumerator AlteringConditional(Blackboard inBlackboard, Action<bool> success)
         {
-            success(ExpectedSuccess);
+            success(_expectedSuccess);
             yield return null;
         }
     }
