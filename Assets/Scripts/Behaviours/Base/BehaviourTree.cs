@@ -1,6 +1,7 @@
 ﻿// Sifaka Game Studios (C) 2017
 
 using System.Collections;
+using Assets.Scripts.Blackboards;
 using Assets.Scripts.Characters;
 using UnityEngine;
 
@@ -16,6 +17,7 @@ namespace Assets.Scripts.Behaviours.Base
     public class BehaviourTree
     {
         public static float UpdateDelay = 5f;
+        public static string AIBaseKey = "AIBase";
 
         public readonly BehaviourBase Root;
 
@@ -24,7 +26,9 @@ namespace Assets.Scripts.Behaviours.Base
             Root = root;
         } 
 
-        public IEnumerator Behave(AIBase theBase)
+        // Still pass in AIBase for now, eventually we will be passing in a Blackboard component that contains all the init
+        // information we require
+        public IEnumerator Behave(AIBase inAiBase)
         {
             if (Root == null)
             {
@@ -32,11 +36,14 @@ namespace Assets.Scripts.Behaviours.Base
             }
             else
             {
+                var blackboard = new Blackboard();
+                blackboard.InstanceBlackboard.Add(AIBaseKey, new BlackboardItem(inAiBase));
+
                 while (true) // Do it forever as the operations will be performed asynchronously
                 {
                     yield return null;
                     Debug.Log("Start BT");
-                    yield return CoroutineSys.Instance.StartCoroutine(Root.Behave(theBase, val => { }));
+                    yield return CoroutineSys.Instance.StartCoroutine(Root.Behave(blackboard, val => { }));
                     Debug.Log("End BT");
                     yield return new WaitForSeconds(UpdateDelay);
                 }
