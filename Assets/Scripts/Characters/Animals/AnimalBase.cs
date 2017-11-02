@@ -4,15 +4,11 @@
 // Date         : 22/08/2016
 
 using UnityEngine;
-using System.Collections;
+using Assets.Scripts.Behaviours;
 using Assets.Scripts.UI;
-using Assets.Scripts.Characters;
-using Assets.Scripts.Managers;
-using Assets.Scripts.BehaviourTree;
 
 namespace Assets.Scripts.Characters.Animals
 {
-
   public class AnimalBase : AIBase
   {
     // Template values never get set, they represent the animal's permanent properties (max age, speed, etc)
