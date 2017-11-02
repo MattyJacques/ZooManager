@@ -18,7 +18,6 @@ namespace Assets.Scripts.UI
   {
     private string _inputString = "";
 
-    public AStar _aStar;
     private Component _buildMgr;
     private Component _animalMgr;
     private Component _fundsMgr;
