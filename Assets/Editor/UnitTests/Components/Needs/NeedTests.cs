@@ -12,20 +12,23 @@ namespace Assets.Editor.UnitTests.Components.Needs
         [Test]
         public void AdjustNeed_UpdatesCurveValueCorrectly()
         {
-            const int maxHealth = 100;
+            const int maxValue = 100;
             const int adjustmentValue = -50;
-            const int expectedHealthChange = -10;
+            const int expectedValueChange = -10;
 
             // Create curve with differing points to make sure it's not a simple straight line graph
             var curve = new AnimationCurve();
-            curve.AddKey((((maxHealth + adjustmentValue)/maxHealth) * 100 ), expectedHealthChange);
-            curve.AddKey(100, expectedHealthChange + 100);
-            curve.AddKey(0, expectedHealthChange - 100);
+            curve.AddKey((((maxValue + adjustmentValue)/maxValue) * 100 ), expectedValueChange);
+            curve.AddKey(100, expectedValueChange + 100);
+            curve.AddKey(0, expectedValueChange - 100);
 
-            var need = new Need(maxHealth, 11f, curve);
+            var need = new Need
+            (
+                new NeedParams { MaxValue = maxValue, HealthAdjustmentCurve = curve }
+            );
 
             need.AdjustNeed(adjustmentValue);
-            Assert.AreEqual(expectedHealthChange, need.GetHealthAdjustment());
+            Assert.AreEqual(expectedValueChange, need.GetHealthAdjustment());
         }
 
         [Test]
@@ -33,9 +36,47 @@ namespace Assets.Editor.UnitTests.Components.Needs
         {
             const float expectedUpdateFrequency = 100f;
             
-            var need = new Need(1, expectedUpdateFrequency, new AnimationCurve());
+            var need = new Need
+            (
+                new NeedParams { UpdateFrequency =  expectedUpdateFrequency }
+            );
 
             Assert.AreEqual(expectedUpdateFrequency, need.GetUpdateFrequency());
+        }
+
+        [Test]
+        public void GetNeedType_ReturnsNeedType()
+        {
+            const NeedType expectedNeedType = NeedType.Hunger;
+
+            var need = new Need
+            (
+                new NeedParams { AssignedNeedType =  expectedNeedType }
+            );
+
+            Assert.AreEqual(expectedNeedType, need.GetNeedType());
+        }
+
+        [Test]
+        public void Decay_UpdatesCurveValueCorrectly()
+        {
+            const int maxValue = 100;
+            const int adjustmentValue = -50;
+            const int expectedValueChange = -10;
+
+            // Create curve with differing points to make sure it's not a simple straight line graph
+            var curve = new AnimationCurve();
+            curve.AddKey((((maxValue + adjustmentValue) / maxValue) * 100), expectedValueChange);
+            curve.AddKey(100, expectedValueChange + 100);
+            curve.AddKey(0, expectedValueChange - 100);
+
+            var need = new Need
+            (
+                new NeedParams { MaxValue = maxValue, ValueDecay = expectedValueChange, HealthAdjustmentCurve = curve }
+            );
+
+            need.Decay();
+            Assert.AreEqual(expectedValueChange, need.GetHealthAdjustment());
         }
     }
 }

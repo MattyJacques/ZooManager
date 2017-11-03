@@ -11,7 +11,7 @@ namespace Assets.Scripts.Tests.Components.Health
         : MonoBehaviour
         , IHealthInterface
     {
-        public int ? AdjustHealthResult { get; private set; }
+        public int ? AdjustHealthResult { get; set; }
         public bool ? SetHealthChangeEnabledResult { get; private set; }
 
         // IHealthInterface

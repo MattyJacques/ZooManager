@@ -4,37 +4,49 @@ using UnityEngine;
 
 namespace Assets.Scripts.Components.Needs
 {
+    public class NeedParams
+    {
+        public NeedType AssignedNeedType { get; set; }
+        public int MaxValue { get; set; }
+        public float UpdateFrequency { get; set; }
+        public int ValueDecay { get; set; }
+        public AnimationCurve HealthAdjustmentCurve { get; set; }
+    }
+
     public class Need
     {
-        private readonly int _maxValue;
-        private readonly float _updateFrequency;
-        private readonly AnimationCurve _healthAdjustmentCurve;
+        private readonly NeedParams _needParams;
 
         private int _currentValue;
 
-        public Need(int inMaxValue, float inUpdateFrequency, AnimationCurve inHealthAdjustmentCurve)
+        public Need(NeedParams inNeedParams)
         {
-            _maxValue = inMaxValue;
-            _currentValue = inMaxValue;
-
-            _updateFrequency = inUpdateFrequency;
-
-            _healthAdjustmentCurve = inHealthAdjustmentCurve;
+            _needParams = inNeedParams;
         }
 
         public void AdjustNeed(int inAdjustment)
         {
-            _currentValue = Mathf.Clamp(_currentValue + inAdjustment, 0, _maxValue);
+            _currentValue = Mathf.Clamp(_currentValue + inAdjustment, 0, _needParams.MaxValue);
         }
 
         public int GetHealthAdjustment()
         {
-            return (int)_healthAdjustmentCurve.Evaluate((_currentValue / _maxValue) * 100);
+            return (int)_needParams.HealthAdjustmentCurve.Evaluate((_currentValue / _needParams.MaxValue) * 100);
         }
 
         public float GetUpdateFrequency()
         {
-            return _updateFrequency;
+            return _needParams.UpdateFrequency;
+        }
+
+        public void Decay()
+        {
+            AdjustNeed(-_needParams.ValueDecay);
+        }
+
+        public NeedType GetNeedType()
+        {
+            return _needParams.AssignedNeedType;
         }
     }
 }
