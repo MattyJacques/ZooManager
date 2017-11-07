@@ -80,6 +80,11 @@ namespace Assets.Scripts.Components.Needs
             }
         }
 
+        public IEnumerable<Need> GetNeeds()
+        {
+            return NeedEntries.Select(needEntry => needEntry.GetNeed());
+        }
+
         private bool ContainsNeedOfType(NeedType inNeedType)
         {
             return NeedEntries.Any(needEntry => needEntry.GetNeed().GetNeedType() == inNeedType);

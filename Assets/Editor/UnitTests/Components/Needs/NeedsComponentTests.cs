@@ -1,5 +1,6 @@
 ﻿// Sifaka Game Studios (C) 2017
 
+using System.Linq;
 using Assets.Scripts.Components.Needs;
 using Assets.Scripts.Tests.Components.Health;
 using Assets.Scripts.Tests.Components.Needs;
@@ -123,6 +124,21 @@ namespace Assets.Editor.UnitTests.Components.Needs
 
             _needsComponent.AddNeed(_need);
             _needsComponent.AddNeed(_need);
+        }
+
+        [Test]
+        public void GetNeeds_ReturnsAllNeeds()
+        {
+            _needsComponent.AddNeed(_need);
+
+            var otherNeed = new Need
+            (
+                new NeedParams { AssignedNeedType = NeedType.Thirst, MaxValue = MaxValue, ValueDecay = DecayValue, UpdateFrequency = _need.GetUpdateFrequency() * 2, HealthAdjustmentCurve = _animationCurve }
+            );
+
+            _needsComponent.AddNeed(otherNeed);
+
+            Assert.AreEqual(2, _needsComponent.GetNeeds().Count());
         }
     }
 }

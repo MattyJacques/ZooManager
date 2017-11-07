@@ -10,7 +10,7 @@ namespace Assets.Scripts.Components.Pathfinding
     [RequireComponent(typeof(RVOController))]
     public class PathfindingComponent 
         : MonoBehaviour
-            , IPathfindingInterface
+        , IPathfindingInterface
     {
         public float DestinationThresholdDistance = 2.5f;
         public float WaypointThresholdDistance = 1f;

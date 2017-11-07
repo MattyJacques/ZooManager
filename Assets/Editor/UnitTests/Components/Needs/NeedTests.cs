@@ -10,6 +10,27 @@ namespace Assets.Editor.UnitTests.Components.Needs
     public class NeedTestFixture
     {
         [Test]
+        public void Created_NeedValueIsMax()
+        {
+            const int maxValue = 100;
+            const int adjustmentValue = -50;
+            const int expectedValueChange = -10;
+
+            // Create curve with differing points to make sure it's not a simple straight line graph
+            var curve = new AnimationCurve();
+            curve.AddKey((((maxValue + adjustmentValue) / maxValue) * 100), expectedValueChange);
+            curve.AddKey(100, expectedValueChange + 100);
+            curve.AddKey(0, expectedValueChange - 100);
+
+            var need = new Need
+            (
+                new NeedParams { MaxValue = maxValue, HealthAdjustmentCurve = curve }
+            );
+
+            Assert.AreEqual(maxValue, need.CurrentValue);
+        }
+
+        [Test]
         public void AdjustNeed_UpdatesCurveValueCorrectly()
         {
             const int maxValue = 100;
@@ -45,6 +66,22 @@ namespace Assets.Editor.UnitTests.Components.Needs
         }
 
         [Test]
+        public void GetCurrentValue_ReflectsExpectedResult()
+        {
+            const int maxValue = 100;
+            const int valueDecay = 2;
+
+            var need = new Need
+            (
+                new NeedParams { MaxValue = maxValue, ValueDecay = valueDecay}
+            );
+
+            need.Decay();
+
+            Assert.AreEqual(maxValue - valueDecay, need.CurrentValue);
+        }
+
+        [Test]
         public void GetNeedType_ReturnsNeedType()
         {
             const NeedType expectedNeedType = NeedType.Hunger;
@@ -61,18 +98,18 @@ namespace Assets.Editor.UnitTests.Components.Needs
         public void Decay_UpdatesCurveValueCorrectly()
         {
             const int maxValue = 100;
-            const int adjustmentValue = -50;
+            const int adjustmentValue = 50;
             const int expectedValueChange = -10;
 
             // Create curve with differing points to make sure it's not a simple straight line graph
             var curve = new AnimationCurve();
-            curve.AddKey((((maxValue + adjustmentValue) / maxValue) * 100), expectedValueChange);
+            curve.AddKey((((maxValue - adjustmentValue) / maxValue) * 100), expectedValueChange);
             curve.AddKey(100, expectedValueChange + 100);
             curve.AddKey(0, expectedValueChange - 100);
 
             var need = new Need
             (
-                new NeedParams { MaxValue = maxValue, ValueDecay = expectedValueChange, HealthAdjustmentCurve = curve }
+                new NeedParams { MaxValue = maxValue, ValueDecay = adjustmentValue, HealthAdjustmentCurve = curve }
             );
 
             need.Decay();
