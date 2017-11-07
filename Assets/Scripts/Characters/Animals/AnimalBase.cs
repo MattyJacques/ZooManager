@@ -5,7 +5,6 @@
 
 using UnityEngine;
 using Assets.Scripts.Behaviours;
-using Assets.Scripts.Components.Pathfinding;
 using Assets.Scripts.UI;
 
 namespace Assets.Scripts.Characters.Animals
@@ -42,10 +41,6 @@ namespace Assets.Scripts.Characters.Animals
         Debug.LogError("AnimalBase is not in a active enclosure!");
       Enclosure = _enclosure;
       Behave = BehaviourCreator.Instance.GetBehaviour("basicAnimal");
-
-      Pathfinder = Model.AddComponent<PathfindingComponent>();
-      if (Pathfinder == null)
-        Debug.LogError("pathfinder not assigned");
 
       CoroutineSys.Instance.StartCoroutine(Behave.Behave(this));
     } // Init()

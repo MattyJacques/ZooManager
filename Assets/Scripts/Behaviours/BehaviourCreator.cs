@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Assets.Scripts.Behaviours.Base;
 using Assets.Scripts.Blackboards;
 using Assets.Scripts.Characters;
+using Assets.Scripts.Components.Pathfinding;
 using UnityEngine;
 
 namespace Assets.Scripts.Behaviours
@@ -308,9 +309,10 @@ namespace Assets.Scripts.Behaviours
 
             var aiBase = inBlackboard.InstanceBlackboard[BehaviourTree.AIBaseKey].GetCurrentItem<AIBase>();
 
-            aiBase.Pathfinder.StartPathfinding(inBlackboard.InstanceBlackboard[PathfindingTargetKey].GetCurrentItem<Vector3>());
+            var pathfinder = aiBase.Model.GetComponent<PathfindingComponent>();
+            pathfinder.StartPathfinding(inBlackboard.InstanceBlackboard[PathfindingTargetKey].GetCurrentItem<Vector3>());
 
-            while (aiBase.Pathfinder.IsPathing())
+            while (pathfinder.IsPathing())
             {
                 yield return null;
             }
