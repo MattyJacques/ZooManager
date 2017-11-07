@@ -309,7 +309,7 @@ namespace Assets.Scripts.Behaviours
 
             var aiBase = inBlackboard.InstanceBlackboard[BehaviourTree.AIBaseKey].GetCurrentItem<AIBase>();
 
-            var pathfinder = aiBase.Model.GetComponent<PathfindingComponent>();
+            var pathfinder = aiBase.Model.GetComponent<IPathfindingInterface>();
             pathfinder.StartPathfinding(inBlackboard.InstanceBlackboard[PathfindingTargetKey].GetCurrentItem<Vector3>());
 
             while (pathfinder.IsPathing())
