@@ -1,6 +1,6 @@
 ﻿// Sifaka Game Studios (C) 2017
 
-using Assets.Scripts.Components.GameSettings;
+using Assets.Scripts.GameSettings;
 using UnityEditor;
 
 namespace Assets.Editor.EditorExtensions.Windows
@@ -16,11 +16,7 @@ namespace Assets.Editor.EditorExtensions.Windows
 
         protected override void SetDataPath()
         {
-            var gameSettingsComponent = FindObjectOfType<ZooManagerGameSettingsComponent>();
-            if (gameSettingsComponent != null)
-            {
-                OutputDataPath = gameSettingsComponent.SettingsPath;
-            }
+            OutputDataPath = GameSettingsConstants.GameSettingsPath;
         }
 
         protected override void OnGUICalled()
