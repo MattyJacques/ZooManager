@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Components.Pathfinding;
+using UnityEngine;
 
 namespace Assets.Scripts.Characters
 {
@@ -17,7 +18,7 @@ namespace Assets.Scripts.Characters
 
     // Target / Path members
     public EnclosureInteriorItem.InteriorItemType NextTarget { get; set; }  // Type of target, example: food or water
-    public Mover pathfinder { get; set; }
+    public PathfindingComponent Pathfinder { get; set; }
     public Enclosure Enclosure { get; set; }
 
     // Behaviour object for AI
