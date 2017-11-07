@@ -17,7 +17,6 @@ namespace Assets.Scripts.Blackboards
         }
 
         public TReturnType GetCurrentItem<TReturnType>()
-            where TReturnType : class
         {
             if (typeof(TReturnType) == _itemType)
             {
@@ -26,7 +25,7 @@ namespace Assets.Scripts.Blackboards
 
             Debug.LogError("Stored Item type does not match expected ItemType!");
 
-            return null;
+            return default(TReturnType);
         }
     }
 }

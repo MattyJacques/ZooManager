@@ -42,10 +42,6 @@ namespace Assets.Scripts.Characters.Animals
       Enclosure = _enclosure;
       Behave = BehaviourCreator.Instance.GetBehaviour("basicAnimal");
 
-      pathfinder = Model.AddComponent<Mover>();
-      if (pathfinder == null)
-        Debug.LogError("pathfinder not assigned");
-
       CoroutineSys.Instance.StartCoroutine(Behave.Behave(this));
     } // Init()
 

@@ -17,21 +17,22 @@ namespace Assets.Scripts.Components.Needs
     {
         private readonly NeedParams _needParams;
 
-        private int _currentValue;
+        public int CurrentValue { get; private set; }
 
         public Need(NeedParams inNeedParams)
         {
             _needParams = inNeedParams;
+            CurrentValue = inNeedParams.MaxValue;
         }
 
         public void AdjustNeed(int inAdjustment)
         {
-            _currentValue = Mathf.Clamp(_currentValue + inAdjustment, 0, _needParams.MaxValue);
+            CurrentValue = Mathf.Clamp(CurrentValue + inAdjustment, 0, _needParams.MaxValue);
         }
 
         public int GetHealthAdjustment()
         {
-            return (int)_needParams.HealthAdjustmentCurve.Evaluate((_currentValue / _needParams.MaxValue) * 100);
+            return (int)_needParams.HealthAdjustmentCurve.Evaluate((CurrentValue / _needParams.MaxValue) * 100);
         }
 
         public float GetUpdateFrequency()
