@@ -1,4 +1,4 @@
-﻿// Copyright Threetee Gang (C) 2017
+﻿// Sifaka Game Studios (C) 2017
 
 #if UNITY_EDITOR
 

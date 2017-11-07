@@ -15,13 +15,13 @@ namespace Assets.Editor.UnitTests.GameSettings
         {
             LogAssert.Expect(LogType.Error, "Failed to load GameSettings!");
 
-            Assert.IsNull(ZooManagerGameSettingsFunctions.LoadSettings("Invalid/Path/For/Sure"));
+            Assert.IsFalse(ZooManagerGameSettingsFunctions.LoadSettings("Invalid/Path/For/Sure").IsSet());
         }
 
         [Test]
         public void LoadSettings_GameSettingsPath_ValidSettingsLoaded()
         {
-            Assert.IsNotNull(ZooManagerGameSettingsFunctions.LoadSettings(GameSettingsConstants.GameSettingsPath));
+            Assert.IsTrue(ZooManagerGameSettingsFunctions.LoadSettings(GameSettingsConstants.GameSettingsPath).IsSet());
         }
     }
 }

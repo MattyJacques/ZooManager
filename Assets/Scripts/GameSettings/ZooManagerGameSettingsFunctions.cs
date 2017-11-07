@@ -1,23 +1,24 @@
 ﻿// Sifaka Game Studios (C) 2017
 
+using Assets.Scripts.Core;
 using UnityEngine;
 
 namespace Assets.Scripts.GameSettings
 {
     public static class ZooManagerGameSettingsFunctions
     {
-        public static ZooManagerGameSettings LoadSettings(string settingsPath)
+        public static Optional<ZooManagerGameSettings> LoadSettings(string settingsPath)
         {
             var settingsAsset = Resources.Load<TextAsset>(settingsPath);
 
             if (settingsAsset != null)
             {
-                return JsonUtility.FromJson<ZooManagerGameSettings>(settingsAsset.text);
+                return new Optional<ZooManagerGameSettings>(JsonUtility.FromJson<ZooManagerGameSettings>(settingsAsset.text));
             }
 
             Debug.LogError("Failed to load GameSettings!");
 
-            return null;
+            return new Optional<ZooManagerGameSettings>();
         }
     }
 }
