@@ -1,18 +1,15 @@
-﻿// Title        : AnimalManager.cs
-// Purpose      : Initiates templates, manages instances of animals
-// Author       : Matthew Jacques
-// Date         : 27/01/2017
+﻿// Sifaka Game Studios (C) 2017
 
 using System.Collections.Generic;         
 using System.IO;
 using Assets.Scripts.Behaviours;
+using Assets.Scripts.Buildings.Enclosures;
 using UnityEngine;                        
 using Assets.Scripts.Characters.Animals;      
 using Assets.Scripts.Helpers;             
 
 namespace Assets.Scripts.Managers
 {
-
   public class AnimalManager : MonoBehaviour
   {
 
