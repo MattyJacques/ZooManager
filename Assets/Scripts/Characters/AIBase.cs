@@ -1,4 +1,6 @@
-﻿using Assets.Scripts.Components.Pathfinding;
+﻿// Sifaka Game Studios (C) 2017
+
+using Assets.Scripts.Components.Enclosure;
 using UnityEngine;
 
 namespace Assets.Scripts.Characters
@@ -18,7 +20,7 @@ namespace Assets.Scripts.Characters
 
     // Target / Path members
     public EnclosureInteriorItem.InteriorItemType NextTarget { get; set; }  // Type of target, example: food or water
-    public Enclosure Enclosure { get; set; }
+    public EnclosureComponent Enclosure { get; set; }
 
     // Behaviour object for AI
     public Behaviours.Base.BehaviourTree Behave { get; set; }

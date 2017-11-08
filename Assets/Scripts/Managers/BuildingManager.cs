@@ -1,7 +1,4 @@
-﻿// Title        : BuildingManager.cs
-// Purpose      : Initiates templates, manages instances of buildings
-// Author       : Matthew Jacques
-// Date         : 03/09/2016
+﻿// Sifaka Game Studios (C) 2017
 
 using UnityEngine;
 using System.Collections;
@@ -10,6 +7,7 @@ using System.IO;
 using Assets.Scripts.Buildings;
 using System;
 using Assets.Scripts.Characters;
+using Assets.Scripts.Components.Enclosure;
 
 namespace Assets.Scripts.Managers
 {
@@ -219,7 +217,7 @@ namespace Assets.Scripts.Managers
                 {
                     //TODO: Get the type of the item from the JSON files, for now it defaults to food
                     EnclosureInteriorItem.InteriorItemType itemType = EnclosureInteriorItem.InteriorItemType.Food;
-                    hit.collider.GetComponent<Enclosure> ().RegisterNewInteriorItem (_currentBuild.gameObject, itemType);
+                    hit.collider.GetComponent<EnclosureComponent> ().RegisterNewInteriorItem (_currentBuild.gameObject, itemType);
                 }
             }
       _currentBuild = null;

@@ -1,7 +1,6 @@
-﻿// Title        : EnclosureInteraction.cs
-// Purpose      : This is a demonstration of a class that allows the player to interact with existing enclosures
-// Author       : Eivind Andreassen
-// Date         : 20/12/2016
+﻿// Sifaka Game Studios (C) 2017
+
+using Assets.Scripts.Components.Enclosure;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -32,7 +31,7 @@ public class EnclosureInteraction : MonoBehaviour
 
       if (Physics.Raycast(ray, out rayHit, Mathf.Infinity, _layerMask, QueryTriggerInteraction.Ignore))
       {
-        Enclosure enclosure = rayHit.collider.GetComponent<Enclosure>();
+        EnclosureComponent enclosure = rayHit.collider.GetComponent<EnclosureComponent>();
         if (enclosure != null)
         {
           enclosure.OnClick();
