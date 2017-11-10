@@ -47,7 +47,7 @@ public class BuildingWindow : MonoBehaviour
           buildingID = jsonInfo["buildingTemplates"][i]["type"] + "/" + buildingID;
     
           button = (GameObject)Instantiate(buttonPrefab, this.transform.position, Quaternion.identity);
-          button.GetComponent<BuildingFromGUI>().buildingName = buildingID;
+          button.GetComponent<BuildingFromGUI>().buildingID = buildingID;
 
           if (buttonSprite != null)
           {

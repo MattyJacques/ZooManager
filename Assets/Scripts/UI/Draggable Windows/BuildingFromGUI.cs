@@ -2,16 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 // Title        : BuildingFromGUI.cs
-// Purpose      : Lets you click on an animal in the GUI and spawn it
+// Purpose      : Click on a building button and place the building
 // Author       : WeirdGamer
 // Date         : 25/05/2017
 public class BuildingFromGUI : MonoBehaviour {
 
-  public string buildingName;
+  public string buildingID;
 
   private GameObject engine;
-
-  private GameObject prefab;
   private GameObject objectToBuild;
 
   void Awake()
@@ -19,11 +17,11 @@ public class BuildingFromGUI : MonoBehaviour {
     engine = GameObject.Find("BuildingEngine");
   }
  
+  //TODO: This will have to be changed to work with the new manager system
   public void OnClick()
     {
-
-      buildingName = "Buildings/Prefabs/" + buildingName;
-      GameObject loadedObject = Resources.Load(buildingName) as GameObject;
+      buildingID = "Buildings/Prefabs/" + buildingID;
+      GameObject loadedObject = Resources.Load(buildingID) as GameObject;
 
       if (loadedObject)
       { // If the object has been loaded, instantiate

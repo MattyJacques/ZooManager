@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 // Title        : animalFromGUI.cs
-// Purpose      : Lets you click on an animal in the GUI and spawn it
+// Purpose      : Click on an animals button and place the building
 // Author       : WeirdGamer
 // Date         : 25/05/2017
 public class AnimalFromGUI : MonoBehaviour {
