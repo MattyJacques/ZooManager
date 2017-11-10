@@ -19,7 +19,7 @@ namespace Assets.Scripts.Components.Enclosure
         private Canvas _canvas;
 
         private readonly List<EnclosureInteriorItem> _interiorItems = new List<EnclosureInteriorItem>();
-        private readonly List<AnimalBase> _animals = new List<AnimalBase>();
+        private readonly List<EnclosureResidentComponent> _enclosureResidents = new List<EnclosureResidentComponent>();
 
         public void Start()
         {
@@ -141,11 +141,11 @@ namespace Assets.Scripts.Components.Enclosure
             }
         }
 
-        public void RegisterNewAnimal(AnimalBase animal)
+        public void RegisterNewAnimal(EnclosureResidentComponent inResident)
         { // Register a new animal into a enclosure
-            _animals.Add(animal);
+            _enclosureResidents.Add(inResident);
 
-            Debug.Log("Added new animal " + animal.Model.name
+            Debug.Log("Added new animal " + inResident.gameObject.name
                       + " to enclosure " + _name);
         }
 
