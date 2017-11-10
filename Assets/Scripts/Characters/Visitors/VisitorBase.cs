@@ -4,9 +4,7 @@
 // Date         : 11/11/2016
 
 using UnityEngine;
-using System.Collections;
 using Assets.Scripts.UI;
-using Assets.Scripts.Characters;
 
 namespace Assets.Scripts.Characters.Visitors
 {

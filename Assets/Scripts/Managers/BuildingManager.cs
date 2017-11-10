@@ -1,13 +1,11 @@
 ﻿// Sifaka Game Studios (C) 2017
 
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Assets.Scripts.Buildings;
-using System;
-using Assets.Scripts.Characters;
 using Assets.Scripts.Components.Enclosure;
+using Assets.Scripts.Components.Needs;
 
 namespace Assets.Scripts.Managers
 {
@@ -216,7 +214,7 @@ namespace Assets.Scripts.Managers
                 if (hit.collider.tag == "Enclosure")
                 {
                     //TODO: Get the type of the item from the JSON files, for now it defaults to food
-                    EnclosureInteriorItem.InteriorItemType itemType = EnclosureInteriorItem.InteriorItemType.Food;
+                    var itemType = NeedType.Hunger;
                     hit.collider.GetComponent<EnclosureComponent> ().RegisterNewInteriorItem (_currentBuild.gameObject, itemType);
                 }
             }

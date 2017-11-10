@@ -2,7 +2,6 @@
 
 using System.Collections;
 using Assets.Scripts.Blackboards;
-using Assets.Scripts.Characters;
 using UnityEngine;
 
 namespace Assets.Scripts.Behaviours.Base
@@ -17,7 +16,7 @@ namespace Assets.Scripts.Behaviours.Base
     public class BehaviourTree
     {
         public static float UpdateDelay = 5f;
-        public static string AIBaseKey = "AIBase";
+        public static string GameObjectKey = "GameObject";
 
         public readonly BehaviourBase Root;
 
@@ -28,7 +27,7 @@ namespace Assets.Scripts.Behaviours.Base
 
         // Still pass in AIBase for now, eventually we will be passing in a Blackboard component that contains all the init
         // information we require
-        public IEnumerator Behave(AIBase inAiBase)
+        public IEnumerator Behave(GameObject inGameObject)
         {
             if (Root == null)
             {
@@ -37,7 +36,7 @@ namespace Assets.Scripts.Behaviours.Base
             else
             {
                 var blackboard = new Blackboard();
-                blackboard.InstanceBlackboard.Add(AIBaseKey, new BlackboardItem(inAiBase));
+                blackboard.InstanceBlackboard.Add(GameObjectKey, new BlackboardItem(inGameObject));
 
                 while (true) // Do it forever as the operations will be performed asynchronously
                 {

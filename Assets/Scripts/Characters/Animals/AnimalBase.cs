@@ -5,8 +5,6 @@
 
 using UnityEngine;
 using Assets.Scripts.Behaviours;
-using Assets.Scripts.Buildings.Enclosures;
-using Assets.Scripts.Components.Enclosure;
 using Assets.Scripts.UI;
 
 namespace Assets.Scripts.Characters.Animals
@@ -38,13 +36,9 @@ namespace Assets.Scripts.Characters.Animals
       Boredom = 100;
       Health = 100;
       Age = 0;
-      EnclosureComponent _enclosure = null;
-      if (EnclosureUtilities.IsActiveEnclosure(base.Model.transform.position, ref _enclosure) == false)
-        Debug.LogError("AnimalBase is not in a active enclosure!");
-      Enclosure = _enclosure;
       Behave = BehaviourCreator.Instance.GetBehaviour("basicAnimal");
 
-      CoroutineSys.Instance.StartCoroutine(Behave.Behave(this));
+      CoroutineSys.Instance.StartCoroutine(Behave.Behave(Model));
     } // Init()
 
     protected void Update()
