@@ -3,13 +3,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Buildings.Enclosures;
-using Assets.Scripts.Characters.Animals;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.Components.Enclosure
 {
-    public class EnclosureComponent : MonoBehaviour
+    [RequireComponent(typeof(BoxCollider)), RequireComponent(typeof(MeshCollider))]
+    public class EnclosureComponent 
+        : MonoBehaviour
+        , IEnclosureInterface
     {
         private const int MaxNameLength = 20;
         private const int MinNameLength = 3;
@@ -21,14 +23,8 @@ namespace Assets.Scripts.Components.Enclosure
         private readonly List<EnclosureInteriorItem> _interiorItems = new List<EnclosureInteriorItem>();
         private readonly List<EnclosureResidentComponent> _enclosureResidents = new List<EnclosureResidentComponent>();
 
-        public void Start()
+        protected void Start()
         {
-            //Check that we have a general collider
-            if (!GetComponent<BoxCollider>() && !GetComponent<MeshCollider>())
-            {
-                Debug.LogError("Enclosure " + name + " at " + transform.position.ToString() + " has no collider!");
-            }
-
             //Get the GUI controller
             _enclosureGUIController = GetComponent<EnclosureGUIController>();
             _canvas = _enclosureGUIController.GetComponent<Canvas>();
@@ -141,13 +137,26 @@ namespace Assets.Scripts.Components.Enclosure
             }
         }
 
-        public void RegisterNewAnimal(EnclosureResidentComponent inResident)
+        // IEnclosureInterface
+        public void RegisterEnclosureResident(EnclosureResidentComponent inResident)
         { // Register a new animal into a enclosure
             _enclosureResidents.Add(inResident);
+            inResident.RegisteredEnclosure = this;
 
             Debug.Log("Added new animal " + inResident.gameObject.name
                       + " to enclosure " + _name);
         }
+
+        public void UnregisterEnclosureResident(EnclosureResidentComponent inResident)
+        {
+            if (!_enclosureResidents.Remove(inResident))
+            {
+                Debug.LogError("Tried to remove a resident that didn't exist!");
+            }
+
+            inResident.RegisteredEnclosure = null;
+        }
+        // ~IEnclosureInterface
 
         public bool Rename(string name)
         { //Renames the enclosure
