@@ -6,6 +6,7 @@ namespace Assets.Scripts.Components.Needs
     {
         Hunger,
         Thirst,
-        Fun
+        Fun,
+        Random
     }
 }

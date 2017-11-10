@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Buildings.Enclosures;
+using Assets.Scripts.Components.Needs;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -46,6 +47,7 @@ namespace Assets.Scripts.Components.Enclosure
             }
         }
 
+        // IEnclosureInterface
         public Vector3 GetRandomPointOnTheGround()
         { //Returns a random point inside of the enclosure that is on the ground
             //Get the extents of the enclosure's collider
@@ -72,7 +74,8 @@ namespace Assets.Scripts.Components.Enclosure
             return rayHit.point;
         }
 
-        public Transform GetClosestInteriorItemTransform(Vector3 fromPosition, EnclosureInteriorItem.InteriorItemType itemType)
+        
+        public Transform GetClosestInteriorItemTransform(Vector3 fromPosition, NeedType itemType)
         { //Returns the closest Transform of itemType
             //Check if any items of itemType exists
             if (_interiorItems.Count <= 0)
@@ -82,7 +85,7 @@ namespace Assets.Scripts.Components.Enclosure
                 return null;
             }
 
-            if (_interiorItems.Count(x => x.type == itemType) <= 0)
+            if (_interiorItems.Count(x => x.SatisfiedNeedType == itemType) <= 0)
             {
                 Debug.LogWarning("Tried getting the closest interior items of type " + itemType.ToString() +
                                  " but enclosure " + _name + " contains no interiorItems of that type!");
@@ -90,15 +93,15 @@ namespace Assets.Scripts.Components.Enclosure
             }
 
             //Get the item of type itemType
-            if (itemType == EnclosureInteriorItem.InteriorItemType.Random)
+            if (itemType == NeedType.Random)
             { //Random is a wildcard, so we return any item
                 int r = Random.Range(0, _interiorItems.Count);
-                return _interiorItems[r].transform;
+                return _interiorItems[r].UnderlyingTransform;
             }
 
             //Return the closest item of itemType
-            EnclosureInteriorItem interiorItem = _interiorItems.Where(x => x.type == itemType)
-                .OrderBy(x => Vector3.Distance(fromPosition, x.transform.position))
+            EnclosureInteriorItem interiorItem = _interiorItems.Where(x => x.SatisfiedNeedType == itemType)
+                .OrderBy(x => Vector3.Distance(fromPosition, x.UnderlyingTransform.position))
                 .FirstOrDefault();
 
             if (interiorItem == null)
@@ -106,29 +109,29 @@ namespace Assets.Scripts.Components.Enclosure
                 return null;
             }
 
-            return interiorItem.transform;
+            return interiorItem.UnderlyingTransform;
         }
 
-        public void RegisterNewInteriorItem(GameObject gameObject, EnclosureInteriorItem.InteriorItemType itemType)
+        public void RegisterNewInteriorItem(GameObject gameObject, NeedType itemType)
         { // Register a new interior object into a enclosure
             EnclosureInteriorItem newItem = new EnclosureInteriorItem(gameObject, itemType);
             _interiorItems.Add(newItem);
 
             Debug.Log("Added new interiorItem " + gameObject.name
-                      + ", of type " + System.Enum.GetName(typeof(EnclosureInteriorItem.InteriorItemType), itemType)
+                      + ", of type " + System.Enum.GetName(typeof(NeedType), itemType)
                       + ", to enclosure " + _name
                       + ", at position " + gameObject.transform.position.ToString()
                       + ".");
         }
 
-        public void RemoveInteriorItem(GameObject gameObject)
+        public void UnregisterInteriorItem(GameObject gameObject)
         {
             foreach (EnclosureInteriorItem item in _interiorItems)
             {
-                if (item.gameObject == gameObject)
+                if (item.UnderlyingGameObject == gameObject)
                 {
                     Debug.Log("Removed interiorItem " + gameObject.name
-                              + ", of tpye " + System.Enum.GetName(typeof(EnclosureInteriorItem.InteriorItemType), item.type)
+                              + ", of tpye " + System.Enum.GetName(typeof(NeedType), item.SatisfiedNeedType)
                               + ", from enclosure " + _name
                               + ", at position " + gameObject.transform.position.ToString() + ".");
                     _interiorItems.Remove(item);
@@ -137,7 +140,6 @@ namespace Assets.Scripts.Components.Enclosure
             }
         }
 
-        // IEnclosureInterface
         public void RegisterEnclosureResident(EnclosureResidentComponent inResident)
         { // Register a new animal into a enclosure
             _enclosureResidents.Add(inResident);

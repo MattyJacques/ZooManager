@@ -7,6 +7,6 @@ namespace Assets.Scripts.Components.Enclosure
     public class EnclosureResidentComponent 
         : MonoBehaviour
     {
-        public EnclosureComponent RegisteredEnclosure { get; set; }
+        public IEnclosureInterface RegisteredEnclosure { get; set; }
     }
 }

@@ -1,30 +1,21 @@
-﻿// Title        : EnclosureInteriorItem.cs
-// Purpose      : This is a container for the EnclosureInteriorItem object
-// Author       : Eivind Andreassen
-// Date         : 26.01.2017
+﻿// Sifaka Game Studios (C) 2017
 
+using Assets.Scripts.Components.Needs;
 using UnityEngine;
 
-public class EnclosureInteriorItem
+namespace Assets.Scripts.Buildings.Enclosures
 {
-  public GameObject gameObject;
-  public Transform transform;
-  public InteriorItemType type;
+    public class EnclosureInteriorItem
+    {
+        public GameObject UnderlyingGameObject;
+        public Transform UnderlyingTransform;
+        public NeedType SatisfiedNeedType;
 
-  public EnclosureInteriorItem(GameObject gameObject, InteriorItemType type)
-  {
-    transform = gameObject.transform;
-    this.gameObject = gameObject;
-    this.type = type;
-  } // EnclosureInteriorItem()
-
-  public enum InteriorItemType
-  {
-    Food ,
-    Water,
-    Fun,
-    Building,
-    Random //Not an actual type, just represents a wildcard when searching for type
-  }
-
-} // EnclosureInteriorItem
+        public EnclosureInteriorItem(GameObject gameObject, NeedType inSatisfiedNeedType)
+        {
+            UnderlyingGameObject = gameObject;
+            UnderlyingTransform = gameObject.transform;
+            SatisfiedNeedType = inSatisfiedNeedType;
+        }
+    }
+}

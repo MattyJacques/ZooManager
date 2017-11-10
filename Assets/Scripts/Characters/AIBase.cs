@@ -1,6 +1,5 @@
 ﻿// Sifaka Game Studios (C) 2017
 
-using Assets.Scripts.Components.Enclosure;
 using UnityEngine;
 
 namespace Assets.Scripts.Characters
@@ -17,10 +16,6 @@ namespace Assets.Scripts.Characters
     public float Age { get; set; }       // Animal Age, increases with time
 
     public GameObject Model { get; set; } // Model of the object, used to render the object
-
-    // Target / Path members
-    public EnclosureInteriorItem.InteriorItemType NextTarget { get; set; }  // Type of target, example: food or water
-    public EnclosureComponent Enclosure { get; set; }
 
     // Behaviour object for AI
     public Behaviours.Base.BehaviourTree Behave { get; set; }

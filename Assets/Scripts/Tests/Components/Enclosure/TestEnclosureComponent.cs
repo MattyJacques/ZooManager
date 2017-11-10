@@ -1,5 +1,7 @@
 ﻿// Sifaka Game Studios (C) 2017
 
+#if UNITY_EDITOR
+
 using Assets.Scripts.Components.Enclosure;
 
 namespace Assets.Scripts.Tests.Components.Enclosure
@@ -13,3 +15,5 @@ namespace Assets.Scripts.Tests.Components.Enclosure
         }
     }
 }
+
+#endif // UNITY_EDITOR
