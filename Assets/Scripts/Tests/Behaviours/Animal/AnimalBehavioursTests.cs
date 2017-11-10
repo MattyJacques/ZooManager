@@ -1,5 +1,7 @@
 ﻿// Sifaka Game Studios (C) 2017
 
+#if UNITY_EDITOR
+
 using System.Collections;
 using Assets.Scripts.Behaviours.Animal;
 using Assets.Scripts.Behaviours.Base;
@@ -271,3 +273,5 @@ namespace Assets.Scripts.Tests.Behaviours.Animal
         }
     }
 }
+
+#endif // UNITY_EDITOR
