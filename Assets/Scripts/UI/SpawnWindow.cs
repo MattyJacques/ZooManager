@@ -31,7 +31,7 @@ public class SpawnWindow : MonoBehaviour {
       window.transform.localPosition = windowPrefab.transform.position;
 
       Color color = window.GetComponent<Image>().color;
-      color.a = .8f;
+      color.a = 1.0f;
       window.GetComponent<Image>().color = color;
 
       switch ( type )

@@ -25,9 +25,9 @@ public class BuildingFromGUI : MonoBehaviour {
 
       if (loadedObject)
       { // If the object has been loaded, instantiate
-        objectToBuild = (GameObject) Instantiate(loadedObject);
+        engine.gameObject.GetComponent<BuildingEngine>().StartBuild(loadedObject, new Vector3(1, 1, 1));
       }
 
-      engine.gameObject.GetComponent<BuildingEngine> ().StartBuild (objectToBuild, new Vector3 ( 1, 1, 1 ));
+      
     }
 }
