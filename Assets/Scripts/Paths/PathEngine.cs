@@ -3,6 +3,7 @@
 //Date: 1/31/2017
 //Purpose: To manage/create paths!
 
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -65,6 +66,7 @@ public class PathEngine : MonoBehaviour {
         }
 
         if (_pathPoints.Count == 1) {
+          float distanceBetween = Vector2.Distance (new Vector2(_pathPoints[0].x, _pathPoints[0].z), new Vector2(_rayHit.point.x, _rayHit.point.z));
           _ghostPath.AddRange(CreatePath (_pathPoints[0], _rayHit.point + new Vector3(0, _pathHeight, 0), _pathHeight));
         } else {
           _ghostPath.Add((GameObject)Instantiate (_polePrefab, _rayHit.point + new Vector3(0, _pathHeight, 0), Quaternion.identity));
