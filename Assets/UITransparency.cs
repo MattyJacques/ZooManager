@@ -16,7 +16,7 @@ public class UITransparency : MonoBehaviour {
 	// Initializing
 	void Start() 
   { // Defaults opacity to 80%, TODO: ready defaults in for a text file with all default settings?
-    opacity = .8f;
+    opacity = 1.0f;
     SetOpacity();
   } // Start()
 	

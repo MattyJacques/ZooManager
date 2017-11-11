@@ -48,11 +48,13 @@ public class SpawnWindow : MonoBehaviour {
           window.GetComponent<TerrainTools>().StartTerrainEditing();
           break;
 
+        case "AnimalTab":
+        case "BuildTab":
         case null:
           break;
                    
         default:
-          window.GetComponent<BuildingWindow>().buildingType = type;
+          window.GetComponent<PlacementWindow>().buildingType = type;
           window.transform.SetParent(GameObject.Find("BuildTab(Clone)").transform);
           break;
       }    

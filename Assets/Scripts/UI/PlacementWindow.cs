@@ -15,7 +15,7 @@ public class PlacementWindow : MonoBehaviour
   public GameObject buttonPrefab;                           // The prefab used for the button
   public GameObject dragScrollBar;                          // Allows for scrolling in the GUI menu
   public string type;
-  public string buildingtype;
+  public string buildingType;
 
   private string objectID;                                  // The ID of the building to be placed
   private Sprite buttonSprite;                              // Sprite to use for the button
@@ -57,7 +57,7 @@ public class PlacementWindow : MonoBehaviour
         objectID = jsonInfo[type + "Templates"][i]["id"];
         buttonSprite = Resources.Load<Sprite>(pathname + "/Previews/" + objectID);
 
-        if (type == "building") { objectID = jsonInfo["buildingTemplates"][i]["type"] + "/" + objectID; }
+       // if (type == "building") { objectID = jsonInfo["buildingTemplates"][i]["type"] + "/" + objectID; }
 
         button = (GameObject)Instantiate(buttonPrefab, this.transform.position, Quaternion.identity);
         // Create a new button for this animal and add functionality
@@ -67,7 +67,13 @@ public class PlacementWindow : MonoBehaviour
             button.GetComponent<AnimalFromGUI>().animalID = objectID;
             break;
           case "building":
-            button.GetComponent<BuildingFromGUI>().buildingID = objectID;
+            if (string.Compare(jsonInfo["buildingTemplates"][i]["type"], buildingType) == 0) {
+                button.GetComponent<BuildingFromGUI>().buildingID = jsonInfo["buildingTemplates"][i]["type"] + "/" + objectID;
+            } else
+            {
+              Destroy(button);
+              continue;
+            }
             break;
         }
         
