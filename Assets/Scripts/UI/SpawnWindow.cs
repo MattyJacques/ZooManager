@@ -47,6 +47,7 @@ public class SpawnWindow : MonoBehaviour {
 
           window.GetComponent<TerrainTools>().StartTerrainEditing();
           break;
+         case "EnclosureWindow":
          case "PathWindow":
            window.transform.SetParent(GameObject.Find("BuildTab(Clone)").transform);
            window.transform.position = window.transform.parent.position + new Vector3(50,0,0);
