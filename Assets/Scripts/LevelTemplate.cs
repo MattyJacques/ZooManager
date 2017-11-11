@@ -1,4 +1,6 @@
-﻿namespace Assets.Scripts.Animals
+﻿// Sifaka Game Studios (C) 2017
+
+namespace Assets.Scripts
 {
 	[System.Serializable]
 	public class LevelTemplate
@@ -6,7 +8,6 @@
 		public int id;
 		public int winCondition;
 		public int loseCondition;
-		public LevelAnimalTemplate[] animals;
 		public LevelBuildingTemplate[] buildings;
 	}
 }

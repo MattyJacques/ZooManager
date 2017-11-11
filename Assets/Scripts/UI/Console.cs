@@ -187,9 +187,6 @@ namespace Assets.Scripts.UI
 
             string type = inputParams[1];
 
-            _animalMgr.GetComponent<Assets.Scripts.Managers.AnimalManager>()
-              .CreateFollowMouse(type);
-
           }
           else
           {
