@@ -10,7 +10,6 @@ using UnityEngine.UI;
 
 public class FreeFormPathGUIController : MonoBehaviour {
 
-    public Button pathModeButton;
     public Button straightButton;
     public Button curveButton;
     public Button circleButton;
@@ -61,11 +60,10 @@ public class FreeFormPathGUIController : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        straightButton.gameObject.SetActive(false);
-        curveButton.gameObject.SetActive(false);
-        circleButton.gameObject.SetActive(false);
+        straightButton.gameObject.SetActive(true);
+        curveButton.gameObject.SetActive(true);
+        circleButton.gameObject.SetActive(true);
 
-        pathModeButton.onClick.AddListener(pathModeButtonClicked);
         straightButton.onClick.AddListener(straightButtonClick);
         curveButton.onClick.AddListener(curveButtonClick);
         circleButton.onClick.AddListener(circleButtonClick);

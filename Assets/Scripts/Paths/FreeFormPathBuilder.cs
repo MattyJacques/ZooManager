@@ -307,6 +307,8 @@ public class FreeFormPathBuilder : MonoBehaviour
         {
             case stateEnum.inactive: //Nothing to cancel, might want to add something
                 break;
+            case stateEnum.choosingCurveControlPoint:
+            case stateEnum.choosingPathEndPosition:
             case stateEnum.choosingPathStartPosition:
                 Destroy(temp);
                 line.enabled = false;
