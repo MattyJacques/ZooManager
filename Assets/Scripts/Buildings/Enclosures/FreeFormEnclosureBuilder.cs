@@ -637,19 +637,19 @@ public class FreeFormEnclosureBuilder : MonoBehaviour
         //----------------------------------------------------------------------------------------
 
         //Restrict enclosure placement along the axis the mouse is moving in (X or Y).
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetKey(Assets.Scripts.GameSettings.ZooManagerGameSettings.LOCK_TO_AXIS))
         {
             angleLock = true;
         }
 
         //Stop Restricting enclosure placement along the axis the mouse is moving in (X or Y).
-        if (Input.GetKeyUp(KeyCode.LeftShift))
+        if (Input.GetKeyUp(Assets.Scripts.GameSettings.ZooManagerGameSettings.LOCK_TO_AXIS))
         {
             angleLock = false;
         }
 
         //Switch snapping to the grid on and off
-        if (Input.GetKeyDown(KeyCode.G))
+        if (Input.GetKeyDown(Assets.Scripts.GameSettings.ZooManagerGameSettings.TOGGLE_GRID))
         {
             gridLock = flipBool(gridLock);
             Debug.Log("GridLock is: " + gridLock);
@@ -663,7 +663,7 @@ public class FreeFormEnclosureBuilder : MonoBehaviour
         }
 
         //Player presses 'Return' to complete current enclosure.
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(Assets.Scripts.GameSettings.ZooManagerGameSettings.FINISH_ENCLOSURE))
         {
             foreach (GameObject o in intermediateEnclosurePieceList)
             {
@@ -792,7 +792,7 @@ public class FreeFormEnclosureBuilder : MonoBehaviour
         }
 
         //If the player right clicks at anytime, cancel any current enclosure building operations.
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(2))
         {
             cancelBuild();
         }
