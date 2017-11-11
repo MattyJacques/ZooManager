@@ -25,8 +25,8 @@ namespace Assets.Scripts.Managers
     };
 
     // Storage for animal data
-    private List<Animal> _animalCollection = new List<Animal>();  // Animal templates
-    private List<AnimalBase> _animals = new List<AnimalBase>();   // Active animals
+    public List<Animal> _animalCollection = new List<Animal>();  // Animal templates
+    public List<AnimalBase> _animals = new List<AnimalBase>();   // Active animals
     BehaviourCreator _behaviours;                                 // Creates behaviours
     EnclosureUtilities _EnclosureCollection;                      // Holds all the enclsoures
 
@@ -47,9 +47,6 @@ namespace Assets.Scripts.Managers
 
       _terrainLayer = LayerMask.GetMask("Ground");
 
-      
-      // Load all animals
-      LoadAnimals();
     } // Start()
 
     // Update is called once per frame
@@ -98,8 +95,6 @@ namespace Assets.Scripts.Managers
         _currentAnimal.transform.position = new Vector3(template.coords.x,
                                                         template.coords.y,
                                                         template.coords.z);
-
-        //PlaceAnimal();
       }
 
     } // Create(LevelAnimalTemplate)
@@ -169,66 +164,6 @@ namespace Assets.Scripts.Managers
     } // PlaceAnimal()
 
     #endregion
-
-    /////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Loading Animals
-    //
-    /////////////////////////////////////////////////////////////////////////////////////////
-    #region Load Animals
-
-    private void LoadAnimals()
-    { // Load animals from Assets/Resources sotring in list of Animal types
-
-      // Get the directories in the Animals folder
-      DirectoryInfo directoryInfo = new DirectoryInfo("Assets/Resources/Animals");
-      DirectoryInfo[] subDirectories = directoryInfo.GetDirectories();
-
-      // Read animal JSON data
-      AnimalTemplateCollection _templates;
-      _templates = JSONReader.ReadJSON<AnimalTemplateCollection>("Animals/Animals_Base");
-
-      foreach (DirectoryInfo dir in subDirectories)
-      { // Loop through all directorys looking for animals
-
-        foreach (FileInfo file in dir.GetFiles())
-        { // Check each directory to see if it contains a prefab file, if so store
-          // in an Animal object
-
-          if (file.Name.EndsWith("prefab"))
-          { // Create a new Animal object with the ID, prefab and template
-            // of the animal found
-
-            Animal newAnimal = new Animal();
-            newAnimal.ID = Path.GetFileNameWithoutExtension(file.Name);
-            newAnimal.Prefab = (GameObject)Resources.Load("Animals/" + dir.Name + "/"
-              + Path.GetFileNameWithoutExtension(file.Name));
-
-            foreach (AnimalTemplate template in _templates.animalTemplates)
-            { // Search the loaded templates for one matching the prefab, setting
-              // if found
-              if (template.id == newAnimal.ID)
-              {
-                newAnimal.Template = template;
-                break;
-              }
-            }
-
-            if (newAnimal.Template != null)
-            { // Add the animal to the collection if setup was successful
-              _animalCollection.Add(newAnimal);
-            }
-            else
-            { // Raise an exception if template not found
-              Debug.Assert(newAnimal.Template != null, "Animal template not found");
-            }
-
-          } // if (file.Name.EndsWith("prefab"))
-        } // foreach (FileInfo file in dir.GetFiles())
-      } // foreach (DirectoryInfo dir in subDirectories)
-    } // LoadAnimals()
-
-    #endregion
-
+    
   } // AnimalManager
 } // Namespace
