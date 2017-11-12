@@ -3,11 +3,7 @@
 // Author       : Alexander Falk
 // Date         : 21/08/2017
 
-using System;
 using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
-using System.Collections;
 
 public class UIControl : MonoBehaviour
 {
