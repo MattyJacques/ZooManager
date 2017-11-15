@@ -4,13 +4,14 @@ using UnityEngine;
 
 namespace Assets.Scripts.Components.Needs
 {
-    public class NeedParams
+    [System.Serializable]
+    public struct NeedParams
     {
-        public NeedType AssignedNeedType { get; set; }
-        public int MaxValue { get; set; }
-        public float UpdateFrequency { get; set; }
-        public int ValueDecay { get; set; }
-        public AnimationCurve HealthAdjustmentCurve { get; set; }
+        public NeedType AssignedNeedType;
+        public int MaxValue;
+        public float UpdateFrequency;
+        public int ValueDecay;
+        public AnimationCurve HealthAdjustmentCurve;
     }
 
     public class Need

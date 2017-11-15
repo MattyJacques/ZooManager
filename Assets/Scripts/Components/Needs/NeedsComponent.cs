@@ -12,6 +12,8 @@ namespace Assets.Scripts.Components.Needs
         : MonoBehaviour
         , INeedsInterface
     {
+        public List<NeedParams> InitialNeeds = new List<NeedParams>();
+
         // Array to optimise for updating (map makes more sense, but would be slower for iteration)
         private IList<NeedEntry> NeedEntries { get; set; }
 
@@ -37,6 +39,13 @@ namespace Assets.Scripts.Components.Needs
         protected void Start ()
         {
 		    NeedEntries = new List<NeedEntry>();
+
+            foreach (var initialNeed in InitialNeeds)
+            {
+                NeedEntries.Add(new NeedEntry( new Need(initialNeed)));
+            }
+
+            InitialNeeds.Clear();
 
             HealthInterface = gameObject.GetComponent<IHealthInterface>();
         }
