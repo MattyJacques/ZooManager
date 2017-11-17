@@ -1,15 +1,11 @@
-﻿// Title        : BuildingManager.cs
-// Purpose      : Initiates templates, manages instances of buildings
-// Author       : Matthew Jacques
-// Date         : 03/09/2016
+﻿// Sifaka Game Studios (C) 2017
 
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Assets.Scripts.Buildings;
-using System;
-using Assets.Scripts.Characters;
+using Assets.Scripts.Components.Enclosure;
+using Assets.Scripts.Components.Needs;
 
 namespace Assets.Scripts.Managers
 {
@@ -24,8 +20,8 @@ namespace Assets.Scripts.Managers
     // Lists
     // Collection of building templates
     private BuildingTemplateCollection _buildingTemplates = null;
-    private static List<GameObject> _buildings = null;    // List of current active buildings
-    private static List<BuildingBase> _buildingBases = null;
+    public static List<GameObject> _buildings = null;    // List of current active buildings
+    public static List<BuildingBase> _buildingBases = null;
 
     // Objects
     public Transform _currentBuild;        // Current building to be placed
@@ -50,8 +46,6 @@ namespace Assets.Scripts.Managers
       //627H & 880W //Test values to make sure that unity properlly streches the buttons to the right size.
       _rotateLeftRect = new Rect((Screen.width / 44), Screen.height - (Screen.height / 11), (Screen.width / 8.8f), (Screen.height / 31.35f));
       _rotateRightRect = new Rect((Screen.width / 4.4f), Screen.height - (Screen.height / 11), (Screen.width / 8.8f), (Screen.height / 31.35f));
-
-      LoadBuildings();
       
       //Set values
       _pave = gameObject.AddComponent<PaveScript>() as PaveScript;
@@ -218,8 +212,8 @@ namespace Assets.Scripts.Managers
                 if (hit.collider.tag == "Enclosure")
                 {
                     //TODO: Get the type of the item from the JSON files, for now it defaults to food
-                    EnclosureInteriorItem.InteriorItemType itemType = EnclosureInteriorItem.InteriorItemType.Food;
-                    hit.collider.GetComponent<Enclosure> ().RegisterNewInteriorItem (_currentBuild.gameObject, itemType);
+                    var itemType = NeedType.Hunger;
+                    hit.collider.GetComponent<EnclosureComponent> ().RegisterNewInteriorItem (_currentBuild.gameObject, itemType);
                 }
             }
       _currentBuild = null;
@@ -343,31 +337,6 @@ namespace Assets.Scripts.Managers
       return templateIndex;
 
     } // GetTemplateIndex()
-
-    private void LoadBuildings()
-    { // Load buildings from Assets/Resources
-
-      DirectoryInfo directoryInfo = new DirectoryInfo("Assets/Resources/Buildings");
-      DirectoryInfo[] subDirectories = directoryInfo.GetDirectories();
-
-      _buildings = new List<GameObject>();
-      
-      foreach (DirectoryInfo dir in subDirectories)
-      {
-        Debug.Log("Searching directory: " + dir.Name);
-
-        foreach (FileInfo file in dir.GetFiles())
-        {
-          if (file.Name.EndsWith("prefab"))
-          {
-            _buildings.Add((GameObject)Resources.Load(dir.Name + "/" + file.Name));
-            Debug.Log("Loaded " + dir.Name + "/" + file.Name);
-          }
-        }
-
-      }
-
-    } // LoadBuildings()
 
     private void OnGUI()
     { // Display buttons for rotation 

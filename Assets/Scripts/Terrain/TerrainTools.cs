@@ -10,7 +10,7 @@ using UnityEngine.UI;
 using Cubiquity;
 
 public class TerrainTools : MonoBehaviour {
-	public GameObject _terrainToolsUI;
+//	public GameObject _terrainToolsUI;
 	public Slider _strengthScrollbar;
 	public Slider _sizeScrollbar;
   public LayerMask _terrainLayers;
@@ -114,7 +114,7 @@ public class TerrainTools : MonoBehaviour {
 	public void StartTerrainEditing(){
 		_editingTerrain = true;
     _terrainMode = 0;
-		_terrainToolsUI.SetActive (true);
+//		_terrainToolsUI.SetActive (true);
     _ghostTile = (GameObject)Instantiate (__ghostTilePrefab, new Vector3(0, 0, 0), Quaternion.identity);
     _ghostTile.transform.Rotate (new Vector3(90, 0, 0));
     _ghostTile.SetActive (false);
@@ -125,7 +125,7 @@ public class TerrainTools : MonoBehaviour {
 	public void StopTerrainEditing(){
 		_editingTerrain = false;
     _terrainMode = 0;
-		_terrainToolsUI.SetActive (false);
+//		_terrainToolsUI.SetActive (false);
     Destroy (_ghostTile);
     _changingTerrain = false;
     _gridSize = 1;

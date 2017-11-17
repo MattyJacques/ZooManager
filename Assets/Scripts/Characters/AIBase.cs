@@ -1,8 +1,6 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Threading;
-using Assets.Scripts.Managers;
-using Pathfinding;
+﻿// Sifaka Game Studios (C) 2017
+
+using UnityEngine;
 
 namespace Assets.Scripts.Characters
 {
@@ -19,13 +17,8 @@ namespace Assets.Scripts.Characters
 
     public GameObject Model { get; set; } // Model of the object, used to render the object
 
-    // Target / Path members
-    public EnclosureInteriorItem.InteriorItemType NextTarget { get; set; }  // Type of target, example: food or water
-    public Mover pathfinder { get; set; }
-    public Enclosure Enclosure { get; set; }
-
     // Behaviour object for AI
-    public BehaviourTree.Base.Behaviour Behave { get; set; }
+    public Behaviours.Base.BehaviourTree Behave { get; set; }
 
     public virtual void Feed(FeedType type, int amount)
     { // Increase the hunger or thirst meter, depending on type
@@ -53,4 +46,4 @@ namespace Assets.Scripts.Characters
 
   } // AIBase
 } // namespace
-    
+    

@@ -4,15 +4,11 @@
 // Date         : 22/08/2016
 
 using UnityEngine;
-using System.Collections;
+using Assets.Scripts.Behaviours;
 using Assets.Scripts.UI;
-using Assets.Scripts.Characters;
-using Assets.Scripts.Managers;
-using Assets.Scripts.BehaviourTree;
 
 namespace Assets.Scripts.Characters.Animals
 {
-
   public class AnimalBase : AIBase
   {
     // Template values never get set, they represent the animal's permanent properties (max age, speed, etc)
@@ -40,17 +36,9 @@ namespace Assets.Scripts.Characters.Animals
       Boredom = 100;
       Health = 100;
       Age = 0;
-      Enclosure _enclosure = null;
-      if (EnclosureUtilities.IsActiveEnclosure(base.Model.transform.position, ref _enclosure) == false)
-        Debug.LogError("AnimalBase is not in a active enclosure!");
-      Enclosure = _enclosure;
       Behave = BehaviourCreator.Instance.GetBehaviour("basicAnimal");
 
-      pathfinder = Model.AddComponent<Mover>();
-      if (pathfinder == null)
-        Debug.LogError("pathfinder not assigned");
-
-      CoroutineSys.Instance.StartCoroutine(Behave.Behave(this));
+      CoroutineSys.Instance.StartCoroutine(Behave.Behave(Model));
     } // Init()
 
     protected void Update()
