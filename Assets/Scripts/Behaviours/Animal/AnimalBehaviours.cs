@@ -2,19 +2,16 @@
 
 using System.Collections;
 using Assets.Scripts.Behaviours.Base;
+using Assets.Scripts.Behaviours.General;
 using Assets.Scripts.Blackboards;
 using Assets.Scripts.Components.Enclosure;
 using Assets.Scripts.Components.Needs;
-using Assets.Scripts.Components.Pathfinding;
 using UnityEngine;
 
 namespace Assets.Scripts.Behaviours.Animal
 {
     public static class AnimalBehaviours
     {
-        public const string PathfindingTargetLocationKey = "PathfindingTarget";
-        public const string PathfindingTargetTypeKey = "PathfindingTargetType";
-
         public const int MinNeedThreshold = 50;
         public const int NeedImproveAmount = 100;
 
@@ -39,7 +36,7 @@ namespace Assets.Scripts.Behaviours.Animal
                 {
                     inBlackboard.InstanceBlackboard.Add
                     (
-                        PathfindingTargetLocationKey,
+                        PathfindingBehaviours.PathfindingTargetLocationKey,
                         new BlackboardItem
                         (
                             enclosureResident.RegisteredEnclosure.GetClosestInteriorItemTransform
@@ -51,7 +48,7 @@ namespace Assets.Scripts.Behaviours.Animal
 
                     inBlackboard.InstanceBlackboard.Add
                     (
-                        PathfindingTargetTypeKey,
+                        PathfindingBehaviours.PathfindingTargetTypeKey,
                         new BlackboardItem(lowestNeed)
                     );
 
@@ -101,7 +98,7 @@ namespace Assets.Scripts.Behaviours.Animal
 
         public static IEnumerator ImproveNeed(Blackboard inBlackboard, System.Action<ReturnCode> returnCode)
         {
-            var needImproved = inBlackboard.InstanceBlackboard[PathfindingTargetTypeKey].GetCurrentItem<Need>();
+            var needImproved = inBlackboard.InstanceBlackboard[PathfindingBehaviours.PathfindingTargetTypeKey].GetCurrentItem<Need>();
 
             var gameObject = inBlackboard.InstanceBlackboard[BehaviourTree.GameObjectKey].GetCurrentItem<GameObject>();
             var enclosureResident = gameObject.GetComponent<EnclosureResidentComponent>();
@@ -115,63 +112,10 @@ namespace Assets.Scripts.Behaviours.Animal
 
             needImproved.AdjustNeed(NeedImproveAmount);
 
-            inBlackboard.InstanceBlackboard.Remove(PathfindingTargetTypeKey);
+            inBlackboard.InstanceBlackboard.Remove(PathfindingBehaviours.PathfindingTargetTypeKey);
 
             returnCode(ReturnCode.Success);
 
-            yield break;
-        }
-
-        public static IEnumerator MoveToTarget(Blackboard inBlackboard, System.Action<ReturnCode> returnCode)
-        { // Move to the target
-
-            Debug.Log("Starting MoveToTarget()");
-
-            var gameObject = inBlackboard.InstanceBlackboard[BehaviourTree.GameObjectKey].GetCurrentItem<GameObject>();
-            var pathfinder = gameObject.GetComponent<IPathfindingInterface>();
-
-            pathfinder.StartPathfinding(inBlackboard.InstanceBlackboard[PathfindingTargetLocationKey].GetCurrentItem<Vector3>());
-
-            while (pathfinder.IsPathing())
-            {
-                yield return null;
-            }
-
-            Debug.Log("MoveToTarget(), returning success");
-
-            inBlackboard.InstanceBlackboard.Remove(PathfindingTargetLocationKey);
-
-            returnCode(ReturnCode.Success);
-        }
-
-        public static IEnumerator GetRandomInterestPoint(Blackboard inBlackboard, System.Action<ReturnCode> returnCode)
-        { // Set's the AIBase pathfinder target to a random interest
-            // point gotten from the IPManager
-            Debug.Log("Getting random Interest Point");
-
-            var ipvec = IPManager.Instance.GetRandomIP();
-
-            if (ipvec == Vector3.zero)
-            { // no interest points
-                returnCode(ReturnCode.Failure);
-                yield break;
-            }
-
-            inBlackboard.InstanceBlackboard.Add(PathfindingTargetLocationKey, new BlackboardItem(ipvec));
-
-            returnCode(ReturnCode.Success);
-        }
-
-        public static IEnumerator GetRandomPointInsideEnclosure(Blackboard inBlackboard, System.Action<ReturnCode> returnCode)
-        {
-            Debug.Log("Getting random point inside Enclosure");
-
-            var enclosureResident = inBlackboard.InstanceBlackboard[BehaviourTree.GameObjectKey].GetCurrentItem<GameObject>().GetComponent<EnclosureResidentComponent>();
-
-            inBlackboard.InstanceBlackboard.Add(PathfindingTargetLocationKey,
-                new BlackboardItem(enclosureResident.RegisteredEnclosure.GetRandomPointOnTheGround()));
-
-            returnCode(ReturnCode.Success);
             yield break;
         }
     }
