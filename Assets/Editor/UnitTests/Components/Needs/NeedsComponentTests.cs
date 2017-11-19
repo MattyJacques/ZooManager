@@ -31,7 +31,7 @@ namespace Assets.Editor.UnitTests.Components.Needs
             _healthComponent = new GameObject().AddComponent<MockHealthComponent>();
 
             _needsComponent = _healthComponent.gameObject.AddComponent<TestNeedsComponent>();
-            _needsComponent.TestStart();
+            
 
             _animationCurve = new AnimationCurve();
             _animationCurve.AddKey(100, HealthAdjustmentBeforeDecay);
@@ -52,10 +52,29 @@ namespace Assets.Editor.UnitTests.Components.Needs
             _needsComponent = null;
             _healthComponent = null;
         }
- 
+
+        [Test]
+        public void Start_UsesInitalNeedsToFormNeedList()
+        {
+            _needsComponent.InitialNeeds.Add(new NeedParams());
+            _needsComponent.TestStart();
+
+            Assert.AreEqual(1, _needsComponent.GetNeeds().Count());
+        }
+
+        [Test]
+        public void Start_ClearsInitialNeeds()
+        {
+            _needsComponent.InitialNeeds.Add(new NeedParams());
+            _needsComponent.TestStart();
+
+            Assert.AreEqual(0, _needsComponent.InitialNeeds.Count);
+        }
+
         [Test]
         public void AddNeed_UpdateForLessThanDecay_DoesNotAdjustHealthByDecay()
         {
+            _needsComponent.TestStart();
             _needsComponent.AddNeed(_need);
 
             _needsComponent.TestUpdate(_need.GetUpdateFrequency() * 0.5f);
@@ -66,6 +85,7 @@ namespace Assets.Editor.UnitTests.Components.Needs
         [Test]
         public void AddNeed_UpdateForDecay_AdjustsHealthByResult()
         {
+            _needsComponent.TestStart();
             _needsComponent.AddNeed(_need);
 
             _needsComponent.TestUpdate(_need.GetUpdateFrequency() + 0.1f);
@@ -76,6 +96,7 @@ namespace Assets.Editor.UnitTests.Components.Needs
         [Test]
         public void AddNeed_UpdateForDecay_DecaysNeed()
         {
+            _needsComponent.TestStart();
             _needsComponent.AddNeed(_need);
 
             _needsComponent.TestUpdate(_need.GetUpdateFrequency() + 0.1f);
@@ -86,6 +107,7 @@ namespace Assets.Editor.UnitTests.Components.Needs
         [Test]
         public void AddNeed_UpdateForNTimesDecay_AdjustsHealthByNTimesDecay()
         {
+            _needsComponent.TestStart();
             _needsComponent.AddNeed(_need);
 
             const int updateNum = 3;
@@ -103,6 +125,7 @@ namespace Assets.Editor.UnitTests.Components.Needs
         [Test]
         public void AddNeed_MultipleNeedsExist_AdjustsHealthAsExpected()
         {
+            _needsComponent.TestStart();
             _needsComponent.AddNeed(_need);
 
             var otherNeed = new Need
@@ -120,6 +143,7 @@ namespace Assets.Editor.UnitTests.Components.Needs
         [Test]
         public void AddNeed_NeedAlreadyExists_ThrowsError()
         {
+            _needsComponent.TestStart();
             LogAssert.Expect(LogType.Error, "Tried to add NeedType that already existed!");
 
             _needsComponent.AddNeed(_need);
@@ -129,6 +153,7 @@ namespace Assets.Editor.UnitTests.Components.Needs
         [Test]
         public void GetNeeds_ReturnsAllNeeds()
         {
+            _needsComponent.TestStart();
             _needsComponent.AddNeed(_need);
 
             var otherNeed = new Need

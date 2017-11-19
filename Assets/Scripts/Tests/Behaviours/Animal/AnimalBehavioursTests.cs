@@ -5,12 +5,12 @@
 using System.Collections;
 using Assets.Scripts.Behaviours.Animal;
 using Assets.Scripts.Behaviours.Base;
+using Assets.Scripts.Behaviours.General;
 using Assets.Scripts.Blackboards;
 using Assets.Scripts.Components.Enclosure;
 using Assets.Scripts.Components.Needs;
 using Assets.Scripts.Tests.Components.Enclosure;
 using Assets.Scripts.Tests.Components.Needs;
-using Assets.Scripts.Tests.Components.Pathfinding;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -25,7 +25,6 @@ namespace Assets.Scripts.Tests.Behaviours.Animal
 
         private MockNeedsComponent _needsComponent;
         private MockEnclosureComponent _enclosureComponent;
-        private MockPathfindingComponent _pathfindingComponent;
         private Blackboard _actualBlackboard;
 
         [SetUp]
@@ -36,7 +35,6 @@ namespace Assets.Scripts.Tests.Behaviours.Animal
 
             _needsComponent = new GameObject().AddComponent<MockNeedsComponent>();
             _enclosureComponent = _needsComponent.gameObject.AddComponent<MockEnclosureComponent>();
-            _pathfindingComponent = _needsComponent.gameObject.AddComponent<MockPathfindingComponent>();
 
             _enclosureComponent.gameObject.AddComponent<EnclosureResidentComponent>().RegisteredEnclosure =
                 _enclosureComponent;
@@ -51,7 +49,6 @@ namespace Assets.Scripts.Tests.Behaviours.Animal
         public void AferTest()
         {
             _actualBlackboard = null;
-            _pathfindingComponent = null;
             _enclosureComponent = null;
             _needsComponent = null;
         }
@@ -110,7 +107,7 @@ namespace Assets.Scripts.Tests.Behaviours.Animal
 
             yield return CoroutineSys.Instance.StartCoroutine(AnimalBehaviours.TryFindNeedToImprove(_actualBlackboard, TestUpdateCondition));
 
-            Assert.IsTrue(_needsComponent.Needs.Contains(_actualBlackboard.InstanceBlackboard[AnimalBehaviours.PathfindingTargetTypeKey].GetCurrentItem<Need>()));
+            Assert.IsTrue(_needsComponent.Needs.Contains(_actualBlackboard.InstanceBlackboard[PathfindingBehaviours.PathfindingTargetTypeKey].GetCurrentItem<Need>()));
         }
 
         [UnityTest]
@@ -120,7 +117,7 @@ namespace Assets.Scripts.Tests.Behaviours.Animal
 
             yield return CoroutineSys.Instance.StartCoroutine(AnimalBehaviours.TryFindNeedToImprove(_actualBlackboard, TestUpdateCondition));
 
-            Assert.AreEqual(_enclosureComponent.ClosestInteriorItemTransformResult.position, _actualBlackboard.InstanceBlackboard[AnimalBehaviours.PathfindingTargetLocationKey].GetCurrentItem<Vector3>());
+            Assert.AreEqual(_enclosureComponent.ClosestInteriorItemTransformResult.position, _actualBlackboard.InstanceBlackboard[PathfindingBehaviours.PathfindingTargetLocationKey].GetCurrentItem<Vector3>());
         }
         #endregion
 
@@ -130,14 +127,14 @@ namespace Assets.Scripts.Tests.Behaviours.Animal
         {
             _actualBlackboard.InstanceBlackboard.Add
             (
-                AnimalBehaviours.PathfindingTargetTypeKey, 
+                PathfindingBehaviours.PathfindingTargetTypeKey, 
                 new BlackboardItem(new Need( new NeedParams{AssignedNeedType = NeedType.Hunger}))
             );
 
             yield return CoroutineSys.Instance.StartCoroutine(AnimalBehaviours.ImproveNeed(_actualBlackboard,
                 TestUpdateCondition));
 
-            Assert.IsFalse(_actualBlackboard.InstanceBlackboard.ContainsKey(AnimalBehaviours.PathfindingTargetTypeKey));
+            Assert.IsFalse(_actualBlackboard.InstanceBlackboard.ContainsKey(PathfindingBehaviours.PathfindingTargetTypeKey));
         }
 
         [UnityTest]
@@ -145,7 +142,7 @@ namespace Assets.Scripts.Tests.Behaviours.Animal
         {
             _actualBlackboard.InstanceBlackboard.Add
             (
-                AnimalBehaviours.PathfindingTargetTypeKey,
+                PathfindingBehaviours.PathfindingTargetTypeKey,
                 new BlackboardItem(new Need(new NeedParams { AssignedNeedType = NeedType.Hunger }))
             );
 
@@ -163,7 +160,7 @@ namespace Assets.Scripts.Tests.Behaviours.Animal
 
             _actualBlackboard.InstanceBlackboard.Add
             (
-                AnimalBehaviours.PathfindingTargetTypeKey,
+                PathfindingBehaviours.PathfindingTargetTypeKey,
                 new BlackboardItem(_needsComponent.Needs[0])
             );
 
@@ -178,7 +175,7 @@ namespace Assets.Scripts.Tests.Behaviours.Animal
         {
             _actualBlackboard.InstanceBlackboard.Add
             (
-                AnimalBehaviours.PathfindingTargetTypeKey,
+                PathfindingBehaviours.PathfindingTargetTypeKey,
                 new BlackboardItem(new Need(new NeedParams { AssignedNeedType = NeedType.Hunger }))
             );
 
@@ -186,79 +183,6 @@ namespace Assets.Scripts.Tests.Behaviours.Animal
                 TestUpdateCondition));
 
             Assert.AreEqual(_enclosureComponent.ClosestInteriorItemTransformResult.gameObject, _enclosureComponent.UnregisteredInteriorItem);
-        }
-        #endregion
-
-        #region MoveToTarget
-        [UnityTest]
-        public IEnumerator MoveToTarget_RemovesTargetFromBlackboard()
-        {
-            _actualBlackboard.InstanceBlackboard.Add
-            (
-                AnimalBehaviours.PathfindingTargetLocationKey,
-                new BlackboardItem(new Vector3())
-            );
-
-            yield return CoroutineSys.Instance.StartCoroutine(AnimalBehaviours.MoveToTarget(_actualBlackboard,
-                TestUpdateCondition));
-
-            Assert.IsFalse(_actualBlackboard.InstanceBlackboard.ContainsKey(AnimalBehaviours.PathfindingTargetLocationKey));
-        }
-
-        [UnityTest]
-        public IEnumerator MoveToTarget_ReturnsSuccess()
-        {
-            _actualBlackboard.InstanceBlackboard.Add
-            (
-                AnimalBehaviours.PathfindingTargetLocationKey,
-                new BlackboardItem(new Vector3())
-            );
-
-            yield return CoroutineSys.Instance.StartCoroutine(AnimalBehaviours.MoveToTarget(_actualBlackboard,
-                TestUpdateCondition));
-
-            Assert.AreEqual(ReturnCode.Success, _actualReturnCode);
-        }
-
-        [UnityTest]
-        public IEnumerator MoveToTarget_StartPathfindingCalledWithBlackboardVector()
-        {
-            var expectedPosition = new Vector3(1, 3, 4);
-
-            _actualBlackboard.InstanceBlackboard.Add
-            (
-                AnimalBehaviours.PathfindingTargetLocationKey,
-                new BlackboardItem(expectedPosition)
-            );
-
-            yield return CoroutineSys.Instance.StartCoroutine(AnimalBehaviours.MoveToTarget(_actualBlackboard,
-                TestUpdateCondition));
-
-            Assert.IsTrue(_pathfindingComponent.StartPathfindingCalled);
-
-            Assert.AreEqual(expectedPosition, _pathfindingComponent.StartPathfindingTargetVector);
-        }
-        #endregion
-
-        #region GetRandomPointInsideEnclosure
-        [UnityTest]
-        public IEnumerator GetRandomPointInsideEnclosure_ReturnSuccess()
-        {
-            yield return CoroutineSys.Instance.StartCoroutine(AnimalBehaviours.GetRandomPointInsideEnclosure(_actualBlackboard,
-                TestUpdateCondition));
-
-            Assert.AreEqual(ReturnCode.Success, _actualReturnCode);
-        }
-
-        [UnityTest]
-        public IEnumerator GetRandomPointInsideEnclosure_GetRandomPointOnTheGroundResultStoredInBT()
-        {
-            _enclosureComponent.GetRandomPointOnTheGroundResult = new Vector3(3, 4, 5);
-
-            yield return CoroutineSys.Instance.StartCoroutine(AnimalBehaviours.GetRandomPointInsideEnclosure(_actualBlackboard,
-                TestUpdateCondition));
-
-            Assert.AreEqual(_enclosureComponent.GetRandomPointOnTheGroundResult, _actualBlackboard.InstanceBlackboard[AnimalBehaviours.PathfindingTargetLocationKey].GetCurrentItem<Vector3>());
         }
         #endregion
 
