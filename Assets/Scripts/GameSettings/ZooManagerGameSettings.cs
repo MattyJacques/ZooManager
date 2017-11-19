@@ -21,9 +21,12 @@ namespace Assets.Scripts.GameSettings
 
       // BUILDING PLACEMENT controls
       public static UnityEngine.KeyCode TOGGLE_GRID       = UnityEngine.KeyCode.Slash;
-      public static UnityEngine.KeyCode TOGGLE_ROTATE     = UnityEngine.KeyCode.Comma;
+      public static UnityEngine.KeyCode ROTATE_LEFT       = UnityEngine.KeyCode.Comma;
+      public static UnityEngine.KeyCode ROTATE_RIGHT      = UnityEngine.KeyCode.Colon;
 
-      // ENCLOSURE BUILDING controls
+      public static float ROTATION_ANGLE                  = 45.0f;
+
+    // ENCLOSURE BUILDING controls
       public static UnityEngine.KeyCode LOCK_TO_AXIS      = UnityEngine.KeyCode.LeftShift;
       public static UnityEngine.KeyCode FINISH_ENCLOSURE  = UnityEngine.KeyCode.Mouse1;
 

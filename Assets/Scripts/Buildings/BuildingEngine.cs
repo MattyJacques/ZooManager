@@ -70,11 +70,11 @@ public class BuildingEngine : MonoBehaviour
       if (Physics.Raycast (_raycastMouse, out _rayHit, 1000, _buildingLayers)) {
 
         //GridBased
-        if (_buildingMode == 1 && !Input.GetKey (Assets.Scripts.GameSettings.ZooManagerGameSettings.TOGGLE_ROTATE)) {
+        if (_buildingMode == 1 && !Input.GetKey (Assets.Scripts.GameSettings.ZooManagerGameSettings.ROTATE_LEFT)) {
           _positionToBuild = new Vector3 (Mathf.RoundToInt (_rayHit.point.x * 1 / _gridSize) * _gridSize, _rayHit.point.y, Mathf.RoundToInt (_rayHit.point.z * 1 / _gridSize) * _gridSize);
           _ghostVis.transform.position = _positionToBuild + new Vector3 (0, 0.02f, 0);
           //TriangleBased
-        } else if (_buildingMode == 2 && !Input.GetKey (Assets.Scripts.GameSettings.ZooManagerGameSettings.TOGGLE_ROTATE)) {
+        } else if (_buildingMode == 2 && !Input.GetKey (Assets.Scripts.GameSettings.ZooManagerGameSettings.ROTATE_LEFT)) {
           _positionToBuild = new Vector3 (Mathf.RoundToInt (_rayHit.point.x * 1 / _gridSize) * _gridSize, _rayHit.point.y, Mathf.RoundToInt (_rayHit.point.z * 1 / _gridSize) * _gridSize);
           _ghostVis.transform.position = _positionToBuild + new Vector3 (0, 0.02f, 0);
           Vector3 trianglePos1 = _positionToBuild + new Vector3 (0.25f * _gridSize, 0, 0);
@@ -99,7 +99,7 @@ public class BuildingEngine : MonoBehaviour
             _positionToBuild = trianglePos4;
             _ghostVis.transform.eulerAngles = new Vector3 (90, 180, 0);
           }
-        } else if (!Input.GetKey (Assets.Scripts.GameSettings.ZooManagerGameSettings.TOGGLE_ROTATE)) {
+        } else if (!Input.GetKey (Assets.Scripts.GameSettings.ZooManagerGameSettings.ROTATE_LEFT)) {
           _positionToBuild = new Vector3 (_rayHit.point.x, _rayHit.point.y, _rayHit.point.z);
           _ghostVis.transform.position = _positionToBuild + new Vector3 (0, 0.02f, 0);
         }
@@ -110,7 +110,7 @@ public class BuildingEngine : MonoBehaviour
           _ghostGameObject.transform.position = Vector3.MoveTowards (_ghostGameObject.transform.position, _positionToBuild + new Vector3 (0, 5, 0), 5);
         }
 
-        if (Input.GetKey(Assets.Scripts.GameSettings.ZooManagerGameSettings.TOGGLE_ROTATE)) {
+        if (Input.GetKey(Assets.Scripts.GameSettings.ZooManagerGameSettings.ROTATE_LEFT)) {
           _ghostGameObject.transform.LookAt (new Vector3 (_rayHit.point.x, _positionToBuild.y + 5, _rayHit.point.z));
         }
 

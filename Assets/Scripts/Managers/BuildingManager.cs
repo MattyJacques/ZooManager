@@ -6,6 +6,7 @@ using System.IO;
 using Assets.Scripts.Buildings;
 using Assets.Scripts.Components.Enclosure;
 using Assets.Scripts.Components.Needs;
+using Assets.Scripts.GameSettings;
 
 namespace Assets.Scripts.Managers
 {
@@ -28,8 +29,8 @@ namespace Assets.Scripts.Managers
 
     private float _currBuildY;              // Current building Y placement
 
-    private Rect _rotateLeftRect;           //Rect for the rotate left button. Used to prevent over clicking.
-    private Rect _rotateRightRect;          //Rect for the rotate right button. Used to prevent over clicking.
+    //private Rect _rotateLeftRect;           //Rect for the rotate left button. Used to prevent over clicking.
+    //private Rect _rotateRightRect;          //Rect for the rotate right button. Used to prevent over clicking.
 
     public Texture2D _leftArrow;            //Images for buttons
     public Texture2D _rightArrow;           //Images for buttons
@@ -40,12 +41,19 @@ namespace Assets.Scripts.Managers
     public bool _isPave = false;            //Are you placing pavement or building
     public PaveScript _pave;                //Assistance in placing script
 
+    /////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Monobehaviours
+    //
+    /////////////////////////////////////////////////////////////////////////////////////////
+    #region Monobehaviours
+
     void Start()
     { // Load the buildings from Resources
 
       //627H & 880W //Test values to make sure that unity properlly streches the buttons to the right size.
-      _rotateLeftRect = new Rect((Screen.width / 44), Screen.height - (Screen.height / 11), (Screen.width / 8.8f), (Screen.height / 31.35f));
-      _rotateRightRect = new Rect((Screen.width / 4.4f), Screen.height - (Screen.height / 11), (Screen.width / 8.8f), (Screen.height / 31.35f));
+      //_rotateLeftRect = new Rect((Screen.width / 44), Screen.height - (Screen.height / 11), (Screen.width / 8.8f), (Screen.height / 31.35f));
+      //_rotateRightRect = new Rect((Screen.width / 4.4f), Screen.height - (Screen.height / 11), (Screen.width / 8.8f), (Screen.height / 31.35f));
       
       //Set values
       _pave = gameObject.AddComponent<PaveScript>() as PaveScript;
@@ -66,35 +74,30 @@ namespace Assets.Scripts.Managers
         
         if (Input.GetMouseButtonDown(0) || (_isPave && Input.GetMouseButton(0)))
         { // If left click, place the building
-
-          if (!_rotateLeftRect.Contains(new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y)) &&
-              !_rotateRightRect.Contains(new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y)))
-          {
-            if (_isPave && !_pave._lockRect.Contains(new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y)))
-            {//Determine if you are placing placement poles
-              if (_pave.passInput(_currentBuild.position))
-                PlacePavement();
-            }
-            else if (!_isPave)
-            {
-              PlaceBuilding();
-            }
-          }
-
+          PlaceBuilding();
+          //if (_isPave && !_pave._lockRect.Contains(new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y)))
+          //{//Determine if you are placing placement poles
+          //  if (_pave.passInput(_currentBuild.position))
+          //    PlacePavement();
+          //}
+          //else if (!_isPave)
+          //{
+            
+          //}
         }
         else if (Input.GetMouseButtonDown(1))
         { // If right click, cancel build
           DeleteCurrBuild();
           _pave.resetPoles();
         }
-        else if (Input.GetKeyDown(KeyCode.L))
+        else if (Input.GetKeyDown(ZooManagerGameSettings.ROTATE_LEFT))
         {
-          Vector3 newRotation = new Vector3(0, -45, 0);
+          Vector3 newRotation = new Vector3(0, -ZooManagerGameSettings.ROTATION_ANGLE, 0);
           _currentBuild.Rotate(newRotation);
         }
-        else if (Input.GetKeyDown(KeyCode.R))
+        else if (Input.GetKeyDown(ZooManagerGameSettings.ROTATE_RIGHT))
         {
-          Vector3 newRotation = new Vector3(0, 45, 0);
+          Vector3 newRotation = new Vector3(0, ZooManagerGameSettings.ROTATION_ANGLE, 0);
           _currentBuild.Rotate(newRotation);
         }
         if (_currentBuild == null)
@@ -108,6 +111,8 @@ namespace Assets.Scripts.Managers
       }
 
     } // Update()
+
+    #endregion
 
     internal static GameObject GetClosestOfType(Vector3 position, 
                                                 TargetType nextTarget)
@@ -337,38 +342,6 @@ namespace Assets.Scripts.Managers
       return templateIndex;
 
     } // GetTemplateIndex()
-
-    private void OnGUI()
-    { // Display buttons for rotation 
-      if (_currentBuild != null)
-      {
-        //Remove this next line to remove all trace of text
-        GUI.Label(new Rect(_rotateLeftRect.x + (Screen.width / 58), _rotateLeftRect.y - (Screen.height / 31.35f), _rotateLeftRect.width, _rotateLeftRect.height), "Rotate Left");
-        if (GUI.Button(_rotateLeftRect, _leftArrow))
-        {
-          Vector3 newRotation = new Vector3(0, -45, 0);
-          _currentBuild.Rotate(newRotation);
-        }
-
-        //Remove this next line to remove all trace of text
-        GUI.Label(new Rect(_rotateRightRect.x + (Screen.width / 58), _rotateRightRect.y - (Screen.height / 31.35f), _rotateRightRect.width, _rotateRightRect.height), "Rotate Right");
-        if (GUI.Button(_rotateRightRect, _rightArrow))
-        {
-          Vector3 newRotation = new Vector3(0, 45, 0);
-          _currentBuild.Rotate(newRotation);
-        }
-        
-        if (_isPave)
-        {
-          //Remove this next line to remove all trace of text
-          GUI.Label(new Rect(_pave._lockRect.x + (Screen.width/58),_pave._lockRect.y - (Screen.height/31.35f),_pave._lockRect.width,_pave._lockRect.height), "Snap");
-          if(GUI.Button(_pave._lockRect, _lockTexture))
-          {
-            _pave._snapping = !_pave._snapping;
-          }
-        }
-      }
-    } // OnGUI()
 
     public void DoService(string type, int id)
     {

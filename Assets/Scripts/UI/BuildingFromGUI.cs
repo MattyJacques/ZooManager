@@ -11,23 +11,25 @@ public class BuildingFromGUI : MonoBehaviour {
 
   private GameObject engine;
   private GameObject objectToBuild;
+  private GameObject managers;
 
   void Awake()
   {
     engine = GameObject.Find("BuildingEngine");
+    managers = GameObject.Find("Managers");
   }
  
   //TODO: This will have to be changed to work with the new manager system
   public void OnClick()
     {
-      buildingID = "Buildings/Prefabs/" + buildingID;
-      GameObject loadedObject = Resources.Load(buildingID) as GameObject;
+    //buildingID = "Buildings/Prefabs/" + buildingID;
+    //GameObject loadedObject = Resources.Load(buildingID) as GameObject;
 
-      if (loadedObject)
-      { // If the object has been loaded, instantiate
-        engine.gameObject.GetComponent<BuildingEngine>().StartBuild(loadedObject, new Vector3(1, 1, 1));
-      }
-
-      
-    }
+    //if (loadedObject)
+    //{ // If the object has been loaded, instantiate
+    //  objectToBuild = (GameObject)Instantiate(loadedObject);
+    //  engine.gameObject.GetComponent<BuildingEngine>().StartBuild(objectToBuild, new Vector3(1, 1, 1));
+    //}
+    managers.gameObject.GetComponent<Assets.Scripts.Managers.BuildingManager>().Create(buildingID);
+  }
 }
