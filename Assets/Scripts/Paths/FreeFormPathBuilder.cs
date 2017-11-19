@@ -5,8 +5,6 @@
 
 using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class FreeFormPathBuilder : MonoBehaviour
 {
@@ -16,10 +14,10 @@ public class FreeFormPathBuilder : MonoBehaviour
     private enum stateEnum {inactive, choosingPathStartPosition, choosingPathEndPosition, choosingCurveControlPoint, establishingCurve};
 
     //The prefab that contains the procgen mesh creation code.
-    public Transform procGenMeshPrefab;
+    public GameObject procGenMeshPrefab;
 
     //The instantiated procgen object that contains the path mesh.
-    private Transform procGenPath;
+    private GameObject procGenPath;
 
     //At present the path supports two submesh materials, but this can be altered to give the path different materials/colours.
     public Material pathMaterial1;
