@@ -36,7 +36,7 @@ namespace Assets.Scripts.Characters.Animals
       Boredom = 100;
       Health = 100;
       Age = 0;
-      Behave = BehaviourCreator.Instance.GetBehaviour("basicAnimal");
+      Behave = BehaviourCreator.Instance.GetBehaviour(BehaviourTreeType.BasicAnimal);
 
       CoroutineSys.Instance.StartCoroutine(Behave.Behave(Model));
     } // Init()

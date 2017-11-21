@@ -1,5 +1,6 @@
 ﻿// Sifaka Game Studios (C) 2017
 
+using Assets.Scripts.Behaviours;
 using Assets.Scripts.Tests.Components.Behaviour;
 using NUnit.Framework;
 using UnityEngine;
@@ -14,9 +15,9 @@ namespace Assets.Editor.UnitTests.Components.Behaviour
         public void Start_NoValidBehaviour_ThrowsError()
         {
             var behaviour = new GameObject().AddComponent<TestBehaviourComponent>();
-            behaviour.BehaviourName = "Terrible test behaviour name that will never exist";
+            behaviour.SelectedTemplateBehaviour = BehaviourTreeType.Unknown;
 
-            LogAssert.Expect(LogType.Error, "Tried to load behaviour with name " + behaviour.BehaviourName + " which does not exist!");
+            LogAssert.Expect(LogType.Error, "Tried to load behaviour with name " + behaviour.SelectedTemplateBehaviour + " which does not exist!");
             behaviour.TestStart();
         }
     }
