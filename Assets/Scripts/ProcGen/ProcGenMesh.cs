@@ -5,6 +5,8 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.Pathfinding;
+using Pathfinding;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshRenderer))]
@@ -165,6 +167,8 @@ public class ProcGenMesh : MonoBehaviour
         mb.BuildTriangle(pathPoints[0][2], underneathPathPoints[0][2], underneathPathPoints[0][0], subMesh);
 
         mf.mesh = mb.CreateMesh();
+
+        AstarPath.active.UpdateGraphs(new GraphUpdateObject {modifyTag = true, bounds = mf.mesh.bounds, setTag = PathfindingConstants.VisitorPath});
 
         UpdateUVs();
 
