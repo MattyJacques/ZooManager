@@ -17,7 +17,6 @@ namespace Assets.Scripts.Behaviours
 
     public class BehaviourCreator
     {
-        
         private Dictionary<BehaviourTreeType, BehaviourTree> _behaviours;
 
         private static BehaviourCreator _instance;
