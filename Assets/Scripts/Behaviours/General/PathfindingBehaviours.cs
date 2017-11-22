@@ -29,7 +29,12 @@ namespace Assets.Scripts.Behaviours.General
                 returnCode(ReturnCode.Failure);
                 yield break;
             }
-            
+
+            if (inBlackboard.InstanceBlackboard.ContainsKey(PathfindingTargetLocationKey))
+            {
+                inBlackboard.InstanceBlackboard.Remove(PathfindingTargetLocationKey);
+            }
+
             inBlackboard.InstanceBlackboard.Add(PathfindingTargetLocationKey, new BlackboardItem(ipvec));
 
             returnCode(ReturnCode.Success);
