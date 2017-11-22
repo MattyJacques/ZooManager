@@ -9,6 +9,8 @@ namespace Assets.Scripts.Tests.Services.PointsOfInterest
         : IPointsOfInterestService
     {
         public Vector3 GetRandomPointOfInterestResult = Vector3.zero;
+        public Vector3 ? AddedPointOfInterest { get; private set; }
+        public Vector3 ? RemovedPointOfInterest { get; private set; }
 
         public Vector3 GetRandomPointOfInterest()
         {
@@ -22,12 +24,12 @@ namespace Assets.Scripts.Tests.Services.PointsOfInterest
 
         public void AddPointOfInterest(Vector3 inPointOfInterest)
         {
-            throw new System.NotImplementedException();
+            AddedPointOfInterest = inPointOfInterest;
         }
 
         public void RemovePointOfInterest(Vector3 inPointOfInterest)
         {
-            throw new System.NotImplementedException();
+            RemovedPointOfInterest = inPointOfInterest;
         }
     }
 }
