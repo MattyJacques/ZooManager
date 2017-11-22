@@ -8,9 +8,16 @@ using UnityEngine;
 
 namespace Assets.Scripts.Behaviours
 {
+    public enum BehaviourTreeType
+    {
+        BasicAnimal,
+        BasicVisitor,
+        Unknown
+    }
+
     public class BehaviourCreator
     {
-        private Dictionary<string, BehaviourTree> _behaviours;
+        private Dictionary<BehaviourTreeType, BehaviourTree> _behaviours;
 
         private static BehaviourCreator _instance;
 
@@ -28,26 +35,26 @@ namespace Assets.Scripts.Behaviours
             }
         }
 
-        public BehaviourTree GetBehaviour(string name)
+        public BehaviourTree GetBehaviour(BehaviourTreeType inTreeType)
         { // Return the behaviour with the given name
 
-            if (_behaviours.ContainsKey(name))
+            if (_behaviours.ContainsKey(inTreeType))
             {
-                Debug.Log("Behaviour \"" + name + "\" found");
-                return _behaviours[name];
+                Debug.Log("Behaviour \"" + inTreeType + "\" found");
+                return _behaviours[inTreeType];
             }
 
-            Debug.Log("Behaviour \"" + name + "\" not found");
+            Debug.Log("Behaviour \"" + inTreeType + "\" not found");
             return null;
         }
 
         private void CreateBehaviours()
         { // Create all of the behaviours needed, storing them in the list
 
-            _behaviours = new Dictionary<string, BehaviourTree>
+            _behaviours = new Dictionary<BehaviourTreeType, BehaviourTree>
             {
-                {"basicAnimal", CreateBasicAnimalTree()},
-                {"basicVisitor", CreateBasicVisitorTree()}
+                {BehaviourTreeType.BasicAnimal, CreateBasicAnimalTree()},
+                {BehaviourTreeType.BasicVisitor, CreateBasicVisitorTree()}
             };
 
         }

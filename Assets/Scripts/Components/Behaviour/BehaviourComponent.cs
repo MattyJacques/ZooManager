@@ -8,18 +8,18 @@ namespace Assets.Scripts.Components.Behaviour
     public class BehaviourComponent 
         : MonoBehaviour
     {
-        public string BehaviourName;
+        public BehaviourTreeType SelectedTemplateBehaviour;
 
         protected void Start ()
         {
-            var behaviour = BehaviourCreator.Instance.GetBehaviour(BehaviourName);
+            var behaviour = BehaviourCreator.Instance.GetBehaviour(SelectedTemplateBehaviour);
             if (behaviour != null)
             {
                 StartCoroutine(behaviour.Behave(gameObject));
             }
             else
             {
-                Debug.LogError("Tried to load behaviour with name " + BehaviourName + " which does not exist!");
+                Debug.LogError("Tried to load behaviour with name " + SelectedTemplateBehaviour + " which does not exist!");
             }
         }
     }
