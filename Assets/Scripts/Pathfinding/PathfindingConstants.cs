@@ -4,6 +4,6 @@ namespace Assets.Scripts.Pathfinding
 {
     public static class PathfindingConstants
     {
-        public const int VisitorPath = 1;
+        public const int VisitorPath = 2;
     }
 }
