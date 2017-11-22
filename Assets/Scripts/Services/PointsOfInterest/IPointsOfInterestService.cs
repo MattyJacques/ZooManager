@@ -4,6 +4,11 @@ using UnityEngine;
 
 namespace Assets.Scripts.Services.PointsOfInterest
 {
+    public static class PointsOfInterestConstants
+    {
+        public static readonly Vector3 InvalidPointOfInterest = Vector3.positiveInfinity;
+    }
+
     public interface IPointsOfInterestService
     {
         Vector3 GetRandomPointOfInterest();

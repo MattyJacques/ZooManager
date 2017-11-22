@@ -19,7 +19,7 @@ namespace Assets.Scripts.Services.PointsOfInterest
 
             Debug.LogError("No points of interest registered!");
 
-            return Vector3.zero;
+            return PointsOfInterestConstants.InvalidPointOfInterest;
         }
 
         public Vector3 GetNearestPointOfInterest(Vector3 inLocation)
@@ -41,7 +41,7 @@ namespace Assets.Scripts.Services.PointsOfInterest
 
             Debug.LogError("No points of interest registered!");
 
-            return currentNearest;
+            return PointsOfInterestConstants.InvalidPointOfInterest;
         }
 
         private bool HasPointsOfInterest()

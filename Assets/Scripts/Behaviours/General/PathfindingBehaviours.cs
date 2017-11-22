@@ -1,8 +1,12 @@
-﻿using System.Collections;
+﻿// Sifaka Game Studios (C) 2017
+
+using System.Collections;
 using Assets.Scripts.Behaviours.Base;
 using Assets.Scripts.Blackboards;
 using Assets.Scripts.Components.Enclosure;
 using Assets.Scripts.Components.Pathfinding;
+using Assets.Scripts.Services;
+using Assets.Scripts.Services.PointsOfInterest;
 using UnityEngine;
 
 namespace Assets.Scripts.Behaviours.General
@@ -17,14 +21,15 @@ namespace Assets.Scripts.Behaviours.General
             // point gotten from the IPManager
             Debug.Log("Getting random Interest Point");
 
-            var ipvec = IPManager.Instance.GetRandomIP();
+            var ipvec = GameServiceProvider.CurrentInstance.GetService<IPointsOfInterestService>()
+                .GetRandomPointOfInterest();
 
-            if (ipvec == Vector3.zero)
+            if (ipvec.Equals(PointsOfInterestConstants.InvalidPointOfInterest))
             { // no interest points
                 returnCode(ReturnCode.Failure);
                 yield break;
             }
-
+            
             inBlackboard.InstanceBlackboard.Add(PathfindingTargetLocationKey, new BlackboardItem(ipvec));
 
             returnCode(ReturnCode.Success);

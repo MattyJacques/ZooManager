@@ -33,7 +33,7 @@ namespace Assets.Scripts.Services
             CurrentInstance = null;
         }
 
-        protected void Awake()
+        protected virtual void Awake()
         {
             CurrentInstance = this;
         }

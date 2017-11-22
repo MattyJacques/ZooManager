@@ -12,13 +12,13 @@ namespace Assets.Editor.UnitTests.Services.PointsOfInterest
     public class PointsOfInterestServiceTestFixture
     {
         [Test]
-        public void GetRandomPointOfInterest_NoPoints_ErrorAndZeroVector()
+        public void GetRandomPointOfInterest_NoPoints_ErrorAndInvalidVector()
         {
 		    LogAssert.Expect(LogType.Error, "No points of interest registered!");
 
             var receivedPoint = new PointsOfInterestService().GetRandomPointOfInterest();
 
-            Assert.AreEqual(Vector3.zero, receivedPoint);
+            Assert.AreEqual(PointsOfInterestConstants.InvalidPointOfInterest, receivedPoint);
         }
 
         [Test]
@@ -39,13 +39,13 @@ namespace Assets.Editor.UnitTests.Services.PointsOfInterest
         }
 
         [Test]
-        public void GetNearestPointOfInterest_NoPoints_ErrorAndInfinityVector()
+        public void GetNearestPointOfInterest_NoPoints_ErrorAndInvalidVector()
         {
             LogAssert.Expect(LogType.Error, "No points of interest registered!");
 
             var receivedPoint = new PointsOfInterestService().GetNearestPointOfInterest(new Vector3());
 
-            Assert.AreEqual(Vector3.positiveInfinity, receivedPoint);
+            Assert.AreEqual(PointsOfInterestConstants.InvalidPointOfInterest, receivedPoint);
         }
 
         [Test]
