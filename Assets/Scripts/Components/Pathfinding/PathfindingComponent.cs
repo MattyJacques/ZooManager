@@ -17,13 +17,12 @@ namespace Assets.Scripts.Components.Pathfinding
         public float RepathRate = 0.5f;
         public float Speed = 10f;
 
-        private float _timeSinceLastRepath = 0.0f;
+        private float _timeOnCurrentNode = 0f;
         private Seeker _pathfinder;
         public RVOController Controller;
         private Vector3 _target;
         private int _currentWaypoint;
         private Path _path;
-        
 
         private void Start()
         { // Initializes all needed parts for pathfinding
@@ -38,18 +37,19 @@ namespace Assets.Scripts.Components.Pathfinding
         { // Update method, currently only used for path following
             if (IsPathing())
             {
+                _timeOnCurrentNode += Time.fixedDeltaTime;
                 if (ReachedDestination())
                 { // We reached the end of the path
                     OnReachedDestination();
                     return;
                 }
-
+                
                 // Repathing if repath time has been reached
                 if (ShouldRepath())
                 {
                     Repath();
                 }
-
+                
                 if (CanTraversePath())
                 { // We do have a path and are not at the end, now follow it
                     TraversePath();
@@ -70,12 +70,12 @@ namespace Assets.Scripts.Components.Pathfinding
 
         private bool ShouldRepath()
         {
-            return (Time.time - _timeSinceLastRepath > RepathRate) && _pathfinder.IsDone();
+            return (_timeOnCurrentNode > RepathRate) && _pathfinder.IsDone();
         }
 
         private void Repath()
         {
-            _timeSinceLastRepath = Time.time + Random.value * RepathRate * 0.5f;
+            _timeOnCurrentNode = 0f;
 
             StartPathfinding(_target);
         }
@@ -88,6 +88,7 @@ namespace Assets.Scripts.Components.Pathfinding
         private void TraversePath()
         {
             Vector3 dir = (_path.vectorPath[_currentWaypoint] - transform.position).normalized;
+            gameObject.transform.localRotation = Quaternion.Euler(dir);
             dir *= Speed;
 
             Controller.Move(dir);
@@ -95,6 +96,7 @@ namespace Assets.Scripts.Components.Pathfinding
             if (Vector3.Distance(transform.position, _path.vectorPath[_currentWaypoint]) < WaypointThresholdDistance)
             { // Waypoint reached
                 _currentWaypoint++;
+                _timeOnCurrentNode = 0f;
             }
         }
 
@@ -104,6 +106,7 @@ namespace Assets.Scripts.Components.Pathfinding
             {
                 _path = p;
                 _currentWaypoint = 1; // 1 because 0 is the start point
+                Controller.locked = false;
             }
         }
 

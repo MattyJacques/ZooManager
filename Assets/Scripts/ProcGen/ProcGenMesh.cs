@@ -168,7 +168,7 @@ public class ProcGenMesh : MonoBehaviour
 
         mf.mesh = mb.CreateMesh();
 
-        AstarPath.active.UpdateGraphs(new GraphUpdateObject {modifyTag = true, bounds = mf.mesh.bounds, setTag = PathfindingConstants.VisitorPath});
+        AstarPath.active.UpdateGraphs(new GraphUpdateObject {shape =  new GraphUpdateShape{convex = true, points = mf.mesh.vertices},modifyTag = true, bounds = mf.mesh.bounds, setTag = PathfindingConstants.VisitorPath});
 
         UpdateUVs();
 
@@ -187,14 +187,5 @@ public class ProcGenMesh : MonoBehaviour
             loop++;
         }
         mf.mesh.uv = uvs;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-
-
-
     }
 }
